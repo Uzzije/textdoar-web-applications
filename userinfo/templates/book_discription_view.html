@@ -1,0 +1,31 @@
+{% extends 'search_results.html' %}
+
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>{% block title %}{% endblock %}</title>
+</head>
+<body>
+{% block body %}
+    <div>
+        {{ book.author }}
+        {{ book.book_condition }}
+        {{ book.for_trade }}
+    {{ book.isbn_number }}
+    </div>
+
+    <div>
+        {% if book_image %}
+            {% load staticfiles %}
+            {% for pic in book_image %}
+                <img src = '{% static 'media' %}/{{ pic.book_image }}'/>
+            {% endfor %}
+            {% endif %}
+    </div>
+     <form method="post" action="{% url 'single_book_description' pk book_id book.slug %}">{% csrf_token %}
+        <input name="watch-list" type="submit" value="watch-list">Add Watch List</input>
+    </form>
+{% endblock %}
+</body>
+</html>

@@ -1,0 +1,39 @@
+{% extends 'search_results.html' %}
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>List New Book</title>
+</head>
+<body>
+{% block body %}
+    <form method="post" action="." enctype="multipart/form-data">{% csrf_token %}
+    {{ form.as_p }}
+    <div>
+        <label>
+            <input type="checkbox" name="for_short_term_rent">
+            For Short Term Rent
+        </label>
+        <label>
+            <input type="checkbox" name="for_long_term_rent">
+                For Long Term Rent
+        </label>
+        <label>
+            <input type="checkbox" name="for_sale">
+            For Sale
+        </label>
+        <label>
+            <input type="checkbox" name="for_trade">
+            For Trade
+        </label>
+    </div>
+        <br>
+        <div>
+            Click All That Applies
+        </div>
+        <br>
+        <input type="submit" value="Register Book">
+        </form>
+{% endblock %}
+</body>
+</html>

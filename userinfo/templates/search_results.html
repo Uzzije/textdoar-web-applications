@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Search Result</title>
+</head>
+<body>
+{% block search %}
+    <form method="get" action="{% url 'search_result_page' pk user_name %}">
+        <input type="text" name="q" id="id_q"/>
+        <input type="submit" value="Search" name="search"/>
+    </form>
+{% endblock %}
+{% block body %}
+        {% for result in found_entries %}
+            <p><a href="{% url 'single_book_description' pk result.id result.slug %}">{{ result.title }}</a> </p>
+            {{ result.isbn_number }}.
+            {{ result.book_owner.username }}
+        {% endfor %}
+    {% endblock %}
+</body>
+</html>
