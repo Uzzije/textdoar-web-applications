@@ -1,0 +1,57 @@
+{% extends 'search_results.html' %}
+{% block staticfiles %}{% load staticfiles %}{% load static %}{% endblock %}
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>{% block title %}{{ first_name }}, Home Page{% endblock %}</title>
+    {% block jquery-head %}
+    <script type="text/javascript" src="{% static 'static_jquery/js/jquery.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/jquery-ui.js' %}"></script>
+        <link rel="stylesheet" type="text/css" href="{% static 'css/jquery-ui/smoothness/jquery-ui.css' %}"/>
+        {% if gue %}
+            <script>
+         $(function() {
+            $( "#help-box" ).dialog({
+               autoOpen: true
+            });
+         });
+      </script>
+        {% else %}
+            <script>
+         $(function() {
+            $( "#help-box" ).dialog({
+               autoOpen: false
+            });
+         });
+      </script>
+        {% endif %}
+     {% endblock %}
+</head>
+<body>
+    {% block body %}
+
+    <div id="help-box">
+        Would you like to buy
+        <br>
+        Buy a book?
+        <br>
+        Sell a book?
+        <br>
+        Rent a book? {{ first_time_user }}
+        <br>
+        List a book to rent?
+        <br>
+        Still need help?
+    </div>
+    <p>Welcome {{ first_name }}</p>
+    <p><a href="{% url 'new_book_entry_page' pk user_name %}">List New Book</a> </p>
+    <p><a href="{% url 'list_of_your_books' pk user_name %}">List Of Your Books</a> </p>
+        <p><a href="{% url 'watch_list' pk user_name %}">Watch List Book</a> </p>
+        <br>
+     <form method="post" action=".">{% csrf_token %}
+        <input type="submit" value="Sign Out" name="sign_out_button">
+    </form>
+    {% endblock %}
+</body>
+</html>

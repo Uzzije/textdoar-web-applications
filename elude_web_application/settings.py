@@ -41,7 +41,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'whoosh',
     'haystack',
-    'userinfo',
+    'textdoor_app',
     'django_static_jquery',
     'jquery_ui',
 )
@@ -95,7 +95,7 @@ HAYSTACK_CONNECTIONS = {
         'PATH': os.path.join(os.path.dirname(__file__), 'whoosh_index'),
     },
 }
-MEDIA_ROOT = os.path.join(BASE_DIR, 'userinfo/static/media')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'textdoor_app/static/media')
 MEDIA_URL = 'static/media/'
 # Internationalization
 # https://docs.djangoproject.com/en/1.8/topics/i18n/
@@ -116,5 +116,5 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
-    "/Users/Administrator/ELUDE APPLICATION PROJECTS/elude_web_application/userinfo/static"
+    "/Users/Administrator/ELUDE APPLICATION PROJECTS/elude_web_application/textdoor_app/static"
     ]

@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% block staticfiles %}{% load staticfiles %}{% load static %}{% endblock %}
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Search Result</title>
+    {% block jquery-head %}
+        {% load js %}
+    <script type="text/javascript" src="{% static 'static_jquery/js/jquery.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/jquery-ui.js' %}"></script>
+        <link rel="stylesheet" type="text/css" href="{% static 'css/jquery-ui/smoothness/jquery-ui.css' %}"/>
+        <link rel="stylesheet" type="text/css" href="{% static 'bootstrap-3.3.5-dist/css/bootstrap.min.css'%}">
+            <script>
+         function openSignInBox() {
+             var check_state = {{ guess_state| js }}
+             console.log(check_state);
+             if( check_state == "true"){
+                $(function() {
+                $( "#sign-in-request-box" ).dialog({
+               autoOpen: true
+                    });
+                });
+             }
+             else{
+                     $(function() {
+            $("#sign-in-request-box").dialog({
+               autoOpen: false
+            });
+         });
+             }
+         }
+      </script>
+     {% endblock %}
+</head>
+<body>
+{% block search %}
+    <div id="sign-in-request-box" style="display:none">
+        <h1>Have an account?</h1>
+            <br>
+        <div class="row">
+            <div class="col-md-6"><a href="{% url 'user_registration_page'%}">Sign Up!</a></div>
+            <div class="col-md-6"><a href="{% url 'login_page'%}">Login!</a></div>
+        </div>
+    </div>
+    <form method="get" action="{% url 'search_result_page' pk user_name %}">
+        <input type="text" name="q" id="id_q"/>
+        <input type="submit" value="Search" name="search"/>
+    </form>
+{% endblock %}
+{% block body %}
+{{ entry_query }}
+        {% for result in found_entries %}
+            <p><a href="{% url 'single_book_description' pk result.id result.slug %}">{{ result.title }}</a> </p>
+            {{ result.isbn_number }}.
+            {{ result.book_owner.username }}
+            <input id="{{ result.slug }}" onclick="openSignInBox()" name="add_to_cart" class="ui-button add_to_cart"
+                   type="submit" value="Add To Cart">
+        {% endfor %}
+    {% endblock %}
+</body>
+</html>

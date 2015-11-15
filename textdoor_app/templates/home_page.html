@@ -1,0 +1,32 @@
+{% block staticfiles %}{% load staticfiles %}{% load static %}{% endblock %}
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>TextDoor</title>
+    {% block jquery_head %}
+     <script type="text/javascript" src="{% static 'static_jquery/js/jquery.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/jquery-ui.js' %}"></script>
+        <link rel="stylesheet" type="text/css" href="{% static 'css/jquery-ui/smoothness/jquery-ui.css' %}"/>
+        <link rel="stylesheet" type="text/css" href="{% static 'bootstrap-3.3.5-dist/css/bootstrap.min.css'%}">
+    {% endblock %}
+</head>
+<body>
+    {% block body %}
+        <h1>Welcome to Elude!</h1>
+        <div>Where you can buy rent and sell textbooks</div>
+{% endblock %}
+    {% block search %}
+        <br>
+        <div>What books are you looking for?</div>
+         <form method="get" action="{% url 'search_result_page' 0000 "guest" %}">
+        <input type="text" name="q" id="id_q"/>
+        <input type="submit" value="Search" name="search"/>
+             <div class="row">
+                 <div class="col-md-6"><a href="{% url 'user_registration_page'%}">Sign Up!</a></div>
+             <div class="col-md-6"><a href="{% url 'login_page'%}">Login!</a></div>
+             </div>
+    </form>
+    {% endblock %}
+</body>
+</html>
