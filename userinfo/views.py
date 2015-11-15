@@ -133,10 +133,10 @@ def search(request, pk, user_name):
         entry_query = search_algorithm.get_query(query_string, ['title', 'isbn_number', 'author'])
 
         found_entries = Book.objects.filter(entry_query).order_by('publish_date')
-
+        found_entries_count = Book.objects.filter(entry_query).count()
     return render(request, 'search_results.html',
                           { 'query_string': query_string, 'found_entries': found_entries, 'pk':pk,
-                            'user_name':user_name},
+                            'user_name':user_name, 'found_entries_count': found_entries_count},
                           context_instance=RequestContext(request))
 
 
