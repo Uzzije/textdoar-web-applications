@@ -1,0 +1,19 @@
+{% extends 'bar.html' %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Search</title>
+    {% block javascript %}
+     {% endblock %}
+</head>
+<body>
+{% block modal_view_dialog %}{% endblock %}
+{% block search %}
+<form method="get" action="{% url 'search_result_page' user_name %}">{% csrf_token %}
+        <input type="text" name="q" id="id_q" value="{{ query_string }}"/>
+        <input type="submit" value="Search" name="search"/>
+    </form>
+{% endblock %}
+</body>
+</html>

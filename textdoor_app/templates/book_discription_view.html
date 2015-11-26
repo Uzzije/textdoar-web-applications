@@ -1,0 +1,67 @@
+{% extends 'search_results.html' %}
+
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>{% block title %}{% endblock %}</title>
+{% block javascript %}
+            <script>
+            var count = 0;
+         function openSignInBox() {
+             var notLoggedIn = document.getElementById("myVar").value;
+             console.log("This is called");
+             if( notLoggedIn == "true"){
+                 console.log("User is not logged in");
+                 count = count + 1;
+                $(function() {
+                        $("#sign-in-request-box").dialog({
+                            autoOpen: true
+                        });
+                });
+             }
+             else{
+                 count = 0;
+                 console.log("User is Logged In");
+                     $(function() {
+            $("#sign-in-request-box").dialog({
+               autoOpen: false
+            });
+         });
+             }
+         }
+      </script>
+     {% endblock %}
+</head>
+<body>
+{% block check_for_login_user %}
+<input type="hidden" id="myVar" name="variable" value="{{ guest_state }}"/>
+{% endblock %}
+{% block body %}
+    <div>
+        {{ book.author }}
+        {{ book.book_condition }}
+        {{ book.for_trade }}
+    {{ book.isbn_number }}
+    </div>
+
+    <div>
+        {% if book_image %}
+            {% load staticfiles %}
+            {% for pic in book_image %}
+                <img src = '{% static 'media' %}/{{ pic.book_image }}'/>
+            {% endfor %}
+            {% endif %}
+    </div>
+     <form method="post" action="{% url 'single_book_description' book_id book.slug %}">{% csrf_token %}
+        <input name="watch-list" type="submit" value="Watch List"/>
+        <input id="add_to_cart" name="add_to_cart" type="submit" value="Add To Cart"/>
+    </form>
+{% endblock %}
+{% block open-box %}
+<script type="text/javascript">
+                openSignInBox();
+            </script>
+{% endblock %}
+</body>
+</html>

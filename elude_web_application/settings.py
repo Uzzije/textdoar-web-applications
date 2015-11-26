@@ -16,8 +16,8 @@ from django.conf.global_settings import ALLOWED_INCLUDE_ROOTS
 from setting_secret import *
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
-
+LOGIN_URL = '/textdoor_app/login'
+REDIRECT_URL = '/textdoor_app'
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
 
@@ -37,13 +37,13 @@ INSTALLED_APPS = (
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
+    'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'whoosh',
-    'haystack',
-    'userinfo',
+    'textdoor_app',
     'django_static_jquery',
     'jquery_ui',
+    'localflavor',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -92,10 +92,10 @@ DATABASES = {
 HAYSTACK_CONNECTIONS = {
     'default': {
         'ENGINE': 'haystack.backends.whoosh_backend.WhooshEngine',
-        'PATH': os.path.join(os.path.dirname(__file__), 'whoosh_index'),
+        'PATH': os.path.join(BASE_DIR, 'whoosh_index'),
     },
 }
-MEDIA_ROOT = os.path.join(BASE_DIR, 'userinfo/static/media')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'textdoor_app/static/media')
 MEDIA_URL = 'static/media/'
 # Internationalization
 # https://docs.djangoproject.com/en/1.8/topics/i18n/
@@ -116,5 +116,5 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
-    "/Users/Administrator/ELUDE APPLICATION PROJECTS/elude_web_application/userinfo/static"
+    "/Users/Administrator/ELUDE APPLICATION PROJECTS/elude_web_application/textdoor_app/static"
     ]
