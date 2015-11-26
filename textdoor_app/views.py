@@ -7,18 +7,38 @@ from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.contrib.auth import authenticate, login, logout
 import search_algorithm
-from variables import *
 from django.template import RequestContext
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 
 
-current_search_state = None
-redirect_page = None
+saved_variable_for_search = 'Find Your Book'
+redirect_page_to_search = False
+shopping_cart_list = []
+search_from_home = False
+user_id = "guest"
+guest_state = 'None'
+
+
 class TextDoorHomePageView(View):
 
     def get(self, request):
-        global current_search_state
-        current_search_state = SEARCHING_FROM_HOME_PAGE
-        return render(request, 'home_page.html', {'current_search_state': current_search_state})
+        global user_id
+        global search_from_home
+        search_from_home = True
+        if request.user.is_authenticated:
+            user_name = request.user.username
+        else:
+            user_name = "guest"
+        return render(request, 'home_page.html', {'user_name': user_name})
+
+
+class LoggedInMixin(object):
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(LoggedInMixin, self).dispatch(*args, **kwargs)
+
 
 class SignUpPageView(View):
 
@@ -43,63 +63,79 @@ class SignUpPageView(View):
 
             elude_user = EludeUser(username=user, college_attending=college_attending, new_user=True)
             elude_user.save()
-            pk = elude_user.id
-            if redirect_page == SEARCHING_FROM_HOME_PAGE:
+            if redirect_page_to_search:
                 return HttpResponseRedirect(reverse('search_result_page',
-                                                    kwargs={'pk':pk,'user_name':user_name}))
+                                                    kwargs={'user_name':user_name}))
             return HttpResponseRedirect(reverse('user_home_profile_page',
-                                                kwargs={'pk': pk, 'user_name': user_name}))
+                                                kwargs={'user_name': user_name}))
         else:
             return render(request, 'sign_up_page.html', {'form': form})
 
 
-class UserHomeProfilePage(View):
-    login_required = True
+class UserHomeProfilePage(LoggedInMixin, View):
 
-    def get(self, request, pk, user_name):
-        first_name = User.objects.get(username=user_name)
-        elude_user = EludeUser.objects.get(username=first_name)
+    def get(self, request, user_name):
+        first_name = User.objects.get(username=request.user.username)
+        elude_user = EludeUser.objects.get(username=request.user)
         new_user = elude_user.new_user
-        return render(request, 'user_profile_page.html', {'user_name':user_name, 'first_name':first_name, 'pk':pk,
-                                                          'first_time_user': new_user})
-
-    def post(self, request, pk, user_name):
-        if request.POST.get("sign_out_button"):
-            logout(request)
+        if request.user.is_authenticated():
+            return render(request, 'user_profile_page.html', {'user_name': user_name, 'first_name': first_name,
+                                                              'first_time_user': new_user})
+        else:
             return HttpResponseRedirect(reverse('login_page'))
 
-class LoginView(FormView):
+    def post(self, request, user_name):
+        logout(request)
+        return HttpResponseRedirect(reverse('logout'))
+
+
+class LogoutView(View):
+
+    def get(self, request):
+        return render(request, 'home_page.html')
+
+
+class LoginViews(FormView):
 
     form_class = form_templates.LogInForm
     template_name = 'log_in_page.html'
 
     def get_success_url(self):
-        global current_search_state
+        global redirect_page_to_search
+        global user_id
         self.success_url = 'user_home_profile_page'
         first_name = User.objects.get(pk=self.request.user.id)
         elude_user = EludeUser.objects.get(username=first_name)
         elude_user.new_user = False
         elude_user.save()
-        current_search_state = None
-        return reverse(self.success_url, kwargs={'user_name': self.request.user.username, 'pk':self.request.user.id})
+        if redirect_page_to_search:
+            user_id = int(elude_user.id)
+            return reverse('search_result_page', kwargs={'user_name': self.request.user.username})
+        return reverse(self.success_url, kwargs={'user_name': self.request.user.username})
 
     def form_valid(self, form):
         name = form.cleaned_data['name']
         password = form.cleaned_data['password']
         user = authenticate(username=name, password=password)
-        if user is not None:
+        try:
+            EludeUser.objects.get(username=User.objects.get(first_name=name))
+            value = "used"
+        except EludeUser.DoesNotExist:
+            value = None
+        if user is not None and value is not None:
             login(self.request, user)
             return HttpResponseRedirect(self.get_success_url())
         else:
             return render(self.request,'log_in_page.html', {'form': form})
 
-class NewBookListingView(View):
 
-    def get(self, request, user_name, pk):
+class NewBookListingView(LoggedInMixin, View):
+
+    def get(self, request, user_name):
         form = form_templates.RegisterBookForm()
-        return render(request, 'new_book_entry.html', {'form': form, 'user_name': user_name, 'pk':pk})
+        return render(request, 'new_book_entry.html', {'form': form, 'user_name': user_name})
 
-    def post(self, request, user_name, pk):
+    def post(self, request, user_name):
         form = form_templates.RegisterBookForm(request.POST, request.FILES)
         if form.is_valid():
             name_of_book = form.cleaned_data.get('book_name')
@@ -131,79 +167,133 @@ class NewBookListingView(View):
             new_book.save()
             book_image = BookImage(image_name=(name_of_book + " book image"), book_image=image_file, book=new_book)
             book_image.save()
-            return HttpResponseRedirect(reverse('success_url_page', kwargs={'user_name': user_name, 'pk': pk}))
+            return HttpResponseRedirect(reverse('success_url_page', kwargs={'user_name': user_name}))
         else:
             return render(request, 'new_book_entry.html', {'form': form})
 
+
 class SuccessPageView(View):
-    def get(self, request, user_name, pk):
-        return render(request, 'success_url.html', {'user_name':user_name, 'pk':pk})
+    def get(self, request, user_name):
+        return render(request, 'success_url.html', {'user_name':user_name})
 
-class SearchView(View):
 
-    def get(self, request, pk, user_name):
-        query_string = ''
-        found_entries = None
-        global redirect_page
-        if current_search_state == SEARCHING_FROM_HOME_PAGE:
-            redirect_page = SEARCHING_FROM_HOME_PAGE
-            guest_state = "true"
-        else:
-            guest_state = "false"
-        if ('q' in request.GET) and request.GET['q'].strip():
-            query_string = request.GET['q']
+class CartView(LoggedInMixin, View):
+    def get(self, request, user_name):
+        global shopping_cart_list
+        return render(request, 'cart.html', {'cart': shopping_cart_list,'user_name': user_name})
 
+
+class SearchResultView(View):
+
+    def get(self, request, user_name):
+        global redirect_page_to_search
+        global saved_variable_for_search
+        global search_from_home
+        global guest_state
+        query_string = saved_variable_for_search
+        entry_query = search_algorithm.get_query(query_string, ['title', 'isbn_number', 'author'])
+        found_entries = Book.objects.filter(entry_query).order_by('publish_date')
+        if 'q' in request.GET and request.GET['q'].strip():
+            query_string = str(request.GET['q'])
             entry_query = search_algorithm.get_query(query_string, ['title', 'isbn_number', 'author'])
-
             found_entries = Book.objects.filter(entry_query).order_by('publish_date')
-
-            count = Book.objects.filter(entry_query).count()
+            saved_variable_for_search = str(query_string)
+        elif redirect_page_to_search:
+            query_string = saved_variable_for_search
+            entry_query = search_algorithm.get_query(query_string, ['title', 'isbn_number', 'author'])
+            found_entries = Book.objects.filter(entry_query).order_by('publish_date')
         return render(request, 'search_results.html',
-                          {'query_string': query_string, 'found_entries': found_entries, 'pk':pk,
-                            'user_name':user_name, 'guess_state': guest_state, 'entry_query':count},
+                          {'query_string': query_string, 'found_entries': found_entries,
+                            'user_name':user_name, 'guest_state': guest_state, 'redirect_page': redirect_page_to_search,
+                           'cart': shopping_cart_list},
                           context_instance=RequestContext(request))
-'''
-    def post(self, request, pk, user_name):
-        if self.request.POST.get('add_to_cart'):
-            #create transaction_process object
-'''
+
+    def post(self, request, user_name):
+        global shopping_cart_list
+        if request.POST['add_to_cart']:
+            book_slug = request.POST['add_to_cart']
+            book = get_object_or_404(Book, slug=book_slug)
+            if len(shopping_cart_list) > 0:
+                if book not in shopping_cart_list:
+                    shopping_cart_list.append(book)
+            else:
+                shopping_cart_list.append(book)
+            return HttpResponseRedirect('')
 
 
-class ListOfYourBooksView(View):
+class ListOfYourBooksView(LoggedInMixin, View):
 
-    def get(self, request, pk, user_name):
+    def get(self, request, user_name):
         user = User.objects.get(username=user_name)
         elude_user = EludeUser.objects.get(username=user)
         user_book = Book.objects.filter(book_owner=elude_user)
-        return render(request, 'all_user_books.html', {'user_book':user_book, 'pk':pk})
+        return render(request, 'all_user_books.html', {'user_book': user_book})
+
 
 class SingleBookDescriptionView(View):
 
-    def get(self, request, pk, book_id, slug):
+    def get(self, request, book_id, slug):
+        global guest_state
+        global redirect_page_to_search
+        if request.user.is_authenticated():
+            guest_state = "false"
+            redirect_page_to_search = False
         book = get_object_or_404(Book, slug=slug)
         book_image = BookImage.objects.filter(book=book).values()
-        return render(request, 'book_discription_view.html', {'book':book, 'pk':pk, 'book_id':book_id,
-                                                              'book_image': book_image})
-    def post(self, request, pk, book_id, slug):
+        return render(request, 'book_discription_view.html', {'book':book,'book_id':book_id,
+                                                                'book_image': book_image,
+                                                              'user_name': request.user.username,
+                                                              'guest_state': guest_state})
 
-        if request.POST["watch-list"]:
+    def post(self, request, book_id, slug):
+        global shopping_cart_list
+        global guest_state
+        global redirect_page_to_search
+        if 'watch-list' in request.POST:
             book = get_object_or_404(Book, slug=slug)
-            elude_user = EludeUser.objects.get(username=request.user)
-            if Watchlist.objects.filter(book=book, user=elude_user) is None:
-                new_watch_list = Watchlist(book=book, user=elude_user)
-                new_watch_list.save()
+            if request.user.is_authenticated():
+                guest_state = "false"
+                redirect_page_to_search = False
+                elude_user = EludeUser.objects.get(username=request.user)
+                try:
+                    Watchlist.objects.get(book=book, user=elude_user)
+                    no_entry = "This Works"
+                except Watchlist.DoesNotExist:
+                    no_entry = None
+                if no_entry is None:
+                    new_watch_list = Watchlist(book=book, user=elude_user)
+                    new_watch_list.save()
+            else:
+                guest_state = "true"
+                redirect_page_to_search = True
             return HttpResponseRedirect('')
 
-class WatchListBooksView(View):
+        if 'add_to_cart' in request.POST:
+            book = get_object_or_404(Book, slug=slug)
+            if len(shopping_cart_list) > 0:
+                if book not in shopping_cart_list:
+                    shopping_cart_list.append(book)
+            else:
+                shopping_cart_list.append(book)
+            if request.user.is_authenticated():
+                guest_state = "false"
+                redirect_page_to_search = False
+            else:
+                guest_state = "true"
+                redirect_page_to_search = True
+            return HttpResponseRedirect('')
 
-    def get(self, request, pk, user_name):
-        user = User.objects.get(username=user_name)
+
+class WatchListBooksView(LoggedInMixin, View):
+
+    def get(self, request, user_name):
+        user = User.objects.get(username=request.user.username)
         elude_user = EludeUser.objects.get(username=user)
         try:
             books = Watchlist.objects.filter(user=elude_user)
         except Watchlist.DoesNotExist:
-            books = 'Start Watch List'
-        return render(request, 'watch_list_books.html', {'books': books, 'pk':pk, 'elude_user':elude_user})
+            books = None
+        return render(request, 'watch_list_books.html', {'books': books, 'elude_user': elude_user})
 '''
 class OrderHistoryView(View):
 
@@ -211,38 +301,45 @@ class OrderHistoryView(View):
         user = User.objects.get(username=user_name)
 
 '''
-class BooksOutOnRentView(View):
 
-    def get(self, request, pk, user_name):
+
+class BooksOutOnRentView(LoggedInMixin, View):
+
+    def get(self, request, user_name):
         user = User.objects.get(username=user_name)
         elude_user = EludeUser.objects.get(username=user)
         try:
             books = BookRentedOut.objects.filter(user=elude_user)
         except BookRentedOut.DoesNotExist:
             books = None
-        return render(request, 'books_out_on_rent.html', {'books':books, 'pk':pk, 'elude_user':elude_user})
+        return render(request, 'books_out_on_rent.html', {'books':books, 'elude_user': elude_user})
 
-class BooksYouAreRentingView(View):
 
-    def get(self, request, pk, user_name):
-        user = User.objects.get(username=user_name)
-        elude_user = EludeUser.objects.get(username=user)
+class BooksYouAreRentingView(LoggedInMixin, View):
+
+    def get(self, request, user_name):
+        try:
+            user = User.objects.get(username=request.user.username)
+            elude_user = EludeUser.objects.get(username=user)
+        except User.DoesNotExist:
+            elude_user = None
         try:
             books = BookYouAreRenting.objects.filter(user=elude_user)
         except BookYouAreRenting.DoesNotExist:
             books = None
-        return render(request, 'book_you_are_renting.html', {'books':books, 'pk':pk, 'elude_user':elude_user})
+        return render(request, 'book_you_are_renting.html', {'books': books, 'elude_user': elude_user})
+
 
 class TradeHistoryView(View):
 
-    def get(self, request, pk, user_name):
+    def get(self, request, user_name):
         user = User.objects.get(username=user_name)
         elude_user = EludeUser.objects.get(username=user)
         try:
             books = BookTradingOut.objects.filter(user=elude_user)
         except BookTradingOut.DoesNotExist:
             books = None
-        return render(request, 'books_out_on_rent.html', {'books':books, 'pk':pk, 'elude_user':elude_user})
+        return render(request, 'books_out_on_rent.html', {'books': books, 'elude_user': elude_user})
 
 
 

@@ -8,7 +8,7 @@
 <body>
 {% block body %}
     {% for book in books %}
-        <p><a href="{% url 'single_book_description' pk pk book %}">{{ book }}</a> </p>
+        <p><a href="{% url 'single_book_description' pk book %}">{{ book }}</a> </p>
     {% endfor %}
 {% endblock %}
 </body>

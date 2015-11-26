@@ -19,14 +19,14 @@
     {% block search %}
         <br>
         <div>What books are you looking for?</div>
-         <form method="get" action="{% url 'search_result_page' 0000 "guest" %}">
+         <form method="get" action="{% url 'search_result_page' user_name %}">{% csrf_token %}
         <input type="text" name="q" id="id_q"/>
         <input type="submit" value="Search" name="search"/>
+        </form>
              <div class="row">
                  <div class="col-md-6"><a href="{% url 'user_registration_page'%}">Sign Up!</a></div>
              <div class="col-md-6"><a href="{% url 'login_page'%}">Login!</a></div>
              </div>
-    </form>
     {% endblock %}
 </body>
 </html>

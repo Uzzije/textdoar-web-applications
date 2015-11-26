@@ -1,0 +1,16 @@
+{% extends 'search_bar.html' %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Cart Page{% endblock %}</title>
+</head>
+<body>
+    {% block body %}
+        {% for item in cart %}
+            <a href="{% url 'single_book_description' item.id item.slug %}">{{ item.title }}</a>
+
+        {% endfor %}
+    {% endblock %}
+</body>
+</html>

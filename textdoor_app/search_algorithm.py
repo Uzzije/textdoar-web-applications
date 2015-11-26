@@ -1,6 +1,7 @@
 __author__ = 'Uzzi'
-# Got Algorithm from online source not quite sure were exactly, still retracing my steps
+# Search Algorithm belongs to Julien Phalip
 import re
+
 
 from django.db.models import Q
 

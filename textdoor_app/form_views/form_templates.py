@@ -1,6 +1,7 @@
 from django import forms
 from textdoor_app.models import User
 from ..choices import SCHOOL_LIST, BOOK_CONDITION
+from localflavor.us.forms import USStateSelect, USZipCodeField
 __author__ = 'Administrator'
 
 'Create for user to sign in/get registered do that today http://www.djangobook.com/en/2.0/chapter14.html'
@@ -11,6 +12,7 @@ __author__ = 'Administrator'
 
 
 SCHOOL_LIST_IN_ORDER = sorted(SCHOOL_LIST)
+
 
 class UserSignUpForm(forms.Form):
 
@@ -63,6 +65,17 @@ class LogInForm(forms.Form):
     }
     name = forms.CharField(label='User Name', max_length=100, error_messages=my_default_errors)
     password = forms.CharField(label='Password', widget=forms.PasswordInput(), error_messages=my_default_errors)
+    '''
+    def get_user(self):
+        return User.objects.get(first_name=self.cleaned_data.get('name'))
+    '''
+
+
+class AddressBookForm(forms.Form):
+    address = forms.CharField(label='Address', max_length=None, required=True)
+    city = forms.CharField(label='City', max_length=None, required=True)
+    zip_code = USZipCodeField(required=True)
+    state = USStateSelect()
 
 
 class RegisterBookForm(forms.Form):

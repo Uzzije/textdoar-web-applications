@@ -5,19 +5,26 @@ from django.core.urlresolvers import reverse
 from django.template.defaultfilters import slugify
 
 
+class EludeUserAddress(models.Model):
+    address = models.CharField(default=None, max_length=600)
+    city = models.CharField(default=None, max_length=600)
+    state = models.CharField(default=None, max_length=600)
+    zip_code = models.CharField(default=None, max_length=600)
+
 
 class EludeUser(models.Model):
     username = models.OneToOneField(User, default='')
     college_attending = models.CharField(max_length=254)
     new_user = models.BooleanField(default=True)
+    address = models.ManyToManyField(EludeUserAddress)
 
     def __str__(self):
         return self.username.username
 
 
 class Book(models.Model):
-    title = models.CharField(max_length=500)
-    isbn_number = models.CharField(max_length=500)
+    title = models.CharField(db_index=True, max_length=500)
+    isbn_number = models.CharField(db_index=True, max_length=500)
     long_term_rent = models.BooleanField(default=False)
     short_term_rent = models.BooleanField(default=False)
     for_buy = models.BooleanField(default=False)
@@ -29,6 +36,9 @@ class Book(models.Model):
     publish_date = models.DateTimeField(db_index=True, blank=True, default=datetime.now)
     book_owner = models.ForeignKey(EludeUser, default='')
     slug = models.SlugField()
+
+    #come back to this search later
+    #objects = SearchManager(('title', 'isbn_number', 'author'))
 
     def __str__(self):
         return self.title
@@ -134,7 +144,6 @@ class NewTransactionProcess(models.Model):
     book = models.ManyToManyField(Book)
     slug = models.SlugField()
     at_least_one_book_sold = models.BooleanField(default=False, verbose_name="Check if user bought at least a textbook")
-
 
 
 

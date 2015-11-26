@@ -7,9 +7,13 @@
 </head>
 <body>
 {% block body %}
+    {% if books %}
     {% for book in books %}
-        <p><a href="{% url 'single_book_description' pk pk book %}">{{ book }}</a> </p>
+        <p><a href="{% url 'single_book_description' book.id book %}">{{ book }}</a></p>
     {% endfor %}
+    {% else %}
+         No book has been added to your watch list
+    {% endif %}
 {% endblock %}
 </body>
 </html>

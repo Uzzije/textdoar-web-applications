@@ -1,4 +1,4 @@
-{% extends 'search_results.html' %}
+{% extends 'search_bar.html' %}
 {% block staticfiles %}{% load staticfiles %}{% load static %}{% endblock %}
 <!DOCTYPE html>
 <html>
@@ -31,7 +31,7 @@
 <body>
     {% block body %}
 
-    <div id="help-box">
+    <div id="help-box" style="display:none">
         Would you like to buy
         <br>
         Buy a book?
@@ -45,13 +45,13 @@
         Still need help?
     </div>
     <p>Welcome {{ first_name }}</p>
-    <p><a href="{% url 'new_book_entry_page' pk user_name %}">List New Book</a> </p>
-    <p><a href="{% url 'list_of_your_books' pk user_name %}">List Of Your Books</a> </p>
-        <p><a href="{% url 'watch_list' pk user_name %}">Watch List Book</a> </p>
+    <p><a href="{% url 'new_book_entry_page' user_name %}">List New Book</a> </p>
+    <p><a href="{% url 'list_of_your_books' user_name %}">List Of Your Books</a> </p>
+        <p><a href="{% url 'watch_list' user_name %}">Watch List Book</a> </p>
         <br>
-     <form method="post" action=".">{% csrf_token %}
-        <input type="submit" value="Sign Out" name="sign_out_button">
-    </form>
+        <form method="post" action=".">{% csrf_token %}
+            <input type="submit" value="Logout" name="logout">
+        </form>
     {% endblock %}
 </body>
 </html>
