@@ -1,30 +1,39 @@
-{% extends 'base.html' %}
+{% extends 'bar.html' %}
 {% block staticfiles %}{% load staticfiles %}{% load static %}{% endblock %}
 <!DOCTYPE html>
 <html>
 <head lang="en">
     <meta charset="UTF-8">
     <title>{% block title %}Sign Up Page{% endblock %}</title>
-    <script type="text/javascript" src="{% static 'static_jquery/js/jquery.js' %}"></script>
-        <script type="text/javascript" src="{% static 'js/jquery-ui.js' %}"></script>
-        <link rel="stylesheet" type="text/css" href="{% static 'css/jquery-ui/smoothness/jquery-ui.css' %}"/>
-        <link rel="stylesheet" type="text/css" href="{% static 'bootstrap-3.3.5-dist/css/bootstrap.min.css'%}">
 </head>
+{% block search %}
+{% endblock %}
 <body>
     {% block body %}
-    <h1>Create an account</h1>
-
+        <div class="container contenter">
+        <div class="jumbotron">
+            <h1 class="roboto-font">Create an account</h1>
+            <p><h4 class="vidaloka-font">A few seconds away from connecting with fellow students
+            on campus that have the book you are looking for</h4></p>
+            <p><b>Already have an account?</b></p>
+            <p><a class="btn-primary btn-lg" href="{% url 'login_page' %}">Sign In</a> </p>
+        </div>
   <form action="." method="post">{% csrf_token %}
-          {{ form.as_p}}
-      <input type="submit" value="Create the account">
+          {% load bootstrap %}
+            {{ form|bootstrap}}
+      <div>
+          <input class="btn-success btn-lg" type="submit" value="Create the account">
+      </div>
+
   </form>
-{% if form.errors %}
-    {% for field in form %}
+            {% if form.errors %}
+                {% for field in form %}
         {% for error in field.errors %}
             <p> {{ errors }} </p>
         {% endfor %}
-    {% endfor %}
-{% endif %}
+        {% endfor %}
+            {% endif %}
+        </div>
 {% endblock %}
 </body>
 </html>

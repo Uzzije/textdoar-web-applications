@@ -27,11 +27,12 @@ urlpatterns = [
         name='books_out_on_rent'),
     url(r'^(?P<user_name>.*)/books-you-are-renting/$', textdoor_app.views.BooksYouAreRentingView.as_view(),
         name='books_your_renting'),
-    url(r'^(?P<user_name>.*)/trade-history/$', textdoor_app.views.TradeHistoryView.as_view(),
-    name='trade_history'),
     url(r'^$', textdoor_app.views.TextDoorHomePageView.as_view(), name='home_page'),
     url(r'^logout/$', textdoor_app.views.LogoutView.as_view(), name='logout'),
     url(r'^(?P<user_name>.*)/cart/$', textdoor_app.views.CartView.as_view(), name='cart_page'),
+    url(r'^(?P<user_name>.*)/account/address/$', textdoor_app.views.AddressView.as_view(), name='address_entry_page'),
+    url(r'^(?P<user_name>.*)/account/$', textdoor_app.views.AccountView.as_view(), name='account_page'),
+    url(r'^(?P<user_name>.*)/payment/$', textdoor_app.views.PaymentView.as_view(), name='payment_page'),
 ]
 urlpatterns += staticfiles_urlpatterns()
 """
@@ -39,4 +40,4 @@ urlpatterns += staticfiles_urlpatterns()
         name='order_history'),
 
 
-urlpatterns += staticfiles_urlpatterns()"""
+"""

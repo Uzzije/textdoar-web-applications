@@ -1,0 +1,20 @@
+{% extends 'search_bar.html' %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Add Shipping Address{% endblock %}</title>
+</head>
+<body>
+{% block body %}
+    <div class="container">
+         <form method="post">{% csrf_token %}
+        {% load bootstrap %}
+        {{ form|bootstrap }}
+    <input type="submit" name="add-address" value="Add Address" class="btn btn-success">
+    </form>
+    </div>
+
+{% endblock %}
+</body>
+</html>

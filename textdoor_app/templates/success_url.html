@@ -1,3 +1,4 @@
+{% extends 'search_bar.html' %}
 <!DOCTYPE html>
 <html>
 <head lang="en">
@@ -5,7 +6,13 @@
     <title></title>
 </head>
 <body>
-    {{ message }}
-    <p><a href="{% url 'user_home_profile_page' user_name %}">Back To Profile Page</a> </p>
+{% block body %}
+    <div class="vidaloka-font container-fluid jumbotron">
+        <h2>{{ message }}</h2>
+    </div>
+    <div class="text-center">
+        <p><a class="btn-lg bg-success" href="{% url 'user_home_profile_page' user_name %}">Back To Profile Page</a> </p>
+    </div>
+{% endblock %}
 </body>
 </html>

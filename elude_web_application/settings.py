@@ -14,10 +14,11 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 import os
 from django.conf.global_settings import ALLOWED_INCLUDE_ROOTS
 from setting_secret import *
+from easy_thumbnails.conf import Settings as thumbnail_settings
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-LOGIN_URL = '/textdoor_app/login'
-REDIRECT_URL = '/textdoor_app'
+LOGIN_URL = '/login'
+SITE_ID = 3
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
 
@@ -44,6 +45,9 @@ INSTALLED_APPS = (
     'django_static_jquery',
     'jquery_ui',
     'localflavor',
+    'easy_thumbnails',
+    'image_cropping',
+    'bootstrapform',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -56,6 +60,10 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
 )
+
+THUMBNAIL_PROCESSORS = (
+    'image_cropping.thumbnail_processors.crop_corners',
+) + thumbnail_settings.THUMBNAIL_PROCESSORS
 
 ROOT_URLCONF = 'elude_web_application.urls'
 

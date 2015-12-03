@@ -9,8 +9,12 @@
         <script type="text/javascript" src="{% static 'js/jquery-ui.js' %}"></script>
         <link rel="stylesheet" type="text/css" href="{% static 'css/jquery-ui/smoothness/jquery-ui.css' %}"/>
         <link rel="stylesheet" type="text/css" href="{% static 'bootstrap-3.3.5-dist/css/bootstrap.min.css'%}">
+        <script type="text/javascript" src="{% static 'bootstrap-3.3.5-dist/js/bootstrap.min.js' %}"></script>
+        <link rel="stylesheet" type="text/css" href="{% static 'general_design.css' %}"/>
+        <link href='https://fonts.googleapis.com/css?family=Droid+Serif' rel='stylesheet' type='text/css'>
+        <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" rel="stylesheet">
     {% endblock %}
-    <meta charset="UTF-8">
+{% block css_individual_page %}{% endblock %}
 {% block javascript %}{% endblock %}
 </head>
 <body>
@@ -18,12 +22,21 @@
 {% block check_for_login_user %}
 {% endblock %}
 {% block bar %}{% endblock %}
-{% block search %}{% endblock %}
 <br>
-    <div class="content">{% block body %}{% endblock %}</div>
+    <div class="container-fluid">
+        {% block body %}{% block search %}{% endblock %}{% endblock %}
+    </div>
     <br>
 {% block open-box %}
 {% endblock %}
-    <div class="footer">Elude LLC 2015</div>
+{% block javascript_extra %}
+{% endblock %}
+{% block footer %}
+    <div class="navbar navbar-default navbar-static-bottom">
+        <div class="container">
+          <p class="navbar-text pull-left">© Elude Group LLC 2015</p>
+        </div>
+    </div>
+{% endblock %}
 </body>
 </html>
