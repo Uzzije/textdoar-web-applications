@@ -4,13 +4,85 @@
 <head>
     <meta charset="UTF-8">
     <title>{% block title %}Cart Page{% endblock %}</title>
+{% block javascript %}
+{% endblock %}
 </head>
 <body>
-    {% block body %}
-        {% for item in cart %}
-            <a href="{% url 'single_book_description' item.id item.slug %}">{{ item.title }}</a>
-
+{% block body %}
+    <div class="container-fluid vidaloka-font">
+    <div class="jumbotron">
+        <p><h1><b>Shopping Cart</b></h1></p>
+        <input type="hidden" name="myAdd" id="myAdd" value="{{ has_address }}">
+    </div>
+        <form method="post">{% csrf_token %}
+             <div class="row container-fluid">
+             {% if cart %}
+                {% for item in cart %}
+                    <div class="row">
+                    <div class="col-md-3 roboto-font">
+                       <h4><a href="{% url 'single_book_description' item.id item.slug %}">{{ item.title }}</a></h4>
+                </div>
+                <div class="col-md-1">
+                    <h4>$ {{ item.sales_price }}</h4>
+                </div>
+                <div class="col-md-3">
+                    <h4><b>Delivered By: {{ delivery_time }}</b></h4>
+                </div>
+                <div class="col-md-3">
+                    <button class="btn-danger btn-lg" type="submit" name="remove-book" value="{{ item.id }}">Remove From Cart</button>
+                </div>
+            </div>
         {% endfor %}
+                 <hr class="divider">
+                 <div class="row">
+                    <div class="col-md-4">
+                        <h3>Total Order:</h3>
+                    </div>
+                    <div class="col-md-4">
+                         <h3>${{ total_order }}</h3>
+                    </div>
+                 <div class="row container-fluid">
+                {% if cart %}
+                    {% if has_address %}
+                        <p><a type="button" class="btn btn-danger btn-lg" href="{% url 'payment_page' user_name %}">Checkout</a></p>
+                    {% else %}
+                        <p><button type="button" class="btn btn-danger" data-toggle="modal" data-target="#address">Checkout</button></p>
+                    {% endif %}
+                    {% endif %}
+                    </div>
+                  </div>
+        {% else %}
+            You have not added anything to this cart.
+        {% endif %}
+            </div>
+        </form>
+    </div>
+     <div id="address" class="modal fade" role="dialog">
+     <div class="modal-dialog">
+     <div class="modal-content">
+      <div class="modal-header">
+             <div class="modal-body">
+                 <h1>Hey, you don't have an address</h1>
+            <br>
+            <br>
+            <div class="row">
+                 <div class="col-md-12"><a href="{% url 'address_entry_page' user_name%}"><h2>Click to enter an address</h2></a></div>
+            </div>
+             </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+         </div>
+        </div>
+        </div>
+        </div>
     {% endblock %}
+{% block footer %}
+            <div class="navbar navbar-default navbar-fixed-bottom">
+            <div class="container">
+             <p class="navbar-text pull-left">© Elude Group LLC 2015</p>
+            </div>
+            </div>
+            {% endblock %}
 </body>
 </html>

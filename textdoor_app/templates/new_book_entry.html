@@ -4,27 +4,67 @@
 <head lang="en">
     <meta charset="UTF-8">
     <title>List New Book</title>
+    {% block javascript %}
+        <script>
+            function openShortTermInput() {
+                if(document.getElementById("short_term").checked){
+                    $("#short-term-rent").show(1000);
+                }
+                if (!document.getElementById("short_term").checked){
+                    console.log("called");
+                    $("#short-term-rent").hide(1000);
+                }
+            }
+
+            function openLongTermInput() {
+                if(document.getElementById("long_term").checked){
+                    $("#long_term_rent_price").show(1000);
+                }
+                else{
+                    $("#long_term_rent_price").hide(1000);
+                }
+            }
+
+            function openBuyInput() {
+                if(document.getElementById("sale").checked){
+                    $("#sale_price").show(1000);
+                }
+                else{
+                    $("#sale_price").hide(1000);
+                }
+            }
+            function open8WeekInput() {
+                if(document.getElementById("8weeks_check").checked){
+                    $("#8weeks_rent_price").show(1000);
+                }
+                else{
+                    $("#8weeks_rent_price").hide(1000);
+                }
+            }
+        </script>
+    {% endblock %}
 </head>
 <body>
 {% block body %}
-    <form method="post" action="." enctype="multipart/form-data">{% csrf_token %}
-    {{ form.as_p }}
+    <div class="container overflow:scroll;">
+    <h1 class="vidaloka-font jumbotron alert-success">
+        List A New Book
+    </h1>
+    <form class="form-group vidaloka-font" method="post" action="." enctype="multipart/form-data">{% csrf_token %}
+        {% load bootstrap %}
+            {{ form|bootstrap}}
     <div>
         <label>
-            <input type="checkbox" name="for_short_term_rent">
+            <input type="checkbox" onclick="openShortTermInput()" name="for_short_term_rent" id="short_term">
             For Short Term Rent
         </label>
         <label>
-            <input type="checkbox" name="for_long_term_rent">
+            <input type="checkbox" onclick="openLongTermInput()" name="for_long_term_rent" id="long_term">
                 For Long Term Rent
         </label>
         <label>
-            <input type="checkbox" name="for_sale">
+            <input type="checkbox" onclick="openBuyInput()" name="for_sale" id="sale">
             For Sale
-        </label>
-        <label>
-            <input type="checkbox" name="for_trade">
-            For Trade
         </label>
     </div>
         <br>
@@ -32,8 +72,62 @@
             Click All That Applies
         </div>
         <br>
-        <input type="submit" value="Register Book">
+        <div row>
+             <div hidden class="col-md-2" id="short-term-rent">
+                 <label>
+                     Enter Rent Per Day in $
+                     <input class="form-control" type="number" value="Enter Rent Per Day" name="short_term_rent_price">
+                        <label>
+                            Earliest Date That You Need The Book Back
+                            <input type="date" name="date_of_short_term_rent">
+                        </label>
+                        </label>
+            </div>
+            <div hidden class="col-md-2" id="long_term_rent_price">
+                <label>
+                        Semester Renter Price in $
+                <input class="form-control" type="number" value="Enter Rent Per Semester" name="long_term_rent_price">
+                            <label>
+                                    Return Date (Last Day Of The Semester)
+                                    <input class="form-control" type="date" name="date_of_long_term_rent">
+                                </label>
+                            <label>
+                                    8 Weeks?
+                                <input class="form-control" type="checkbox" onclick="open8WeekInput()" name="8weeks_rent_price" id="8weeks_check">
+                            </label>
+                     <div class="row" hidden id="8weeks_rent_price">
+                                <label>
+                                    8 week course in $
+                                    <input class="form-control" type="number" name="8weekCourse"
+                                        value="Enter 8 weeks cost amount">
+                                </label>
+                                <label>
+                                    Return Date
+                                    <input class="form-control" type="date" name="date_of_8weeks">
+                                </label>
+                            </div>
+                    </label>
+                </div>
+                <div hidden class="col-md-2" id="sale_price">
+                    <label>
+                        Sales Price in $:
+                        <input class="form-control" type="number" name="sales_price">
+                    </label>
+                </div>
+            </div>
+            <div>
+                <input class="btn btn-lg btn-success" type="submit" value="Register Book">
+            </div>
         </form>
+    </div>
 {% endblock %}
+    {% block javascript_extra %}
+    <script>
+        openShortTermInput();
+        openLongTermInput();
+        openBuyInput();
+        open8WeekInput();
+    </script>
+    {% endblock %}
 </body>
 </html>

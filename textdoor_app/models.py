@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from datetime import datetime
 from django.core.urlresolvers import reverse
 from django.template.defaultfilters import slugify
+from image_cropping import ImageRatioField
 
 
 class EludeUserAddress(models.Model):
@@ -29,13 +30,15 @@ class Book(models.Model):
     short_term_rent = models.BooleanField(default=False)
     for_buy = models.BooleanField(default=False)
     book_condition = models.CharField(max_length=25)
-    for_trade = models.BooleanField(default=False)
     need_investment = models.BooleanField(default=False)
     author = models.CharField(max_length=500)
-    price = models.FloatField(default=0.00)
+    sales_price = models.CharField(default="0.00", max_length=500)
+    rent_price = models.CharField(default="0.00", max_length=500)
+    short_term_rent_price = models.CharField(default="0.00", max_length=500)
+    eight_weeks_rent_price = models.CharField(default="0.00", max_length=500)
     publish_date = models.DateTimeField(db_index=True, blank=True, default=datetime.now)
     book_owner = models.ForeignKey(EludeUser, default='')
-    slug = models.SlugField()
+    slug = models.SlugField(max_length=100)
 
     #come back to this search later
     #objects = SearchManager(('title', 'isbn_number', 'author'))
@@ -44,11 +47,11 @@ class Book(models.Model):
         return self.title
 
     def get_absolute_url(self):
-        return reverse('single_book_description', args=(self.pk, self.id, self.slug ))
+        return reverse('single_book_description', args=(self.id, self.slug))
 
     def save(self, *args, **kwargs):
         if not self.slug:
-            self.slug = slugify(self.title)
+            self.slug = slugify("%s%s" % (self.title, str(self.id)))
         super(Book, self).save(*args, **kwargs)
 
 
@@ -58,6 +61,7 @@ class Watchlist(models.Model):
 
     def __str__(self):
         return self.book.title
+
 
 class OrderHistory(models.Model):
     book = models.ForeignKey(Book, default='No order history')
@@ -71,9 +75,11 @@ class BookImage(models.Model):
     image_name = models.CharField(max_length=100)
     book_image = models.ImageField(upload_to='image/%Y/%m/%d', verbose_name="book image")
     book = models.ForeignKey(Book, default='')
+    cropping = ImageRatioField('book_image', '430x360')
 
     def __str__(self):
         return self.image_name
+
 
 class MerchantGroup(models.Model):
     user = models.ForeignKey(EludeUser)
@@ -91,59 +97,60 @@ class RepGroup(models.Model):
     user = models.ForeignKey(EludeUser)
 
 
-class BookRentedOut(models.Model):
+class BookAcquiredByRent(models.Model):
     user = models.ForeignKey(EludeUser)
     book = models.ForeignKey(Book)
-    time_received = models.DateTimeField(verbose_name="Time book was received")
-    additional_information = models.TextField(verbose_name="Additional Information about book rental i.e length of rent")
-    time_book_was_rented_out = models.DateTimeField(verbose_name="Time book was rented out")
-    has_book_been_returned = models.BooleanField(default=False, verbose_name="Has book been Returned")
-    type_of_rent = models.CharField(default=None, verbose_name="Length of Book's Rent", max_length=250)
-    price = models.CharField(default=None, max_length=250)
+    rented_date = models.DateTimeField()
+    additional_information = models.TextField()
+    return_date = models.DateTimeField()
+    has_book_been_returned = models.BooleanField(default=False)
+    type_of_rent = models.CharField(default=None, max_length=250)
 
-class BookYouAreRenting(models.Model):
+
+class BookListedAsRent(models.Model):
     user = models.ForeignKey(EludeUser)
     book = models.ForeignKey(Book)
-    time_received = models.DateTimeField(verbose_name="Time renting began")
-    additional_information = models.TextField(verbose_name="Additional Information about book rental i.e length of rent")
-    time_book_was_rented_out = models.DateTimeField(verbose_name="Time renting ended or should end")
-    has_book_been_returned = models.BooleanField(default=False, verbose_name="Has book been Returned to owner?")
-    type_of_rent = models.CharField(default='None', verbose_name="Length of Book's Rent", max_length=250)
-    price = models.CharField(default=None, max_length=250)
+    time_received = models.DateTimeField(auto_now_add=True)
+    additional_information = models.TextField()
+    return_date = models.DateTimeField()
+    type_of_rent = models.CharField(default='None',
+                                    max_length=250)
 
-class BookTradingOut(models.Model):
+
+class BooksYourAreRenting(models.Model):
     user = models.ForeignKey(EludeUser)
-    book = models.ForeignKey(Book, related_name='your_book')
-    time_received = models.DateTimeField(verbose_name="Time book was received", default=None)
-    additional_information = models.TextField(verbose_name="Additional Information about book trade i.e length of trade")
-    length_of_trade = models.CharField(verbose_name="Length of trade", default='None', max_length=250)
-    has_book_been_returned = models.BooleanField(default=False, verbose_name="Has book been Returned")
-    item_traded_for_if_not_book = models.CharField(default=None, verbose_name="Item traded for, if not book", max_length=250)
-    book_gotten_in_trade = models.ForeignKey(Book, related_name='book_gotten_in_trade')
-    time_book_was_traded = models.DateTimeField(verbose_name="Time book was traded out", default=None)
-    price = models.CharField(default=None, max_length=250)
+    book = models.ForeignKey(BookListedAsRent, related_name='your_book')
+    has_book_been_returned = models.BooleanField(default=False)
 
 
-class BookYouSold(models.Model):
+class ListedBookForSale(models.Model):
     user = models.ForeignKey(EludeUser)
     book = models.ForeignKey(Book)
-    additional_information = models.TextField(verbose_name="Additional Information about book sold")
-    time_book_was_sold = models.DateTimeField(verbose_name="Time book was sold")
-    price = models.CharField(default=None, max_length=250)
+    additional_information = models.TextField(default="No additional information")
 
 
-class BookYouBought(models.Model):
+class SoldBooks(models.Model):
+    user = models.ForeignKey(EludeUser)
+    book = models.ForeignKey(ListedBookForSale)
+    time_book_was_sold = models.DateTimeField()
+
+
+class PurchasedBooks(models.Model):
     user = models.ForeignKey(EludeUser)
     book = models.ForeignKey(Book)
-    additional_information = models.TextField(verbose_name="Additional Information about book rental i.e length of rent")
-    time_book_was_bought = models.DateTimeField(verbose_name="Time book was bought")
-    price = models.CharField(default=None, max_length=250)
+    additional_information = models.TextField()
+    time_book_was_bought = models.DateTimeField()
+
 
 class NewTransactionProcess(models.Model):
     user = models.ForeignKey(EludeUser, default="guest")
     book = models.ManyToManyField(Book)
     slug = models.SlugField()
-    at_least_one_book_sold = models.BooleanField(default=False, verbose_name="Check if user bought at least a textbook")
+    date = models.DateTimeField(auto_now_add=True)
 
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify("%s%s" % (self.title, str(self.id)))
+        super(NewTransactionProcess, self).save(*args, **kwargs)
 
 

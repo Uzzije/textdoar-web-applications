@@ -1,0 +1,27 @@
+{% extends 'search_bar.html' %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Payment{% endblock %}</title>
+</head>
+<body>
+{% block body %}
+    <div class="container-fluid center col-md-4 col-md-offset-4">
+    <div class="jumbotron vidaloka-font center">
+        <h1 class="panel-title display-td" >Payment Details</h1>
+        <div class="display-td" >
+            <img class="img-responsive pull-right" src="http://i76.imgup.net/accepted_c22e0.png">
+        </div>
+    </div>
+        <form method="post" role="form">{% csrf_token %}
+            <div class="form-group">
+            {{ form.as_p }}
+            </div>
+        <button class="btn btn-danger" type="submit" name="payment">Make Payment</button >
+        </form>
+    </div>
+
+{% endblock %}
+</body>
+</html>

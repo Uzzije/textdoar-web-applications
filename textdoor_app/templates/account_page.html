@@ -1,0 +1,13 @@
+{% extends 'search_bar.html' %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}{{ user_name }} Account Page{% endblock %}</title>
+</head>
+<body>
+    {% block body %}
+        <a href="{% url 'address_entry_page' user_name %}">Enter Delivery Address</a>
+{% endblock %}
+</body>
+</html>

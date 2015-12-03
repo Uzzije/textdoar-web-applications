@@ -1,20 +1,40 @@
-{% extends 'search_results.html' %}
+{% extends 'search_bar.html' %}
 <!DOCTYPE html>
 <html>
 <head lang="en">
     <meta charset="UTF-8">
-    <title>{% block title %}{{ user_name }}, Books{% endblock %}</title>
+    <title>{% block title %}{{ request.user.username }}, Books{% endblock %}</title>
 </head>
 <body>
 {% block body %}
-<div class="content">
-    {% block content %}
-        {% for book in user_book %}
-            {{ book.title }}
-            {{ book.author }}
-            {{ book.book_condition }}
+<div class="container-fluid roboto-font">
+        {% for book, book_image in user_book %}
+            <p><h1>{{ book.title }}</h1></p>
+                <div class="row">
+                    <div class="col-md-3">
+                        {% if book_image %}
+                           {% load staticfiles %}
+                            {% for pic in book_image %}
+                              <h2><img src = '{% static 'media' %}/{{ pic.book_image }}' style="width:100%;height:100%;"></h2>
+                            {% endfor %}
+                            {% endif %}
+                    </div>
+         <div class="col-md-3">
+            <p><b><h1>Author: {{ book.author }}</h1></b></p>
+            <p><b><h2>Condition: {{ book.book_condition }}</h2></b></p>
+            <p><b><h3>ISBN: {{ book.isbn_number }}</h3></b></p>
+             <p><b><h4>Price: ${{ book.sales_price }}</h4></b></p>
+        </div>
+
+                <div class="col-md-4">
+                <form method="post" action="{% url 'single_book_description' book.id book.slug %}">{% csrf_token %}
+                     <p><input class="btn btn-lg btn-primary" name="watch-list" type="submit" value="Watch List"/></p>
+                     <p><input class="btn btn-lg btn-primary" id="add_to_cart" name="add_to_cart" type="submit" value="Add To Cart"/></p>
+                </form>
+                    </div>
+                </div>
+             </div>
         {% endfor %}
-    {% endblock %}
 {% endblock %}
 </div>
 </body>

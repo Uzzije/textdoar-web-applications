@@ -23,5 +23,5 @@ BOOK_CONDITION = \
                   ('Good', 'Good'),
                   ('Like', 'Like New')
     ]
-TYPE_OF_RENT = [('Long Term', 'Long Term i.e half a semester or longer'), ('Meduim Term', 'Medium Term, i.e a few weeks'),
+TYPE_OF_RENT = [('Long Term', 'Long Term i.e half a semester or longer'), ('Medium Term', 'Medium Term, i.e a few weeks'),
                 ('Short Term', 'Short Term i.e a less than a couple of weeks')]
