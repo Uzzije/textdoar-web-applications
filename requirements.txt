@@ -1,6 +1,6 @@
 django>=1.8.0, <1.9.0
 django_static_jquery==2.1.1
-git+ssh://git@github.com/benbacardi/django-jquery-ui.git#egg=django-jquery-ui
+django-jquery-ui==1.11.4
 django-localflavor==1.1
 easy-thumbnails==2.2.1
 django-image-cropping==1.0.2
