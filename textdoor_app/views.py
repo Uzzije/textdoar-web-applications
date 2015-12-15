@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.models import User
 from django.views.generic import View, FormView
 from form_views import form_templates
-from models import EludeUser, BookImage, Book, Watchlist, BookListedAsRent, BookAcquiredByRent, ListedBookForSale, \
+from models import EludeUser, BookImage, Book, Watchlist, BookListedAsRent, ListedBookForSale, \
     EludeUserAddress
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
@@ -15,6 +15,7 @@ import variables
 from datetime import datetime, timedelta
 from decimal import *
 from django.core.mail import send_mail
+from django.contrib import messages
 
 # global variables used throughout user's logged in time
 saved_variable_for_search = 'Find Your Book'
@@ -245,9 +246,6 @@ class SearchResultView(View):
         global guest_state
         global book_image_list_for_search
         book_image_list_for_search = []
-        query_string = saved_variable_for_search
-        entry_query = search_algorithm.get_query(query_string, ['title', 'isbn_number', 'author'])
-        found_entries = Book.objects.filter(entry_query).order_by('publish_date')
         if 'q' in request.GET and request.GET['q'].strip():
             query_string = str(request.GET['q'])
             entry_query = search_algorithm.get_query(query_string, ['title', 'isbn_number', 'author'])
@@ -257,17 +255,23 @@ class SearchResultView(View):
             query_string = saved_variable_for_search
             entry_query = search_algorithm.get_query(query_string, ['title', 'isbn_number', 'author'])
             found_entries = Book.objects.filter(entry_query).order_by('publish_date')
+        else:
+            query_string = saved_variable_for_search
+            entry_query = search_algorithm.get_query(query_string, ['title', 'isbn_number', 'author'])
+            found_entries = Book.objects.filter(entry_query).order_by('publish_date')
         if request.user.is_authenticated():
             saved_variable_for_search = "Nothing Was Found"
         if found_entries:
             for book in found_entries:
                 book_image = BookImage.objects.filter(book=book).values()
                 book_image_list_for_search.append((book, book_image))
+        delivery_time = datetime.now() + timedelta(hours=24)
+        delivery_time = delivery_time.strftime("%A %d. %B %Y")
         return render(request, 'search_results.html', {'query_string': query_string, 'found_entries': found_entries,
                                                        'user_name':user_name, 'guest_state': guest_state,
                                                        'redirect_page': redirect_page_to_search,
                                                        'cart': shopping_cart_list, 'list_of_book_image':
-                                                           book_image_list_for_search},
+                                                           book_image_list_for_search, 'delivery_time': delivery_time},
                       context_instance=RequestContext(request))
 
     def post(self, request, user_name):
@@ -301,9 +305,7 @@ class SingleBookDescriptionView(LoggedInMixin, View):
     def get(self, request, book_id, slug):
         global guest_state
         global redirect_page_to_search
-        if request.user.is_authenticated():
-            guest_state = "false"
-            redirect_page_to_search = False
+        redirect_page_to_search = False
         book = get_object_or_404(Book, slug=slug)
         book_image = BookImage.objects.filter(book=book).values()
         return render(request, 'book_discription_view.html', {'book':book,'book_id':book_id,
@@ -315,6 +317,8 @@ class SingleBookDescriptionView(LoggedInMixin, View):
         global shopping_cart_list
         global guest_state
         global redirect_page_to_search
+        book = get_object_or_404(Book, slug=slug)
+        book_image = BookImage.objects.filter(book=book).values()
         if 'watch-list' in request.POST:
             book = get_object_or_404(Book, slug=slug)
             if request.user.is_authenticated():
