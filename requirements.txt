@@ -1,27 +1,7 @@
-Searching for pip
-Best match: pip 7.0.3
-Processing pip-7.0.3-py2.7.egg
-pip 7.0.3 is already the active version in easy-install.pth
-Installing pip script to /usr/local/bin
-Installing pip2.7 script to /usr/local/bin
-Installing pip2 script to /usr/local/bin
-
-Using /Library/Python/2.7/site-packages/pip-7.0.3-py2.7.egg
-Processing dependencies for pip
-Finished processing dependencies for pip
-Searching for freeze
-Reading https://pypi.python.org/simple/freeze/
-Best match: freeze 1.0.9
-Downloading https://pypi.python.org/packages/source/f/freeze/freeze-1.0.9.tar.gz#md5=21b579947bced4c94ea1e967c8eb5588
-Processing freeze-1.0.9.tar.gz
-Writing /tmp/easy_install-K2imSU/freeze-1.0.9/setup.cfg
-Running freeze-1.0.9/setup.py -q bdist_egg --dist-dir /tmp/easy_install-K2imSU/freeze-1.0.9/egg-dist-tmp-DMIAsn
-Installing with cython
-
-Installing without cython
-
-Adding freeze 1.0.9 to easy-install.pth file
-
-Installed /Library/Python/2.7/site-packages/freeze-1.0.9-py2.7.egg
-Processing dependencies for freeze
-Finished processing dependencies for freeze
+django>=1.8.0, <1.9.0
+django_static_jquery==2.1.1
+git+ssh://git@github.com/benbacardi/django-jquery-ui.git#egg=django-jquery-ui
+django-localflavor==1.1
+easy_thumbnails==2.2.1
+django-image-cropping==1.0.2
+django-bootstrap-form
