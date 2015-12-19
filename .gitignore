@@ -3,3 +3,4 @@ setting_secret.py
 
 # idea
 *.idea
+*.DS_store
