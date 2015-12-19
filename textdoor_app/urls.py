@@ -5,7 +5,6 @@ from django.conf.urls import url
 import textdoor_app.views
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
-from . import views
 
 urlpatterns = [
     url(r'^signup/$', textdoor_app.views.SignUpPageView.as_view(), name='user_registration_page'),
