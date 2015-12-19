@@ -13,7 +13,7 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 from django.conf.global_settings import ALLOWED_INCLUDE_ROOTS
-from setting_secret import *
+from elude_web_application.setting_secret import *
 from easy_thumbnails.conf import Settings as thumbnail_settings
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -23,7 +23,7 @@ SITE_ID = 3
 # See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'xap2qh1043h=((5st(dhxo6dok&0u0jgf)efy$zrdew7s8)1g8'
+SECRET_KEY = SECRET_KEY
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -87,23 +87,15 @@ WSGI_APPLICATION = 'elude_web_application.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'elude_db',
+        'NAME': TEST_DATABASE_NAME,
         'USER': USERNAME,
         'PASSWORD': DATABASE_PASSWORD,
     }
 }
-
-HAYSTACK_CONNECTIONS = {
-    'default': {
-        'ENGINE': 'haystack.backends.whoosh_backend.WhooshEngine',
-        'PATH': os.path.join(BASE_DIR, 'whoosh_index'),
-    },
-}
-MEDIA_ROOT = os.path.join(BASE_DIR, 'textdoor_app/static/media')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'textdoor_app/static/../../textdoor_app/static/media')
 MEDIA_URL = 'static/media/'
 # Internationalization
 # https://docs.djangoproject.com/en/1.8/topics/i18n/
