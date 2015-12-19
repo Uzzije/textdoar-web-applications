@@ -15,6 +15,7 @@ import variables
 from datetime import datetime, timedelta
 from decimal import *
 from django.core.mail import send_mail
+from braces.views import LoginRequiredMixin
 from django.contrib import messages
 
 # global variables used throughout user's logged in time
@@ -79,7 +80,9 @@ class SignUpPageView(View):
             return render(request, 'sign_up_page.html', {'form': form})
 
 
-class UserHomeProfilePage(LoggedInMixin, View):
+class UserHomeProfilePage(LoginRequiredMixin, View):
+
+    login_url = "/login/"
 
     def get(self, request, user_name):
         first_name = User.objects.get(username=request.user.username)
@@ -134,7 +137,9 @@ class LoginViews(FormView):
             return render(self.request,'log_in_page.html', {'form': form})
 
 
-class NewBookListingView(LoggedInMixin, View):
+class NewBookListingView(LoginRequiredMixin, View):
+
+    login_url = "/login/"
 
     def get(self, request, user_name):
         form = form_templates.RegisterBookForm()
@@ -207,7 +212,7 @@ class SuccessPageView(View):
         return render(request, 'success_url.html', {'user_name':user_name, 'message': message})
 
 
-class CartView(LoggedInMixin, View):
+class CartView(LoginRequiredMixin, View):
     def get(self, request, user_name):
         global shopping_cart_list
         global redirect_to_payment_page
@@ -287,7 +292,7 @@ class SearchResultView(View):
             return HttpResponseRedirect('')
 
 
-class ListOfYourBooksView(LoggedInMixin, View):
+class ListOfYourBooksView(LoginRequiredMixin, View):
 
     def get(self, request, user_name):
         user_books = []
@@ -300,7 +305,7 @@ class ListOfYourBooksView(LoggedInMixin, View):
         return render(request, 'all_user_books.html', {'user_book': user_books})
 
 
-class SingleBookDescriptionView(LoggedInMixin, View):
+class SingleBookDescriptionView(LoginRequiredMixin, View):
 
     def get(self, request, book_id, slug):
         global guest_state
@@ -354,7 +359,7 @@ class SingleBookDescriptionView(LoggedInMixin, View):
             return HttpResponseRedirect('')
 
 
-class WatchListBooksView(LoggedInMixin, View):
+class WatchListBooksView(LoginRequiredMixin, View):
 
     def get(self, request, user_name):
         user = User.objects.get(username=request.user.username)
