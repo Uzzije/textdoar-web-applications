@@ -1,0 +1,42 @@
+{% block staticfiles %}{% load staticfiles %}{% load static %}{% endblock %}
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>{% block title %}Textdoor{% endblock %}</title>
+    {% block jquery_head %}
+     <script type="text/javascript" src="{% static 'static_jquery/js/jquery.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/jquery-ui.js' %}"></script>
+        <link rel="stylesheet" type="text/css" href="{% static 'css/jquery-ui/smoothness/jquery-ui.css' %}"/>
+        <link rel="stylesheet" type="text/css" href="{% static 'bootstrap-3.3.5-dist/css/bootstrap.min.css'%}">
+        <script type="text/javascript" src="{% static 'bootstrap-3.3.5-dist/js/bootstrap.min.js' %}"></script>
+        <link rel="stylesheet" type="text/css" href="{% static 'general_design.css' %}"/>
+        <link href='https://fonts.googleapis.com/css?family=Droid+Serif' rel='stylesheet' type='text/css'>
+        <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" rel="stylesheet">
+    {% endblock %}
+{% block css_individual_page %}{% endblock %}
+{% block javascript %}{% endblock %}
+</head>
+<body>
+{% block modal_view_dialog %}{% endblock %}
+{% block check_for_login_user %}
+{% endblock %}
+{% block bar %}{% endblock %}
+<br>
+    <div class="container-fluid">
+        {% block body %}{% block search %}{% endblock %}{% endblock %}
+    </div>
+    <br>
+{% block open-box %}
+{% endblock %}
+{% block javascript_extra %}
+{% endblock %}
+{% block footer %}
+    <div class="navbar navbar-default navbar-static-bottom">
+        <div class="container">
+          <p class="navbar-text pull-left">© Elude Group LLC 2015</p>
+        </div>
+    </div>
+{% endblock %}
+</body>
+</html>

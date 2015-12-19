@@ -1,0 +1,39 @@
+{% extends 'bar.html' %}
+{% block staticfiles %}{% load staticfiles %}{% load static %}{% endblock %}
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>{% block title %}Sign Up Page{% endblock %}</title>
+</head>
+{% block search %}
+{% endblock %}
+<body>
+    {% block body %}
+        <div class="container contenter">
+        <div class="jumbotron">
+            <h1 class="roboto-font">Create an account</h1>
+            <p><h4 class="vidaloka-font">A few seconds away from connecting with fellow students
+            on campus that have the book you are looking for</h4></p>
+            <p><b>Already have an account?</b></p>
+            <p><a class="btn-primary btn-lg" href="{% url 'login_page' %}">Sign In</a> </p>
+        </div>
+  <form action="." method="post">{% csrf_token %}
+          {% load bootstrap %}
+            {{ form|bootstrap}}
+      <div>
+          <input class="btn-success btn-lg" type="submit" value="Create the account">
+      </div>
+
+  </form>
+            {% if form.errors %}
+                {% for field in form %}
+        {% for error in field.errors %}
+            <p> {{ errors }} </p>
+        {% endfor %}
+        {% endfor %}
+            {% endif %}
+        </div>
+{% endblock %}
+</body>
+</html>

@@ -1,0 +1,41 @@
+{% extends 'bar.html' %}
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Log in</title>
+</head>
+<body>
+{% block body %}
+    <div class="jumbotron roboto-font">
+       <h1>
+          Sign In
+       </h1>
+    </div>
+    <form class="form-group container" action="{% url 'login_page' %}" method="post">{% csrf_token %}
+         {% load bootstrap %}
+            {{ form|bootstrap}}
+        <div class="row container">
+            <div class="col-md-1">
+                <input class="btn-success" type="submit" value="Log In">
+            </div>
+            <div class="col-md-1">
+                <h4>OR</h4>
+            </div>
+            <div class="col-md-3">
+
+                <a class="btn-danger btn-lg" href="{% url 'user_registration_page' %}">Sign Up!</a>
+            </div>
+        </div>
+
+    </form>
+{% endblock %}
+{% block footer %}
+            <div class="navbar navbar-default navbar-fixed-bottom">
+            <div class="container">
+             <p class="navbar-text pull-left">© Elude Group LLC 2015</p>
+            </div>
+            </div>
+            {% endblock %}
+</body>
+</html>

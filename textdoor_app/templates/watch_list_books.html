@@ -1,0 +1,19 @@
+{% extends 'search_results.html' %}
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+{% block body %}
+    {% if books %}
+    {% for book in books %}
+        <p><a href="{% url 'single_book_description' book.id book %}">{{ book }}</a></p>
+    {% endfor %}
+    {% else %}
+         No book has been added to your watch list
+    {% endif %}
+{% endblock %}
+</body>
+</html>
