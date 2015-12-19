@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
-    <title>Tomedoor</title>
+    <title>Textdoar</title>
     {% block jquery_head %}
      <script type="text/javascript" src="{% static 'static_jquery/js/jquery.js' %}"></script>
         <script type="text/javascript" src="{% static 'js/jquery-ui.js' %}"></script>
@@ -65,7 +65,7 @@
             <div class="intro-text">
                 <div class="intro-lead-in">Find Your Next Textbook Within Your Campus</div>
                  {% block search %}
-            <form method="get" action="{% url 'search_result_page' user_name %}">{% csrf_token %}
+            <form method="get" action="{% url 'search_result_page' user_name %}">
                 <div class="row">
                     <div class="input-group">
                         <div class="col-lg-12">
