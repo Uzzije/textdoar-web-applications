@@ -33,7 +33,7 @@ class TextDoorHomePageView(View):
         global user_id
         global search_from_home
         search_from_home = True
-        if request.user.is_authenticated:
+        if request.user.is_authenticated():
             user_name = request.user.username
         else:
             user_name = "guest"
@@ -259,8 +259,8 @@ class SearchResultView(View):
             query_string = saved_variable_for_search
             entry_query = search_algorithm.get_query(query_string, ['title', 'isbn_number', 'author'])
             found_entries = Book.objects.filter(entry_query).order_by('publish_date')
-        if request.user.is_authenticated():
-            saved_variable_for_search = ""
+        if not request.user.is_authenticated():
+            user_name = "guest"
         if found_entries:
             for book in found_entries:
                 book_image = BookImage.objects.filter(book=book).values()
@@ -268,7 +268,7 @@ class SearchResultView(View):
         delivery_time = datetime.now() + timedelta(hours=24)
         delivery_time = delivery_time.strftime("%A %d. %B %Y")
         return render(request, 'search_results.html', {'query_string': query_string, 'found_entries': found_entries,
-                                                       'user_name':user_name, 'guest_state': guest_state,
+                                                       'user_name': user_name, 'guest_state': guest_state,
                                                        'redirect_page': redirect_page_to_search,
                                                        'cart': shopping_cart_list, 'list_of_book_image':
                                                            book_image_list_for_search, 'delivery_time': delivery_time},
