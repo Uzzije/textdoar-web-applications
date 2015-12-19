@@ -65,7 +65,7 @@
             <div class="intro-text">
                 <div class="intro-lead-in">Find Your Next Textbook Within Your Campus</div>
                  {% block search %}
-            <form method="get" action="{% url 'search_result_page' user_name %}">{% csrf_token %}
+            <form method="get" action="{% url 'search_result_page' user_name %}">
                 <div class="row">
                     <div class="input-group">
                         <div class="col-lg-12">

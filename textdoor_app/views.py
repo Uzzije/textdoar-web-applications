@@ -260,7 +260,7 @@ class SearchResultView(View):
             entry_query = search_algorithm.get_query(query_string, ['title', 'isbn_number', 'author'])
             found_entries = Book.objects.filter(entry_query).order_by('publish_date')
         if request.user.is_authenticated():
-            saved_variable_for_search = "Nothing Was Found"
+            saved_variable_for_search = ""
         if found_entries:
             for book in found_entries:
                 book_image = BookImage.objects.filter(book=book).values()
