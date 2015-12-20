@@ -54,7 +54,7 @@ class SignUpPageView(View):
         global current_search_state
         current_search_state = None
         form = form_templates.UserSignUpForm()
-        return render(request, 'sign_up_page.html', {'form': form})
+        return render(request, 'sign_up_page.html', {'form': form, 'user_name': "guest"})
 
     def post(self, request):
         form = form_templates.UserSignUpForm(request.POST)
