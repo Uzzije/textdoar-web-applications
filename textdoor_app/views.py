@@ -16,7 +16,7 @@ from datetime import datetime, timedelta
 from decimal import *
 from django.core.mail import send_mail
 from braces.views import LoginRequiredMixin
-from django.contrib import messages
+import isbnlib
 
 # global variables used throughout user's logged in time
 saved_variable_for_search = 'Find Your Book'

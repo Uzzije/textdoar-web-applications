@@ -6,3 +6,4 @@ easy-thumbnails==2.2.1
 django-image-cropping==1.0.2
 django-bootstrap-form
 django-braces==1.8.1
+isbntools==4.2.6
