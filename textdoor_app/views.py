@@ -103,7 +103,7 @@ class LogoutView(View):
 
     def get(self, request):
         logout(request)
-        return render(request, 'home_page.html')
+        return render(request, 'home_page.html', {'user_name': "guest"})
 
 
 class LoginViews(FormView):
