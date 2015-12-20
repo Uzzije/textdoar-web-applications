@@ -136,6 +136,11 @@ class LoginViews(FormView):
         else:
             return render(self.request,'log_in_page.html', {'form': form})
 
+    def get_context_data(self, **kwargs):
+        """Use this to add extra context."""
+        context = super(LoginViews, self).get_context_data(**kwargs)
+        context['user_name'] = "guest"
+        return context
 
 class NewBookListingView(LoginRequiredMixin, View):
 
