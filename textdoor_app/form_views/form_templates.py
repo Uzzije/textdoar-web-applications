@@ -38,7 +38,8 @@ class UserSignUpForm(forms.Form):
         try:
             user = User.objects.get(username=user_name)
         except User.DoesNotExist:
-            return user_name
+            if user_name is not "guest":
+                return user_name
         msg = "Username already in use"
         self.add_error('user_name', msg)
 
@@ -74,7 +75,6 @@ class LogInForm(forms.Form):
             return user
 
 
-
 class AddressBookForm(forms.Form):
     address = forms.CharField(label='Address', max_length=None, required=True, widget=forms.TextInput)
     city = forms.CharField(label='City', max_length=None, required=True)
@@ -86,9 +86,15 @@ class RegisterBookForm(forms.Form):
     book_name = forms.CharField(label='Name of Book', max_length=None, required=True)
     author = forms.CharField(label='Author', max_length=None, required=True)
     isbn = forms.CharField(max_length=500, label='ISBN Number')
-    images = forms.ImageField(label='Book Images', required=False)
+    images = forms.ImageField(label='Upload Your Own Image(Optional)', required=False)
     book_condition = forms.ChoiceField(label='Book Condition', choices=BOOK_CONDITION, widget=forms.Select(),
                                        required=True)
+    book_edition = forms.CharField(max_length=100, label="Book Edition (leave blank if no volume or edition has been issued to book)",
+                                   required=False)
+    book_price = forms.CharField(max_length=100, label="Selling Price($)", required=True)
+    book_description = forms.CharField(max_length=5000, label="Is there anything else you would like the buyer "
+                                                             "to know about this book (Optional)", widget=forms.Textarea,
+    required=False)
 
 
 class CreditCardField(forms.IntegerField):

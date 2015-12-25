@@ -18,6 +18,7 @@ def normalize_query(query_string,
     '''
     return [normspace(' ', (t[0] or t[1]).strip()) for t in findterms(query_string)]
 
+
 def get_query(query_string, search_fields):
     ''' Returns a query, that is a combination of Q objects. That combination
         aims to search keywords within a model by testing the given search fields.

@@ -24,7 +24,7 @@
         {% block search %}{% endblock %}
     </div>
     <ul class="nav navbar-nav navbar-right">
-      <li><a class="btn pull-right" href="{% url 'new_book_entry_page' user_name %}">
+      <li><a class="btn pull-right" href="{% url 'isbn_entry_page' user_name %}">
           <span class="glyphicon"></span>List a Textbook</a></li>
         <li> <a href="{% url 'cart_page' user_name %}">Cart</a> </li>
         <li><a href="{% url 'user_home_profile_page' user_name %}">Your Home Page</a></li>

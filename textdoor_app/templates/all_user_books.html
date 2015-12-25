@@ -9,7 +9,7 @@
 {% block body %}
 <div class="container-fluid roboto-font">
         {% for book, book_image in user_book %}
-            <p><h1>{{ book.title }}</h1></p>
+            <p><h1>{{ book.title }},{{ book.book_edition }}</h1></p>
                 <div class="row">
                     <div class="col-md-3">
                         {% if book_image %}

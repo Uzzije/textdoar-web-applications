@@ -48,6 +48,7 @@ INSTALLED_APPS = (
     'easy_thumbnails',
     'image_cropping',
     'bootstrapform',
+    'rest_framework'
 )
 
 MIDDLEWARE_CLASSES = (
@@ -95,7 +96,14 @@ DATABASES = {
         'PASSWORD': DATABASE_PASSWORD,
     }
 }
-MEDIA_ROOT = os.path.join(BASE_DIR, 'textdoor_app/static/../../textdoor_app/static/media')
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+    }
+}
+SESSION_ENGINE = "django.contrib.sessions.backends.cache"
+MEDIA_ROOT = os.path.join(BASE_DIR, '../textdoor_app/static/media/')
 MEDIA_URL = 'static/media/'
 # Internationalization
 # https://docs.djangoproject.com/en/1.8/topics/i18n/
