@@ -160,7 +160,7 @@ class LoginViews(FormView):
         return context
 
 
-class ISBNView(LoginRequiredMixin, View):
+class ISBNView(View):
 
     def get(self, request, user_name):
         return render(request, 'isbn_entry.html', {'user_name': user_name})
