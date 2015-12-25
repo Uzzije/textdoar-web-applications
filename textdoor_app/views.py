@@ -89,8 +89,6 @@ class SignUpPageView(View):
 
 class UserHomeProfilePage(LoginRequiredMixin, View):
 
-    login_url = "/login/"
-
     def get(self, request, user_name):
         if not request.user.is_authenticated():
             user_name = "guest"
@@ -163,7 +161,6 @@ class LoginViews(FormView):
 
 
 class ISBNView(LoginRequiredMixin, View):
-    login_url = "/login/"
 
     def get(self, request, user_name):
         return render(request, 'isbn_entry.html', {'user_name': user_name})
@@ -240,8 +237,6 @@ class ISBNView(LoginRequiredMixin, View):
 
 
 class NewBookListingView(LoginRequiredMixin, View):
-
-    login_url = "/login/"
 
     def get(self, request, user_name):
         try:
