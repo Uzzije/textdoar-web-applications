@@ -29,6 +29,11 @@ SECRET_KEY = SECRET_KEY
 DEBUG = True
 
 ALLOWED_HOSTS = []
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'email@textdoar.com'
+EMAIL_HOST_PASSWORD = 'Bmotbjgm1'
+EMAIL_PORT = 587
 
 
 # Application definition
@@ -48,7 +53,8 @@ INSTALLED_APPS = (
     'easy_thumbnails',
     'image_cropping',
     'bootstrapform',
-    'rest_framework'
+    'rest_framework',
+    'pinax.stripe'
 )
 
 MIDDLEWARE_CLASSES = (
@@ -97,12 +103,6 @@ DATABASES = {
     }
 }
 
-CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
-    }
-}
-SESSION_ENGINE = "django.contrib.sessions.backends.cache"
 MEDIA_ROOT = os.path.join(BASE_DIR, '../textdoor_app/static/media/')
 MEDIA_URL = 'static/media/'
 # Internationalization

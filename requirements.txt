@@ -9,3 +9,4 @@ django-braces==1.8.1
 isbnlib==3.5.7
 djangorestframework==3.3.2
 requests==2.9.1
+pinax-stripe-3.0.0

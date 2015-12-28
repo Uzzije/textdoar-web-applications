@@ -13,9 +13,8 @@ from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 import variables
 from datetime import datetime, timedelta
-import time
 from decimal import *
-from django.core.mail import send_mail
+from django.core.mail import EmailMessage
 from braces.views import LoginRequiredMixin
 import isbnlib
 import urllib2
@@ -78,9 +77,7 @@ class SignUpPageView(View):
 
             elude_user = EludeUser(username=user, college_attending=college_attending, new_user=True)
             elude_user.save()
-            if redirect_page_to_search:
-                return HttpResponseRedirect(reverse('search_result_page',
-                                                    kwargs={'user_name':user_name}))
+            #customers.create(user=elude_user)
             return HttpResponseRedirect(reverse('user_home_profile_page',
                                                 kwargs={'user_name': user_name}))
         else:
@@ -224,25 +221,29 @@ class ISBNView(View):
                 return render(request, 'isbn_entry.html', {'user_name': self.request.user.username, 'value': value,
                                                            'error':error})
         if request.POST.get("finalizing_list"):
-            if request.session['dictionary']:
+            try:
+                self.request.session.get('dictionary', False)
+            except (KeyError, TypeError):
                 return HttpResponseRedirect(reverse('new_book_entry_page',
                                                         kwargs={'user_name':self.request.user.username}))
-            else:
-                return render(request, 'isbn_entry.html', {'user_name': self.request.user.username,
-                                                           'dictonary':request.session['dictionary'],
-                                                           'error':error})
+
+            return HttpResponseRedirect(reverse('new_book_entry_page', kwargs={'user_name': self.request.user.username}))
         if request.POST.get("manually_list"):
             return HttpResponseRedirect(reverse('new_book_entry_page',
-                                                    kwargs={'user_name':self.request.user.username}))
+                                                    kwargs={'user_name': self.request.user.username}))
 
 
 class NewBookListingView(LoginRequiredMixin, View):
 
     def get(self, request, user_name):
+        if request.user.is_authenticated():
+            user_name = self.request.user.username
+        else:
+            user_name = "guest"
         try:
             dictionary_new = self.request.session.get('dictionary', False)
         except (KeyError, TypeError):
-            return HttpResponseRedirect(reverse('isbn_entry_page', kwargs={'user_name':self.request.user.username}))
+            return HttpResponseRedirect(reverse('isbn_entry_page', kwargs={'user_name':user_name}))
         try:
             form = form_templates.RegisterBookForm(initial={'book_name':dictionary_new['isbn_title'],
                                                             'author':dictionary_new['isbn_author'],
@@ -320,8 +321,9 @@ class SuccessPageView(View):
 
 class CartView(LoginRequiredMixin, View):
     def get(self, request, user_name):
-        global shopping_cart_list
+        shopping_cart = self.request.session.get('shopping_cart')
         global redirect_to_payment_page
+        cart = []
         total_order = 0
         elude_user = EludeUser.objects.get(username=request.user)
         if elude_user.address.count() is 0:
@@ -332,18 +334,21 @@ class CartView(LoginRequiredMixin, View):
             has_address = True
         delivery_time = datetime.now() + timedelta(hours=24)
         delivery_time = delivery_time.strftime("%A %d. %B %Y")
-        for item in shopping_cart_list:
-            total_order += Decimal(item.sales_price)
-        return render(request, 'cart.html', {'cart': shopping_cart_list,'user_name': user_name,
+        if shopping_cart_list is not None:
+            for item in shopping_cart:
+                book = get_object_or_404(Book, id=item)
+                cart.append(book)
+                total_order += Decimal(book.sales_price)
+        return render(request, 'cart.html', {'cart': cart,'user_name': user_name,
                                              'has_address': has_address, 'delivery_time':delivery_time, 'total_order':
                                              total_order})
 
     def post(self, request, user_name):
-        global shopping_cart_list
+        dynamic_cart = self.request.session.get('shopping_cart')
         if 'remove-book' in request.POST:
             book_id = request.POST.get("remove-book")
-            book = Book.objects.get(id=book_id)
-            shopping_cart_list.remove(book)
+            del dynamic_cart[book_id]
+            self.request.session['shopping_cart'] = dynamic_cart
             return HttpResponseRedirect('')
         return HttpResponseRedirect('')
 
@@ -372,6 +377,8 @@ class SearchResultView(View):
             found_entries = Book.objects.filter(entry_query).order_by('publish_date')
         if not request.user.is_authenticated():
             user_name = "guest"
+        else:
+            user_name = self.request.user.username
         if found_entries:
             for book in found_entries:
                 book_image = BookImage.objects.filter(book=book).values()
@@ -417,7 +424,6 @@ class SingleBookDescriptionView(LoginRequiredMixin, View):
                                                               'guest_state': guest_state})
 
     def post(self, request, book_id, slug):
-        global shopping_cart_list
         global guest_state
         global redirect_page_to_search
         book = get_object_or_404(Book, id=book_id)
@@ -441,12 +447,12 @@ class SingleBookDescriptionView(LoginRequiredMixin, View):
             return HttpResponseRedirect('')
 
         if 'add_to_cart' in request.POST:
-            book = get_object_or_404(Book, id=book_id)
-            if len(shopping_cart_list) > 0:
-                if book not in shopping_cart_list:
-                    shopping_cart_list.append(book)
-            else:
-                shopping_cart_list.append(book)
+            shopping_cart_lists = self.request.session.get('shopping_cart')
+            if shopping_cart_lists is None:
+                shopping_cart_lists = {book_id:book_id}
+            elif book_id not in shopping_cart_lists:
+                shopping_cart_lists[book_id] = book_id
+            self.request.session['shopping_cart'] = shopping_cart_lists
             if request.user.is_authenticated():
                 guest_state = "false"
                 redirect_page_to_search = False
@@ -531,8 +537,9 @@ class PaymentView(LoggedInMixin, View):
         global message
         if 'payment' in request.POST:
             message = variables.MAKE_PAYMENT
-            send_mail(variables.BOUGHT_BOOK_MESSAGE_EMAIL_SUBJECT, 'Congratulation. You should take a picture',
-                      variables.TEXTDOOR_EMAIL, ['Uzzije2000@yahoo.co.uk'], fail_silently=False)
+            email = EmailMessage(variables.BOUGHT_BOOK_MESSAGE_EMAIL_SUBJECT, 'Congratulation. You should take a picture',
+                      variables.TEXTDOAR_EMAIL, ['Uzzije2000@yahoo.co.uk'])
+            email.send()
             return HttpResponseRedirect(reverse('success_url_page', kwargs={'user_name': request.user.username}))
 
 
