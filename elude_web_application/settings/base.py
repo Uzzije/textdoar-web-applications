@@ -54,7 +54,6 @@ INSTALLED_APPS = (
     'image_cropping',
     'bootstrapform',
     'rest_framework',
-    'pinax.stripe'
 )
 
 MIDDLEWARE_CLASSES = (
