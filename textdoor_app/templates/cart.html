@@ -44,7 +44,7 @@
                  <div class="row container-fluid">
                 {% if cart %}
                     {% if has_address %}
-                        <p><a type="button" class="btn btn-danger btn-lg" href="{% url 'payment_page' user_name %}">Checkout</a></p>
+                        <p><a type="button" class="btn btn-danger btn-lg" href="{% url 'payment_page' %}">Checkout</a></p>
                     {% else %}
                         <p><button type="button" class="btn btn-danger" data-toggle="modal" data-target="#address">Checkout</button></p>
                     {% endif %}
