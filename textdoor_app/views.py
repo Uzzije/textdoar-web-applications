@@ -525,7 +525,7 @@ class AccountView(LoggedInMixin, View):
 
 
 class PaymentView(LoggedInMixin, View):
-    def get(self, request, user_name):
+    def get(self, request):
         if not request.user.is_authenticated():
             user_name = "guest"
         else:
@@ -533,7 +533,7 @@ class PaymentView(LoggedInMixin, View):
         form = form_templates.PaymentForm()
         return render(request, 'payment_page.html', {'user_name': user_name, 'form': form})
 
-    def post(self, request, user_name):
+    def post(self, request):
         global message
         if 'payment' in request.POST:
             message = variables.MAKE_PAYMENT

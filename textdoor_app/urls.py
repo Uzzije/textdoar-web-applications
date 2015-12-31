@@ -27,7 +27,7 @@ urlpatterns = [
     url(r'^(?P<user_name>.*)/cart/$', textdoor_app.views.CartView.as_view(), name='cart_page'),
     url(r'^(?P<user_name>.*)/account/address/$', textdoor_app.views.AddressView.as_view(), name='address_entry_page'),
     url(r'^(?P<user_name>.*)/account/$', textdoor_app.views.AccountView.as_view(), name='account_page'),
-    url(r'^(?P<user_name>.*)/payment/$', textdoor_app.views.PaymentView.as_view(), name='payment_page'),
+    url(r'^payment/$', textdoor_app.views.PaymentView.as_view(), name='payment_page'),
     url(r'^(?P<user_name>.*)/isbn-finder/$', textdoor_app.views.ISBNView.as_view(), name='isbn_entry_page'),
 ]
 urlpatterns += staticfiles_urlpatterns()
