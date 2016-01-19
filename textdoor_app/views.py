@@ -24,12 +24,13 @@ from django.core.files.temp import NamedTemporaryFile
 import string
 import stripe
 from helper_functions import application_fee_amount
-from elude_web_application.setting_secret import TEST_STRIPE_API_KEY
+from elude_web_application.setting_secret import TEST_STRIPE_API_KEY, STRIPE_LIVE_SECRET_KEY, STRIPE_LIVE_PUBLISHABLE_KEY
 from django.contrib import messages
 import os, stat
 from delete_isbn_pic_dir import DELETE_PIC_DIR
 from templated_email import send_templated_mail
 from django.core.exceptions import ObjectDoesNotExist
+from django.http import Http404
 # global variables used throughout user's logged in time
 
 book_image_list_for_search = []
@@ -71,7 +72,7 @@ class SignUpPageView(View):
             send_templated_mail(
                 template_name='activation_email',
                 from_email='no reply',
-                recipient_list=['Uzzije2000@yahoo.co.uk'],
+                recipient_list=['email@textdoar.com', email],
                 context={
                     'activation_code': activation_code,
                      'user_name': elude_user.username.username,
@@ -111,17 +112,29 @@ class UserHomeProfilePage(LoginRequiredMixin, View):
 
 class SellingInformationView(View):
     def get(self, request):
-        return render(request, 'selling_a_textbook_info_page.html')
+        if request.user.is_authenticated():
+            user_name = request.user.username
+        else:
+            user_name = "guest"
+        return render(request, 'selling_a_textbook_info_page.html', {'user_name':user_name})
 
 
 class BuyingInformationView(View):
     def get(self, request):
-        return render(request, 'buying_a_textbook_info_page.html')
+        if request.user.is_authenticated():
+            user_name = request.user.username
+        else:
+            user_name = "guest"
+        return render(request, 'buying_a_textbook_info_page.html', {'user_name': user_name})
 
 
 class FAQView(View):
     def get(self, request):
-        return render(request, 'faq_page.html')
+        if request.user.is_authenticated():
+            user_name = request.user.username
+        else:
+            user_name = "guest"
+        return render(request, 'faq_page.html', {'user_name':user_name})
 
 
 class LogoutView(View):
@@ -208,7 +221,7 @@ class AccountActivationView(View):
             send_templated_mail(
                 template_name='activation_email',
                 from_email='Textdoar Team',
-                recipient_list=['Uzzije2000@yahoo.co.uk'],
+                recipient_list=['email@textdoar.com', user_email],
                 context={
                     'activation_code': activation_code,
                      'first_name': first_name,
@@ -227,7 +240,7 @@ class AccountActivationView(View):
                 send_templated_mail(
                 template_name = 'welcome_email',
                 from_email = 'Textdoar Team',
-                recipient_list = ['Uzzije2000@yahoo.co.uk'],
+                recipient_list = ['email@textdoar.com', user_email],
                 context={
                     'user_name': user.username,
                      'first_name': first_name,
@@ -243,6 +256,10 @@ class AccountActivationView(View):
 class ISBNView(View):
 
     def get(self, request, user_name):
+        if request.user.is_authenticated():
+            user_name = request.user.username
+        else:
+            user_name = "guest"
         return render(request, 'isbn_entry.html', {'user_name': user_name})
 
     def post(self, request, user_name):
@@ -347,7 +364,7 @@ class NewBookListingView(LoginRequiredMixin, View):
     def post(self, request, user_name):
         form = form_templates.RegisterBookForm(request.POST, request.FILES)
         if form.is_valid():
-            '''
+            ''' #comback to this later giving users the ability to pre-post
             if self.request.POST.get('date_specified_check'):
                 pub_date = self.request.POST.get("inputed_date")
                 pub_date_clean = datetime.strptime(pub_date, '%Y-%m-%d')
@@ -443,7 +460,7 @@ class NewBookListingView(LoginRequiredMixin, View):
             send_templated_mail(
                 template_name='new_book_listed',
                 from_email='no reply',
-                recipient_list=['Uzzije2000@yahoo.co.uk'],
+                recipient_list=['email@textdoar.com', elude_user.username.email],
                 context={
                     'book': new_book.title,
                      'isbn_number': new_book.isbn_number,
@@ -559,8 +576,9 @@ class SearchResultView(View):
                                                            book_image_list_for_search, 'delivery_time': delivery_time},
                                                                 context_instance=RequestContext(request))
 
-            return render(request, 'search_results.html', {'found_entries': None, 'form':form, 'query_string':query_string})
-        return render(request, 'search_results.html', {'no_found_entries': True})
+            return render(request, 'search_results.html', {'found_entries': None, 'form':form,
+                                                           'query_string':query_string, 'user_name':user_name})
+        return render(request, 'search_results.html', {'no_found_entries': True, 'user_name':user_name})
 
     def post(self, request, user_name):
         form = form_templates.BooksStudentNeedForm(request.POST)
@@ -586,7 +604,7 @@ class ListOfYourBooksView(LoginRequiredMixin, View):
         user_books = []
         user = User.objects.get(username=request.user)
         elude_user = EludeUser.objects.get(username=user)
-        user_book = Book.objects.filter(book_owner=elude_user)
+        user_book = Book.objects.filter(book_owner=elude_user).filter(book_is_sold=False)
         for book in user_book:
                 book_image = BookImage.objects.filter(book=book).values()
                 user_books.append((book, book_image))
@@ -806,11 +824,12 @@ class PaymentView(LoginRequiredMixin, View):
 
         form = form_templates.PaymentForm()
         return render(request, 'payment_page.html', {'user_name': user_name, 'form': form,
-                                                     'application_fee':application_fee})
+                                                     'application_fee':application_fee,
+                                                     'pub_key':STRIPE_LIVE_PUBLISHABLE_KEY})
 
     def post(self, request):
         elude_user = EludeUser.objects.get(username=self.request.user)
-        stripe.api_key = TEST_STRIPE_API_KEY
+        stripe.api_key = STRIPE_LIVE_SECRET_KEY
         try:
             token = request.POST.get("stripeToken")
         except KeyError:
@@ -892,7 +911,7 @@ class PaymentView(LoginRequiredMixin, View):
                     send_templated_mail(
                         template_name = 'user_purchase_confirmation_email',
                         from_email = 'Textdoar Team',
-                        recipient_list = ['Uzzije2000@yahoo.co.uk'],
+                        recipient_list = ['email@textdoar.com', elude_user.username.email],
                         context={
                             'first_name': elude_user.username.first_name,
                             'address': full_address,
@@ -915,7 +934,7 @@ class PaymentView(LoginRequiredMixin, View):
                     send_templated_mail(
                         template_name = 'user_sold_confirmation',
                         from_email = 'Textdoar Team',
-                        recipient_list = ['Uzzije2000@yahoo.co.uk'],
+                        recipient_list = ['email@textdoar.com', sold_book.seller.username.email],
                         context={
                             'first_name': sold_book.seller.username.first_name,
                             'pickup_day_range': start_range_of_pickup_time_str,
@@ -985,7 +1004,7 @@ class SavedCreditCardPaymentView(LoginRequiredMixin, View):
 
     def post(self, request, user_name):
         if request.POST.get("payment"):
-            stripe.api_key = TEST_STRIPE_API_KEY
+            stripe.api_key = STRIPE_LIVE_SECRET_KEY
             elude_user = EludeUser.objects.get(username=self.request.user)
             checkout_cart = self.request.session.get('shopping_cart')
             payment_data = elude_user.payment_card_info.all().get(is_user_current_option=True)
@@ -1022,7 +1041,7 @@ class SavedCreditCardPaymentView(LoginRequiredMixin, View):
                     send_templated_mail(
                     template_name = 'user_purchase_confirmation_email',
                     from_email = 'Textdoar Team',
-                    recipient_list = ['Uzzije2000@yahoo.co.uk'],
+                    recipient_list = ['email@textdoar.com', elude_user.username.email],
                     context={
                         'first_name': elude_user.username.first_name,
                         'address': full_address,
@@ -1045,7 +1064,7 @@ class SavedCreditCardPaymentView(LoginRequiredMixin, View):
                     send_templated_mail(
                     template_name = 'user_sold_confirmation',
                     from_email = 'Textdoar Team',
-                    recipient_list = ['Uzzije2000@yahoo.co.uk'],
+                    recipient_list = ['email@textdoar.com', sold_book.seller.username.email],
                     context={
                         'first_name': sold_book.seller.username.first_name,
                         'pickup_day_range': start_range_of_pickup_time_str,
@@ -1252,7 +1271,8 @@ class PaymentCardDetailView(LoginRequiredMixin, View):
         elude_user = EludeUser.objects.get(username=self.request.user)
         saved_card_details = elude_user.payment_card_info.all()
         return render(request, 'payment_card_details_page.html', {'user_name':user_name,
-                                                                  'saved_card_info': saved_card_details})
+                                                                  'saved_card_info': saved_card_details,
+                                                                  })
 
     def post(self, request, user_name):
         elude_user = EludeUser.objects.get(username=self.request.user)
@@ -1280,20 +1300,28 @@ class ErrorPageViewForStripe(LoginRequiredMixin, View):
 
     def get(self, request, user_name):
         elude_user = EludeUser.objects.get(username=self.request.user)
-        return render('error_page_for_stripe.html', {'user_name':elude_user.username.username})
+        return render(request, 'error_page_for_stripe.html', {'user_name':elude_user.username.username})
 
 
 class AboutUSView(View):
 
     def get(self, request):
-        return render(request, 'about_us.html')
+        if request.user.is_authenticated():
+            user_name = request.user.username
+        else:
+            user_name = "guest"
+        return render(request, 'about_us.html', {'user_name':user_name})
 
 
 class ContactUSView(View):
 
     def get(self, request):
         form = form_templates.StudentFeedBacksForm()
-        return render(request, 'contact_us.html', {'form':form})
+        if request.user.is_authenticated():
+            user_name = request.user.username
+        else:
+            user_name = "guest"
+        return render(request, 'contact_us.html', {'form':form, 'user_name':user_name})
 
     def post(self, request):
         form = form_templates.StudentFeedBacksForm(request.POST)
@@ -1304,9 +1332,9 @@ class ContactUSView(View):
             student_feed_back = StudentFeedBacks(email=email, feed_back=feed_back, topic=topic)
             student_feed_back.save()
             if email:
-                sending_list = ['Uzzije2000@yahoo.co.uk', email]
+                sending_list = ['email@textdoar.com', email]
             else:
-                sending_list = ['Uzzije2000@yahoo.co.uk']
+                sending_list = ['emai@textdoar.com']
             send_templated_mail(
                 template_name = 'feed_back_receive_email',
                 from_email = 'Textdoar Team',
@@ -1327,7 +1355,11 @@ class ContactUSView(View):
 class TermAndConditionView(View):
 
     def get(self, request):
-        return render(request, 'term_and_condition_page.html')
+        if request.user.is_authenticated():
+            user_name = request.user.username
+        else:
+            user_name = "guest"
+        return render(request, 'term_and_condition_page.html', {'user_name':user_name})
 
 
 

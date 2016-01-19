@@ -21,9 +21,6 @@ integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkz
                 <div class="col-md-3">
                     <small><a href='https://www.textdoar.com/privacy'>Privacy</a></small>
                 </div>
-                <div class="col-md-3">
-                    <small><a href='https://www.textdoar.com/unsubscribed'>un-subscribed</a></small>
-                </div>
             </div>
         </div>
 {% endblock %}

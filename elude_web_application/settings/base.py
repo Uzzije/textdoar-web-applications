@@ -12,7 +12,6 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
-from django.conf.global_settings import ALLOWED_INCLUDE_ROOTS
 from elude_web_application.setting_secret import *
 from easy_thumbnails.conf import Settings as thumbnail_settings
 
@@ -57,6 +56,7 @@ INSTALLED_APPS = (
     'oauth2_provider',
 )
 
+
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -66,6 +66,9 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
+
+    # custome middleware for redirecting non super users away from admin
+    'textdoor_app.middleware.custome_middleware.RestrictStaffToAdminMiddleware'
 )
 
 THUMBNAIL_PROCESSORS = (
@@ -87,6 +90,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.static',
             ],
         },
     },
@@ -120,10 +124,7 @@ USE_L10N = True
 
 USE_TZ = True
 
-
+STATIC_ROOT = os.path.join(BASE_DIR, '../textdoor_app/static/')
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, '../textdoor_app/static/'),
-    ]

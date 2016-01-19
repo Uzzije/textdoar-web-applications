@@ -41,3 +41,7 @@ html, body {
   clear:both;
   padding-top:20px;
 }
+
+.bar-font{
+    font-family: 'Bad Script', cursive;
+}

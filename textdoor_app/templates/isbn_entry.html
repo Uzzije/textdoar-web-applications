@@ -35,9 +35,9 @@
                     <div class="col-md-4">
                         <input type="submit" class="btn btn-primary btn-lg" value="Continue" name="finalizing_list">
                         <hr>
-                        <p><h5 class="roboto-font text-center">Feel free to edit what does not quite look right in the product
+                        <p><h5 class="roboto-font text-center"><b>Feel free to edit what does not quite look right in the product
                         description on the next page; this includes uploading your own picture, if you do not like the
-                        one returned to you.</h5></p>
+                        one returned to you.</b></h5></p>
                     </div>
                 </div>
                 <hr>
@@ -67,12 +67,15 @@
                         </div>
                 </div>
                 </div>
-            {% endif %}
-            {% if error%}
+            {% else %}
                     <p>
-                        Sorry, we could not retrieve the isbn number that you entered from our online library friends, however
-                        you can still list the book, and upload the picture by clicking on this link.
-                        <input type="submit" class="btn-link" name="manually_list" value="Manually List Your Textbook">
+                       <h2 class="bar-font"> Sorry, we could not retrieve the isbn number that you entered from our good friends at google books or
+                           open library, however
+                        you can still list the book, and upload the picture by clicking on this link.</h2>
+                <div class="row text-center">
+                    <h3><input type="submit" class="btn-link" name="manually_list" value="Manually List Your Textbook"></h3>
+                </div>
+
                     </p>
             {% endif %}
             </div>

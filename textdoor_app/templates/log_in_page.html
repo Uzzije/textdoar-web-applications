@@ -16,8 +16,10 @@
     {% endblock %}
 </head>
 <body>
+{% block bar %}{% endblock %}
 {% block body %}
     <div>
+        <br><br>
             <div class="col-md-12 text-center">
                     <div class="jumbotron">
                         <h2>Log in or Sign Up!</h2>
@@ -32,8 +34,11 @@
                                 <div class="modal-dialog">
                                     <br>
                                     <br>
-                                            <h3><b>Textdoar Login</b></h3>
-                                            <form class="form-group container col-md-6"method="post">{% csrf_token %}
+                                    <div class=" modal-content ">
+
+
+                                            <form class="form-group container col-md-6 col-lg-offset-3"method="post">{% csrf_token %}
+                                                 <h3><b>Textdoar Login</b></h3>
                                                     {% load bootstrap %}
                                                     {{ form|bootstrap}}
                                                 <input type="hidden" name="next" value="{{ request.GET.next }}" />
@@ -54,7 +59,7 @@
                                                         <a id="password-send-button" class="alert-link" href="{% url 'password_reset' %}"><p style="color:white">Forgot Password or Username?</p></a>
                                                     </div>
                                                 </div>
-
+                                            </div>
                                 </div>
                     </div>
         </div>

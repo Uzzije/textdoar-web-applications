@@ -12,10 +12,7 @@ djangorestframework==3.3.2
 requests==2.9.1
 django-sslserver==0.18
 django-sslify>=0.2.0
-<<<<<<< HEAD
-
-=======
 django-oauth-toolkit==0.10.0
 sanction==0.4.1
 rauth==0.7.2
->>>>>>> 119959d9ac3625fb826f675833fc8230502cfacd
+stripe==1.28.0
