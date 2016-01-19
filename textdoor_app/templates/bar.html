@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% block staticfiles %}{% load static %}{% endblock %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -17,7 +18,7 @@
       <span class="icon-bar"></span>
       <span class="icon-bar"></span>
     </button>
-    <a style="color:white" class="navbar-brand" href="{% url 'home_page'%}">textdoar</a>
+    <a style="color:white" class="navbar-brand bar-font" href="{% url 'home_page'%}"><h4>textdoar</h4></a>
   </div>
   <!-- Collect the nav links, forms, and other content for toggling -->
   <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
