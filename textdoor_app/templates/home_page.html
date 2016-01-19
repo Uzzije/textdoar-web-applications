@@ -7,49 +7,47 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
+
     <title>Textdoar</title>
-    {% block jquery_head %}
-     <script type="text/javascript" src="{% static 'static_jquery/js/jquery.js' %}"></script>
-        <script type="text/javascript" src="{% static 'js/jquery-ui.js' %}"></script>
-        <link rel="stylesheet" type="text/css" href="{% static 'css/jquery-ui/smoothness/jquery-ui.css' %}"/>
-        <link rel="stylesheet" type="text/css" href="{% static 'bootstrap-3.3.5-dist/css/bootstrap.min.css'%}">
-        <link rel="stylesheet" type="text/css" href="{% static 'bar_design.css' %}"/>
         <link rel="stylesheet" type="text/css" href="{% static 'general_design.css' %}"/>
-        <link rel="stylesheet" type="text/css" href="{% static 'startbootstrap-agency-1.0 2.5/css/agency.css' %}"/>
+        <link rel="stylesheet" type="text/css" href="{% static 'startbootstrap-agency-1.0 2.5/css/bootstrap.min.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'startbootstrap-agency-1.0 2.5/css/agency.css' %}">
+        <link rel="icon" type="image/png" href='{% static 'media/image/logo/book_only_textdoar_logo.png' %}' sizes="16x16">
+        <link rel="icon" type="image/png" href='{% static 'media/image/logo/book_only_textdoar_logo.png' %}' sizes="32x32">
     <!-- Custom Fonts -->
         <link rel="stylesheet" type=text/css href="{% static "startbootstrap-agency-1.0 2.5/font-awesome/css/font-awesome.min.css" %}"/>
         <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
         <link href='https://fonts.googleapis.com/css?family=Kaushan+Script' rel='stylesheet' type='text/css'>
         <link href='https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
         <link href='https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700' rel='stylesheet' type='text/css'>
-
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
-
-    {% endblock %}
 </head>
-<body>
-{% block bar %}
+<body id="page-top" class="index">
      <nav class="navbar navbar-default navbar-fixed-top">
         <div class="container">
             <!-- Brand and toggle get grouped for better mobile display -->
             <div class="navbar-header page-scroll">
-                    <a class="navbar-brand" href="{% url 'home_page'%}">Textdoar</a>
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand page-scroll" href="{% url 'home_page'%}">
+                    textdoar
+                    </a>
             </div>
-
             <!-- Collect the nav links, forms, and other content for toggling -->
-            <div class="collapse navbar-collapse">
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
+                    <li class="hidden">
+                        <a href="#page-top"></a>
+                    </li>
                     <li>
-                        <a class="page-scroll button btn-link" href="{% url 'isbn_entry_page' user_name %}">
+                         <a class="page-scroll" href="{% url 'isbn_entry_page' user_name %}">
                                 List a Textbook</a>
                     </li>
                     <li>
-                        <a class="page-scroll" href="{% url 'login_page' %}">Sign In</a>
+                        <a class="page-scroll" href="{% url 'user_home_profile_page' user_name %}">Sign In</a>
                     </li>
                 </ul>
             </div>
@@ -57,26 +55,21 @@
         </div>
         <!-- /.container-fluid -->
     </nav>
-    {% endblock %}
-    {% block body %}
          <!-- Header -->
     <header>
         <div class="container">
             <div class="intro-text">
                 <div class="intro-lead-in">Find Your Next Textbook Within Your Campus</div>
-                 {% block search %}
             <form method="get" action="{% url 'search_result_page' user_name %}">
                 <div class="row">
-                    <div class="input-group">
-                        <div class="col-lg-12">
-                         <input type="text" name="q" id="id_q" class="form-control glyphicon glyphicon-search"
-                   placeholder="What Book Are You Looking For?..."/>
-                        </div>
-                     <span class="input-group-btn">
-                         <input class="btn btn-default" type="submit" value="Search" name="search"/>
-                     </span>
+                            <div class="col-md-12 input-group input-group-lg">
+                               <input type="text" name="q" id="id_q" class="form-control"
+                                placeholder="Search Book By ISBN, Title or Author..."/>
+                                 <span class="input-group-btn">
+                                    <input class="btn btn-default btn-lg" type="submit" value="Search" name="search"/>
+                                </span>
+                            </div>
                    </div><!-- /.col-lg-6 -->
-                </div>
             </form>
                      <br>
                 <div class="row">
@@ -86,54 +79,89 @@
                 </div>
             </div>
         </div>
-                     {% endblock %}
                      </header>
                       <!-- How It Works Section -->
     <section id="services">
         <div class="container">
             <div class="row">
                 <div class="col-lg-12 text-center">
-                    <h2 class="section-heading">How Textdoar Works?</h2>
+                    <h2 class="section-heading">This is Textdoar</h2>
                 </div>
             </div>
             <div class="row text-center">
                 <div class="col-md-4">
                     <span class="fa-stack fa-4x">
-                        <i class="fa fa-circle fa-stack-2x text-primary"></i>
-                        <i class="fa fa-laptop fa-stack-1x fa-inverse"></i>
+                        <i class="fa  fa-stack-2x text-primary"></i>
+                        <i class="fa fa-bicycle fa-stack-1x fa-inverse"></i>
                     </span>
-                    <h4 class="service-heading">Simply Search For A TextBook</h4>
-                    <p class="text-muted">Before you set out to buy your next textbook, check to see if someone on your
-                    campus has listed the book you are looking for by searching our platform</p>
+                    <h4 class="service-heading">Local</h4>
+                    <p class="text-muted">Before you set out to buy your next textbook, we invite you to use our website
+                        to check if someone from your local campus has listed that particular textbook for sale.
+                        Simply search for the textbook by name, author or isbn number;
+                        if you find it, great! You can go ahead and purchase it online and have it delivered to you
+                        within the next two days.</p>
+                </div>
+                <div class="col-md-4">
+                     <span class="fa-stack fa-4x">
+                        <i class="fa fa-stack-2x text-primary"></i>
+                        <i class="fa fa-barcode fa-stack-1x fa-inverse"></i>
+                    </span>
+                    <h4 class="service-heading">Simple</h4>
+                    <p class="text-muted">If you are looking to sell your textbook locally, our platform provides a simple
+                    three step procedure: search for the textbook's isbn number,
+                        insert your price, connect to a stripe account (if it
+                    is your first listing), done. Once your textbook is sold, our logistics team takes care of the
+                    pick-up and delivery of your textbook.</p>
                 </div>
                 <div class="col-md-4">
                     <span class="fa-stack fa-4x">
-                        <i class="fa fa-circle fa-stack-2x text-primary"></i>
-                        <i class="fa fa-shopping-cart fa-stack-1x fa-inverse"></i>
-                    </span>
-                    <h4 class="service-heading">Buy TextBook Online</h4>
-                    <p class="text-muted">If you find the book you are looking for, Great! You can purchase it right
-                    on our website, and you will receive the book straight to your door within the next 48 hours, free
-                    delivery</p>
-                </div>
-                <div class="col-md-4">
-                    <span class="fa-stack fa-4x">
-                        <i class="fa fa-circle fa-stack-2x text-primary"></i>
+                        <i class="fa fa-stack-2x text-primary"></i>
                         <i class="fa fa-lock fa-stack-1x fa-inverse"></i>
                     </span>
-                    <h4 class="service-heading">Security</h4>
-                    <p class="text-muted">Our sellers are fellow students on your campus.
-                        Although we provide a very convenient way of listing a new textbook,
-                        our team performs background checks of all sellers and renters before their textbooks
-                        are made available to you. All deliveries are made by sellers straight to your mailbox,
-                        hence you never have to have that awkward encounter meeting them face to face.
-                        We also have our genius developers working around the clock to make sure all online
-                        transactions are safe and secure.
+                    <h4 class="service-heading">Secure</h4>
+                    <p class="text-muted">All sellers on our platform are required to have a stripe account. This process
+                        takes about a minute because the sign up application has been pre-filled for your convenience.
+                        By using stripe's payment system we are able provide a secure means of buying a textbook and
+                        a simple and quick means of receiving payment for a textbook.
                     </p>
                 </div>
             </div>
         </div>
     </section>
-{% endblock %}
+
+     <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <span class="copyright">Copyright &copy; Textdoar 2016</span>
+                </div>
+                <div class="col-md-4">
+                    <ul class="list-inline">
+                        <li><a href="{% url 'about_us_page' %}">About Us</a>
+                        </li>
+                        <li><a href="{% url 'contact_us_page'  %}">Contact Us</a>
+                        </li>
+                        <li><a href="{% url 'faq_page' %}">FAQ</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <ul class="list-inline quicklinks">
+                        <li><a class="page-scroll" href="{% url 'term_and_condition_page' %}">Terms and Conditions</a></p>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script type="text/javascript" src="{% static 'startbootstrap-agency-1.0 2.5/js/jquery.js' %}"></script>
+    <script type="text/javascript" src="{% static 'startbootstrap-agency-1.0 2.5/js/bootstrap.min.js' %}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js" type="text/javascript"></script>
+    <script type="text/javascript" src="{% static 'startbootstrap-agency-1.0 2.5/js/classie.js' %}"></script>
+    <script type="text/javascript" src="{% static 'startbootstrap-agency-1.0 2.5/js/cbpAnimatedHeader.js' %}"></script>
+    <script type="text/javascript" src="{% static 'startbootstrap-agency-1.0 2.5/js/jqBootstrapValidation.js' %}"></script>
+    <script type="text/javascript" src="{% static 'startbootstrap-agency-1.0 2.5/js/contact_me.js' %}"></script>
+    <script type="text/javascript" src="{% static 'startbootstrap-agency-1.0 2.5/js/agency.js' %}"></script>
 </body>
 </html>

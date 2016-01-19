@@ -7,7 +7,8 @@
 </head>
 <body>
     {% block bar %}
-        <nav class="navbar navbar-inverse vidaloka-font" role="navigation" >
+        <div class="">
+        <nav class="navbar navbar-default navbar-custom" role="navigation" >
   <!-- Brand and toggle get grouped for better mobile display -->
   <div class="navbar-header">
     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
@@ -16,7 +17,7 @@
       <span class="icon-bar"></span>
       <span class="icon-bar"></span>
     </button>
-    <a class="navbar-brand" href="{% url 'home_page'%}">Textdoor</a>
+    <a style="color:white" class="navbar-brand" href="{% url 'home_page'%}">textdoar</a>
   </div>
   <!-- Collect the nav links, forms, and other content for toggling -->
   <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
@@ -24,12 +25,17 @@
         {% block search %}{% endblock %}
     </div>
     <ul class="nav navbar-nav navbar-right">
-      <li><a class="btn pull-right" href="{% url 'isbn_entry_page' user_name %}">
-          <span class="glyphicon"></span>List a Textbook</a></li>
-        <li> <a href="{% url 'cart_page' user_name %}">Cart</a> </li>
-        <li><a href="{% url 'user_home_profile_page' user_name %}">Your Home Page</a></li>
-        <li><a href="{% url 'account_page' user_name %}">Your Account Page</a></li>
-        <li><a href="{% url 'logout'%}">Sign Out</a></li>
+      <li><a style="color:white" href="{% url 'isbn_entry_page' user_name %}">
+          List a Textbook</a></li>
+        <li> <a style="color:white" href="{% url 'cart_page' user_name %}">
+            <span class="fa-stack fa-1x">
+                        <i class="fa  fa-stack-2x text-primary"></i>
+                        <i class="fa fa-shopping-cart fa-stack-2x fa-inverse"></i>
+                    </span>
+        </a> </li>
+        <li><a style="color:white" href="{% url 'user_home_profile_page' user_name %}">Your Home Page</a></li>
+        <li><a style="color:white" href="{% url 'account_page' user_name %}">Your Account Page</a></li>
+        <li><a style="color:white" href="{% url 'logout'%}">Sign Out</a></li>
     </ul>
   </div><!-- /.navbar-collapse -->
 </nav>

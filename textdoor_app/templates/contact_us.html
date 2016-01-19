@@ -1,0 +1,51 @@
+{% extends 'search_results.html' %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Contact Us{% endblock %}</title>
+{% block javascript %}
+    <script>
+        $(document).ready(function() {
+            setTimeout(function(){
+                $("#confirmation-message").fadeIn('slow').delay(2000).fadeOut('slow');
+            }, 3000);
+        });
+    </script>
+{% endblock %}
+</head>
+<body>
+{% block body %}
+    <div class="container overflow:scroll;">
+    <div class="row">
+     <div class="col-md-12 text-center">
+        <h1>Feel free to leave us a feedback or a question that you may have.</h1><hr>
+        </div>
+    </div>
+    <div class="col-md-12 text-center">
+    {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                <li id="confirmation-message" {% if message.tags == "success" %} class="alert alert-success"{% endif %}><div>{{ message }}</div></li>
+            {% endfor %}
+        </ul>
+            {% endif %}
+        </div>
+    <div class="row col-lg-offset-2">
+        <p><h2>We are still figuring out how best to serve
+        you, hence your inputs are greatly appreciated.</h2></p>
+        <form class="form-group vidaloka-font" method="post" action="" enctype="multipart/form-data">{% csrf_token %}
+        <div class="col-md-6 input-group input-group-lg">
+            {% load bootstrap %}
+            {{ form|bootstrap}}
+            <br><br>
+            <div class="row col-md-6">
+                <input type="submit" name="submit" value="Submit" class="btn btn-success">
+            </div>
+        </div>
+        </form>
+    </div>
+    </div>
+{% endblock %}
+</body>
+</html>

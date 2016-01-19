@@ -1,0 +1,129 @@
+{% extends 'search_results.html' %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}FAQ{% endblock %}</title>
+</head>
+<body>
+{% block body %}
+    <div class="container-fluid">
+    <h3>
+        <h3>
+            What is textdoar?
+        </h3>
+        <br>
+        <p>
+            A textbook sharing marketplace that connects students with each other for the purchase and sell of textbooks
+            locally
+
+         </p>
+            <br>
+        <h3>
+        Q: Where did my book come from?
+
+        </h3>
+        <br>
+        <p>
+            A: All books are listed from students here at Manhattan, Kansas.
+
+         </p>
+            <br>
+        <h3>
+            Q: I just listed my book, what’s next?
+
+        </h3>
+        <br>
+        <p>
+            A: The next step is to wait until someone buys your book. If your book is bought within 5 days after you list it, you receive a Chipotle Gift card.
+
+         </p>
+            <br>
+        <h3>
+            Q: What do I do if I do not see the book I am looking for?
+
+        </h3>
+        <br>
+        <p>
+            A: Enter the books information and we will notify you when it becomes available.
+
+
+         </p>
+            <br>
+            <h3>
+                Q: How will I receive my Chipotle Gift card?
+        </h3>
+        <br>
+        <p>
+            A: When we pick up your textbook that was bought, we will leave the Gift card in a sealed envelope with you or in your mailbox.
+
+         </p>
+            <br>
+        <h3>
+            Q: I just got an email saying I sold my book, what do I do now?
+
+        </h3>
+        <br>
+        <p>
+            A: Congratulations! You will be receiving a call or text shortly after to notify us when a convenient time is for you to have us pick up your book. That way you can relax and have us take care of everything else.
+
+
+         </p>
+            <br>
+        <h3>
+            Q: How do I know my payments are secure?
+
+        </h3>
+        <br>
+        <p>
+            A: All payments through textdoar go through Stripe, a financial technology company that allows both
+            private individuals and businesses to accept payments over the Internet. They also handle payments for
+            companies such as Lyft and Squarspace. We do not store your sensitive payment information on our server's either.
+            This means that in the rare occasion that our secured systems get breached your information will be safe.
+
+         </p>
+            <br>
+        <h3>
+            Q: I sold my book, it has been picked up, when do I receive my money?
+
+        </h3>
+        <br>
+        <p>
+            A: All payments will be deposited into the sellers’ bank account two days after the book is picked up from the sellers’ house.
+
+         </p>
+            <br>
+        <h3>
+                 Q: Can anyone use this website?
+
+        </h3>
+        <br>
+        <p>
+            A: No! Each buyer and seller must be a student here in Manhattan, Kansas or one who still has a valid edu email, i.e a recent graduate.
+
+         </p>
+            <br><h3>
+            Q: When will this be at my University?
+        </h3>
+        <br>
+        <p>
+            A: Soon! We are a young start-up company hoping to one day scale to every college in America.
+            It is always goal to provide cheap and reliable textbooks to college students in the most convenient
+            way possible across the nation. We are currently at Kansas State University but will be expanding to
+            other campuses as we progress.
+         </p>
+        </h3>
+            <hr>
+        <div class="row text-center">
+            <p><h2>More Questions?</h2><a href="{% url 'contact_us_page'  %}"><h2>Ask Us</h2></a></p>
+        </div>
+        <div class="row text-center">
+            <p><a href="{% url 'buying_a_textbook_info_page'  %}"><h3>How to Buy a Textbook?</h3></a> </p>
+        </div>
+        <div class="row text-center">
+            <p><a href="{% url 'selling_a_textbook_info_page' %}"><h3>How to Sell a Textbook?</h3></a> </p>
+        </div>
+    </div>
+{% endblock %}
+</body>
+</html>

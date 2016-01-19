@@ -1,13 +1,33 @@
 {% extends 'search_bar.html' %}
 <!DOCTYPE html>
-<html>
+<html xmlns="http://www.w3.org/1999/html">
 <head lang="en">
     <meta charset="UTF-8">
     <title>{% block title %}{{ request.user.username }}, Books{% endblock %}</title>
+    {% block javascript %}
+    <script>
+        $(document).ready(function() {
+            setTimeout(function(){
+                $("#confirmation-message").fadeOut('slow');
+            }, 2000);
+        });
+    </script>
+{% endblock %}
 </head>
 <body>
 {% block body %}
 <div class="container-fluid roboto-font">
+<form method="post" action=".">{% csrf_token %}
+        <div  class="row">
+                {% if messages %}
+                <ul class="messages">
+                {% for message in messages %}
+                <li id="confirmation-message" {% if message.tags == "success" %} class="alert alert-success"{% endif %}><div>{{ message }}</div></li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+    {% if book %}
         {% for book, book_image in user_book %}
             <p><h1>{{ book.title }},{{ book.book_edition }}</h1></p>
                 <div class="row">
@@ -24,18 +44,23 @@
             <p><b><h2>Condition: {{ book.book_condition }}</h2></b></p>
             <p><b><h3>ISBN: {{ book.isbn_number }}</h3></b></p>
              <p><b><h4>Price: ${{ book.sales_price }}</h4></b></p>
+             {% if book.book_description %}
+             <p><b><h4>Short Description: ${{ book.book_description }}</h4></b></p>
+             {% endif %}
         </div>
-
                 <div class="col-md-4">
-                <form method="post" action="{% url 'single_book_description' book.id book.slug %}">{% csrf_token %}
-                     <p><input class="btn btn-lg btn-primary" name="watch-list" type="submit" value="Watch List"/></p>
-                     <p><input class="btn btn-lg btn-primary" id="add_to_cart" name="add_to_cart" type="submit" value="Add To Cart"/></p>
-                </form>
+                    <p><button class="btn btn-lg btn-primary" id="delete-book" name="delete-book-id" type="submit" value="{{ book.id }}">Remove Book From Listing</button></p>
+                    <p><button class="btn btn-lg btn-primary" id="edit-book" name="edit-book-id" type="submit" value="{{ book.id }}">Edit Book Information</button></p>
                     </div>
                 </div>
-             </div>
         {% endfor %}
+    {% else %}
+    <div class="col-md-6">
+        You have no book listed Yet. <a href="{% url 'isbn_entry_page' user_name %}">Click here to list a new book</a>
+    </div>
+    {% endif %}
 {% endblock %}
+</form>
 </div>
 </body>
 </html>

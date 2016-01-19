@@ -1,0 +1,46 @@
+{% extends 'search_results.html' %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Register-Payment-Account</title>
+    {% block javascript %}
+    <script>
+            $(document).ready(function(){
+                    // Show the Modal on load
+                    $("#address").modal("show");
+                });
+        </script>
+    {% endblock %}
+</head>
+<body>
+     {% block body %}
+         <div class="text-center">
+            <h4>Finalize the connection process to your stripe account in order to start receiving payments for your sold textbooks</h4>
+         </div>
+         <form id="api_form" method="post" action=".">{% csrf_token %}
+            <input type="hidden" name="code" value="{{ code }}">
+            <input type="hidden" name="scope" value="{{ scope }}">
+             <p><button type="submit" value="complete-connection" name="complete-connection-non-modal" class="btn btn-primary">Finalize Connection</button></p>
+        <div class="container">
+                     <div id="address" class="modal fade" role="dialog">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <div class="modal-body">
+                                        <h4>Complete the process by clicking the button below.</h4>
+                                            <hr>
+                                             <p><button type="submit" value="complete-connection" class="btn btn-primary" name="complete-connection">Complete Connection</button></p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                    </div>
+                                </div>
+                            </div>
+                         </div>
+                    </div>
+            </div>
+         </form>
+     {% endblock %}
+</body>
+</html>

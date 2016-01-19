@@ -1,17 +1,32 @@
-{% extends 'search_bar.html' %}
+{% extends 'search_results.html' %}
 <!DOCTYPE html>
 <html>
 <head lang="en">
     <meta charset="UTF-8">
-    <title></title>
+    <title>{% block title %}Success Page{% endblock %}</title>
+    {% block javascript %}
+         <script>
+            $(document).ready(function() {
+                var user_name = document.getElementById("user_name").value;
+                console.log(user_name);
+                event.preventDefault()
+                setTimeout(function(){
+                    window.location.replace("{% url 'user_home_profile_page' user_name  %}")
+                }, 3000);
+            });
+    </script>
+    {% endblock %}
 </head>
 <body>
 {% block body %}
-    <div class="vidaloka-font container-fluid jumbotron">
-        <h2>{{ message }}</h2>
+    <div class="text-center">
+        <h2 class="roboto-font">Success Confirmation</h2>
+        <h4 class="roboto-font">{{ message }}</h4>
     </div>
     <div class="text-center">
-        <p><a class="btn-lg bg-success" href="{% url 'user_home_profile_page' user_name %}">Back To Profile Page</a> </p>
+        <input hidden id="user_name" value="{{ user_name }}">
+        <p><a class="btn btn-lg bg-primary" href="{% url 'user_home_profile_page' user_name %}">Back To Profile Page</a> </p>
+            <p><h>You will be redirected shortly...</h></p>
     </div>
 {% endblock %}
 </body>
