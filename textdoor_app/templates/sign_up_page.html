@@ -5,34 +5,67 @@
 <head lang="en">
     <meta charset="UTF-8">
     <title>{% block title %}Sign Up Page{% endblock %}</title>
+{% block javascript %}
+        <script>
+            $(document).ready(function(){
+                    $("#sign-up-form").modal("show");
+                    $("#sign-up-button").click(function(){
+                        $("#sign-up-form").modal("show");
+                    })
+                });
+        </script>
+    {% endblock %}
 </head>
 {% block search %}
 {% endblock %}
 <body>
     {% block body %}
-        <div class="container contenter">
-        <div class="jumbotron">
-            <h1 class="roboto-font">Create an account</h1>
-            <p><h4 class="vidaloka-font">A few seconds away from connecting with fellow students
-            on campus that have the book you are looking for</h4></p>
-            <p><b>Already have an account?</b></p>
-            <p><a class="btn-primary btn-lg" href="{% url 'login_page' %}">Sign In</a> </p>
-        </div>
-  <form action="." method="post">{% csrf_token %}
-          {% load bootstrap %}
-            {{ form|bootstrap}}
-      <div>
-          <input class="btn-success btn-lg" type="submit" value="Create the account">
-      </div>
-
-  </form>
-            {% if form.errors %}
-                {% for field in form %}
-        {% for error in field.errors %}
-            <p> {{ errors }} </p>
-        {% endfor %}
-        {% endfor %}
-            {% endif %}
+        <div class="col-md-6 container contenter">
+            <div class="row text-center jumbotron">
+                    <h1 class="roboto-font">Create an account</h1>
+                    <p><h4 class="vidaloka-font">A few seconds away from connecting with fellow students
+                        on campus that have the book you are looking for</h4></p>
+                <div class="col-md-6">
+                    <div class="row">
+                        <p><b>Already have an account?</b></p>
+                    </div>
+                </div>
+                 <div class="col-md-6">
+                     <p><a class="btn-primary btn-lg" href="{% url 'login_page' %}">Sign In!</a> </p>
+                    <p><button id="sign-up-button" class="btn-primary btn-lg">Sign Up!</button> </p>
+                </div>
+            </div>
+                    <div id="sign-up-form" class="modal fade" role="dialog">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4 class="text-center">Sign Up!</h4>
+                                    <div class=" modal-body">
+                                        <form action="." method="post">{% csrf_token %}
+                                            <div class="col-md-6 input-group input-group-lg">
+                                                {% load bootstrap %}
+                                                {{ form|bootstrap}}
+                                            </div>
+                                                <hr>
+                                            <div>
+                                                <input class="btn btn-success btn-lg" type="submit" value="Create the account">
+                                            </div>
+                                        </form>
+                                                    {% if form.errors %}
+                                                        {% for field in form %}
+                                                            {% for error in field.errors %}
+                                                                <p> {{ errors }} </p>
+                                                            {% endfor %}
+                                                        {% endfor %}
+                                                    {% endif %}
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                    </div>
+                                </div>
+                            </div>
+                         </div>
+                    </div>
         </div>
 {% endblock %}
 </body>

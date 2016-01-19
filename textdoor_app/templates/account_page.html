@@ -7,7 +7,46 @@
 </head>
 <body>
     {% block body %}
-        <a href="{% url 'address_entry_page' user_name %}">Enter Delivery Address</a>
+        <div class="container-fluid col-md-12 text-center ">
+            <p><h3 class="jumbotron">Your Account Page</h3></p>
+            <hr>
+            <div class="row">
+            <div class="col-md-12">
+                <a style="color:black" href="{% url 'address_entry_page' user_name %}"><h4>Shipping Address (add new/edit current address)</h4></a>
+            </div>
+        </div>
+            <hr>
+        <div class="row">
+            <div class="col-md-12">
+                <a style="color:black" href="{% url 'change_password_page' user_name %}"><h4>Change Password</h4></a>
+            </div>
+        </div>
+            <hr>
+        <div class="row">
+            <div class="col-md-12">
+                 <a style="color:black" href="{% url 'list_of_your_books' user_name %}"><h4>View/Edit Your Listed Book</h4></a>
+            </div>
+        </div>
+            <hr>
+        <div class="row">
+            <div class="col-md-12">
+                <a style="color:black" href="{% url 'order_history' user_name %}"><h4>Order History (purchased and sold books)</h4></a>
+            </div>
+        </div>
+            <hr>
+         <div class="row">
+            <div class="col-md-12">
+                <a style="color:black" href="{% url 'watch_list' user_name %}"><h4>Watchlist Books</h4></a>
+            </div>
+        </div>
+            <hr>
+        <div class="row">
+            <div class="col-md-12">
+                 <a style="color:black" href="{% url 'saved_card_page' user_name %}"><h4>Payment Information</h4></a>
+            </div>
+        </div>
+        <hr>
+        </div>
 {% endblock %}
 </body>
 </html>

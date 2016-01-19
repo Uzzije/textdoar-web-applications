@@ -5,14 +5,21 @@
     <meta charset="UTF-8">
     <title>{% block title %}Textdoor{% endblock %}</title>
     {% block jquery_head %}
-     <script type="text/javascript" src="{% static 'static_jquery/js/jquery.js' %}"></script>
+        <link rel="icon" type="image/png" href='{% static 'media/image/logo/book_only_textdoar_logo.png' %}' sizes="16x16">
+        <link rel="icon" type="image/png" href='{% static 'media/image/logo/book_only_textdoar_logo.png' %}' sizes="32x32">
+        <link rel="stylesheet" type="text/css" href="{% static 'general_design.css' %}"/>
+        <script type="text/javascript" src="{% static 'static_jquery/js/jquery.js' %}"></script>
         <script type="text/javascript" src="{% static 'js/jquery-ui.js' %}"></script>
         <link rel="stylesheet" type="text/css" href="{% static 'css/jquery-ui/smoothness/jquery-ui.css' %}"/>
         <link rel="stylesheet" type="text/css" href="{% static 'bootstrap-3.3.5-dist/css/bootstrap.min.css'%}">
         <script type="text/javascript" src="{% static 'bootstrap-3.3.5-dist/js/bootstrap.min.js' %}"></script>
-        <link rel="stylesheet" type="text/css" href="{% static 'general_design.css' %}"/>
+        <link rel="stylesheet" type="text/css" href="{% static 'toastr.css' %}"/>
+        <script type="text/javascript" src="{% static 'toastr.js' %}"></script>
         <link href='https://fonts.googleapis.com/css?family=Droid+Serif' rel='stylesheet' type='text/css'>
         <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" rel="stylesheet">
+        <link rel="stylesheet" type=text/css href="{% static "startbootstrap-agency-1.0 2.5/font-awesome/css/font-awesome.min.css" %}"/>
+        <link href='https://fonts.googleapis.com/css?family=Rum+Raisin' rel='stylesheet' type='text/css'>
+
     {% endblock %}
 {% block css_individual_page %}{% endblock %}
 {% block javascript %}{% endblock %}
@@ -24,7 +31,7 @@
 {% block bar %}{% endblock %}
 <br>
     <div class="container-fluid">
-        {% block body %}{% block search %}{% endblock %}{% endblock %}
+        <div id="wrap"><div class="general-font" id="main">{% block body %}{% block search %}{% endblock %}{% endblock %}</div></div>
     </div>
     <br>
 {% block open-box %}
@@ -32,11 +39,32 @@
 {% block javascript_extra %}
 {% endblock %}
 {% block footer %}
-    <div class="navbar navbar-default navbar-static-bottom">
+    <footer>
         <div class="container">
-          <p class="navbar-text pull-left">© Elude Group LLC 2015</p>
+            <div class="row">
+                <div class="col-md-4">
+
+                </div>
+                <div class="col-md-6">
+                    <ul class="list-inline">
+                        <span style="color:black" class="copyright">Copyright &copy; Textdoar 2016</span>
+                        <li><a class="copyright" style="color:black" href="{% url 'about_us_page' %}"><span>About Us</span></a>
+                        </li>
+                        <li><a style="color:black" href="{% url 'contact_us_page'  %}"><span class="copyright">Contact Us</span></a>
+                        </li>
+                        <li><a style="color:black" href="{% url 'faq_page' %}"><span class="copyright">FAQ</span></a>
+                            <li><a style="color:black" class="page-scroll" href="{% url 'term_and_condition_page' %}">Terms and Conditions</a></li>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                </div>
+            </div>
         </div>
-    </div>
+    </footer>
+{% endblock %}
+{% block jquery_body %}
+
 {% endblock %}
 </body>
 </html>

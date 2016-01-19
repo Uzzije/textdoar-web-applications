@@ -11,20 +11,11 @@
 {% endblock %}
 </head>
 <body>
-{% block modal_view_dialog %}
-    <div id="sign-in-request-box" hidden>
-        <h1>Have an account?</h1>
-        <br>
-            <br>
-        <div class="row">
-            <div class="col-md-6"><a href="{% url 'user_registration_page'%}">Sign Up!</a></div>
-            <div class="col-md-6"><a href="{% url 'login_page'%}">Login!</a></div>
-        </div>
-    </div>
-{% endblock %}
+
 {% block body %}
     <div class="container-fluid roboto-font">
-     <h3><b>Search Results For "{{ query_string }}"</b></h3>
+     <h3><b>search results for "{{ query_string }}"</b></h3>
+    <hr>
     <form method="post">{% csrf_token %}
         <div class="col-sm-3 col-md-3 sidebar">
     <div class="mini-submenu">
@@ -32,7 +23,7 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
     </div>
-    <div class="list-group">
+    <div hidden class="list-group">
         <span href="#" class="list-group-item active">
             Filter
             <span class="pull-right" id="slide-submenu">
@@ -62,10 +53,13 @@
         </label>
         </div>
     </div>
-    <div class="col-md-6">
-        {% if found_entries %}
+    <div class="col-md-8">
+    {% if no_found_entries %}
+        <h5>"Hey, you have to search something to get a result back!"</h5>
+    {% else %}
+        {% if list_of_book_image %}
         {% for result, image in list_of_book_image %}
-            <div class="row list-group">
+            <div class="row list-group jumbotron">
             <div class="col-md-3">
                 {% load staticfiles %}
                 {% for pic in image %}
@@ -73,42 +67,61 @@
                     {% endfor %}
             </div>
                 <div class="col-md-6 roboto-font">
-                    <b><p><a href="{% url 'single_book_description' result.id result.slug %}">{{ result.title }}</a></p></b>
+                    <b><p><a  href="{% url 'single_book_description' result.id result.slug %}">{{ result.title }} {{ result.book_edition }}</a></p></b>
                     <p><b>ISBN</b>: {{ result.isbn_number }}</p>
                     <p><b>Listed By</b>: {{ result.book_owner.username }}</p>
                 </div>
                 <div class="col-md-3">
                     <div class="col-md-6">
-                        <b>${{ result.sales_price }}</b>
+                        <b><h2>${{ result.sales_price }}</h2></b>
                     </div>
                     <div class="col-md-6">
-                        <p><a class="btn btn-success"href="{% url 'single_book_description' result.id result.slug %}">Buy</a></p>
-                    </div>
+                        <p><a class="btn btn-primary btn-lg" href="{% url 'single_book_description' result.id result.slug %}">Buy</a></p>
+
                     <p>
                         <a data-toggle="modal" data-target="#address">
-                        <h4><b>Delivered By: {{ delivery_time }}</b></h4>
+                        <h5 style="color:black"><b>Get Delivery Time </b></h5>
                         </a>
                     </p>
+                        </div>
                 </div>
             </div>
         {% endfor %}
         {% else %}
-            <div class="vidaloka-font">
-                <h3>Sorry, the book you entered may not be listed yet.</h3>
-            </div>
-    {% endif %}
-    </div>
-    <div class="col-md-3">
-       <img src="http://dummyimage.com/300x800/000/fff&text=Ad+Here">
-    </div>
+                <form method="post">{% csrf_token %}
+                    <div class="panel-heading"><h2>Sorry, your book may not be listed yet</h2>
+                        <h4>Give us the isbn and we will let you know when it is available</h4>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-md-12 input-group input-group-lg">
+                            {% load bootstrap %}
+                            {{ form | bootstrap }}
+                        </div>
+                        <hr>
+                            <div class="row input-group-btn">
+                                <input type="submit" class="btn btn-default btn-lg" value="Notify Me" name="search_value">
+                            </div>
+                    </div>
+                    {% if form.errors %}
+                    {% for field in form %}
+                    {% for error in field.errors %}
+                        <p> {{ errors }} </p>
+                    {% endfor %}
+                        {% endfor %}
+                        {% endif %}
+                </form>
+                {% endif %}
+                {% endif %}
+        </div>
     </form>
     </div>
          <div id="address" class="modal fade" role="dialog">
      <div class="modal-dialog">
      <div class="modal-content">
       <div class="modal-header">
-             <div class="modal-body">
-                 <h3>Book Will Be Delivered To You Within 48 Hours</h3>
+             <div class=" text-center modal-body">
+                 <h5>Book Will Be Delivered To You By {{ delivery_time }}</h5>
          </div>
     </div>
     </div>

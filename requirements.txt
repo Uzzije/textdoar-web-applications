@@ -1,3 +1,4 @@
+git://github.com/BradWhittington/django-templated-email.git@b993f2d3562fca490dc19a2607dc4e3ea6878917#egg=django-templated-email
 django>=1.8.0, <1.9.0
 django_static_jquery==2.1.1
 django-jquery-ui==1.11.4
@@ -11,3 +12,6 @@ djangorestframework==3.3.2
 requests==2.9.1
 django-sslserver==0.18
 django-sslify>=0.2.0
+django-oauth-toolkit==0.10.0
+sanction==0.4.1
+rauth==0.7.2

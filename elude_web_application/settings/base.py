@@ -19,23 +19,18 @@ from easy_thumbnails.conf import Settings as thumbnail_settings
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 LOGIN_URL = '/login'
 SITE_ID = 3
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = SECRET_KEY
-
-# SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
+USE_TZ = True
 ALLOWED_HOSTS = []
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'email@textdoar.com'
-EMAIL_HOST_PASSWORD = 'Bmotbjgm1'
+EMAIL_HOST_PASSWORD = EMAIL_PASSWORD
 EMAIL_PORT = 587
-
+MY_TEMPLATE_DIRECTORY = os.path.join(BASE_DIR, '../textdoor_app/templates/')
+TEMPLATED_EMAIL_BACKEND = 'templated_email.backends.vanilla_django.TemplateBackend'
 
 # Security
 SECURE_SSL_REDIRECT = True
@@ -59,6 +54,7 @@ INSTALLED_APPS = (
     'image_cropping',
     'bootstrapform',
     'rest_framework',
+    'oauth2_provider',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -81,8 +77,10 @@ ROOT_URLCONF = 'elude_web_application.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
-        'APP_DIRS': True,
+        'DIRS': [
+            MY_TEMPLATE_DIRECTORY
+        ],
+        'APP_DIRS':True,
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',
@@ -108,7 +106,7 @@ DATABASES = {
 }
 
 MEDIA_ROOT = os.path.join(BASE_DIR, '../textdoor_app/static/media/')
-MEDIA_URL = 'static/media/'
+MEDIA_URL = '/static/media/'
 # Internationalization
 # https://docs.djangoproject.com/en/1.8/topics/i18n/
 
@@ -125,8 +123,7 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
-
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
-    "/Users/Administrator/ELUDE APPLICATION PROJECTS/elude_web_application/textdoor_app/static"
+    os.path.join(BASE_DIR, '../textdoor_app/static/'),
     ]

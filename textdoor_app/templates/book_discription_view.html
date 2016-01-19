@@ -6,32 +6,14 @@
     <meta charset="UTF-8">
     <title>{% block title %}{% endblock %}</title>
 {% block javascript %}
-            <script>
-            var count = 0;
-         function openSignInBox() {
-             var notLoggedIn = document.getElementById("myVar").value;
-             console.log("This is called");
-             if( notLoggedIn == "true"){
-                 console.log("User is not logged in");
-                 count = count + 1;
-                $(function() {
-                        $("#sign-in-request-box").dialog({
-                            autoOpen: true
-                        });
-                });
-             }
-             else{
-                 count = 0;
-                 console.log("User is Logged In");
-                     $(function() {
-            $("#sign-in-request-box").dialog({
-               autoOpen: false
-            });
-         });
-             }
-         }
-      </script>
-     {% endblock %}
+    <script>
+        $(document).ready(function() {
+            setTimeout(function(){
+                $("#confirmation-message").fadeOut('slow');
+            }, 3000);
+        });
+    </script>
+{% endblock %}
 </head>
 <body>
 {% block check_for_login_user %}
@@ -39,7 +21,16 @@
 {% endblock %}
 {% block body %}
     <div class="container-fluid roboto-font">
-    <p><h1>{{ book.title }}</h1></p>
+    <div  class="row">
+            {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                <li id="confirmation-message" {% if message.tags == "success" %} class="alert alert-success"{% endif %}><div>{{ message }}</div></li>
+            {% endfor %}
+        </ul>
+            {% endif %}
+        </div>
+    <p><h1>{{ book.title }} {{ book.book_edition }}</h1></p>
     <div class="row">
     <div class="col-md-3">
         {% if book_image %}
@@ -50,10 +41,14 @@
             {% endif %}
     </div>
          <div class="col-md-3">
-            <p><b><h1>Author: {{ book.author }}</h1></b></p>
-            <p><b><h2>Condition: {{ book.book_condition }}</h2></b></p>
-            <p><b><h3>ISBN: {{ book.isbn_number }}</h3></b></p>
+            <p><b><h3>Author: {{ book.author }}</h3></b></p>
+            <p><b><h5>Condition: {{ book.book_condition }}</h5></b></p>
+            <p><b><h4>ISBN: {{ book.isbn_number }}</h4></b></p>
              <p><b><h4>Price: ${{ book.sales_price }}</h4></b></p>
+             {% if book.book_description %}
+                <p>Description</p>
+                 <p>{{ book.book_description }}</p>
+             {% endif %}
         </div>
 
     <div class="col-md-4">
@@ -64,11 +59,6 @@
             </div>
     </div>
     </div>
-{% endblock %}
-{% block open-box %}
-<script type="text/javascript">
-                openSignInBox();
-            </script>
 {% endblock %}
 {% block footer %}
             <div class="navbar navbar-default navbar-fixed-bottom">

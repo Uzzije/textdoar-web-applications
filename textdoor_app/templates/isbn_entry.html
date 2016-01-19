@@ -3,56 +3,77 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Isbn Finder</title>
+    <title>{% block title %}Isbn Finder{% endblock %}</title>
 </head>
 <body>
 {% block body %}
     <form method="post">{% csrf_token %}
-    {{ errors }}
-        <label>
-            Insert the ISBN in here {{ error }}
-            <input type="text" name="isbn_value" placeholder="Search ISBN Number">
-        </label>
-        <input type="submit" value="Search" name="search_value">
+
         <div class="container" id="isbn_value_number">
-            {% if value and isbn_value and check_value and isbn_values%}
+                    <div class="col-md-6 col-lg-offset-3">
+                        <h3>What Book Do You Want to Sell?</h3>
+                    </div>
+        <div class="row">
+            <div class="col-md-6 col-lg-offset-3 input-group input-group-lg">
+                    <input type="text" name="isbn_value" class= "form-control" placeholder="Insert ISBN Number Here">
+                    <span class="input-group-btn">
+                            <input type="submit" class="btn btn-default btn-lg" value="Search" name="search_value">
+                    </span>
+            </div>
+        </div>
+        <hr>
+            {% if value and isbn_from_word and check_isbn_exist and isbn_to_book_info%}
                 <div class="row">
                     <div class="col-md-4">
-                        <img src="{{ isbn_picture }}" alt="This should show a picture">
+                        {% if isbn_picture %}
+                            <img src="{{ isbn_picture }}" alt="Bummer, Image Not Found">
+                            {% else %}
+                            <p><b>We Could Not Retrieve A Cover Pic From
+                                Our Library Connection, Feel Free to Upload Your Own Picture On the Next Page</b></p>
+                            {% endif %}
                     </div>
                     <div class="col-md-4">
-                        <input type="submit" value="Continue" name="finalizing_list">
+                        <input type="submit" class="btn btn-primary btn-lg" value="Continue" name="finalizing_list">
+                        <hr>
+                        <p><h5 class="roboto-font text-center">Feel free to edit what does not quite look right in the product
+                        description on the next page; this includes uploading your own picture, if you do not like the
+                        one returned to you.</h5></p>
                     </div>
                 </div>
+                <hr>
+                <div class="panel panel-body">
                 <div class="row">
+                    <div class="col-md-4">
                     <label>
-                        Author(s):
+                        <h4>Author(s):</h4>
                     </label>
                         {{ isbn_author}}
                     </div>
+                    </div>
                 <div class="row">
+                    <div class="col-md-4">
                     <label>
-                        Title:
+                        <h4>Title:</h4>
                     </label>
-                    {{ isbn_title }}
+                        {{ isbn_title }}
+                        </div>
                 </div>
                 <div class="row">
+                    <div class="col-md-4">
                     <label>
-                        ISBN-13(s):
+                        <h4>ISBN-13(s):</h4>
                     </label>
                     {{ isbn_isbn }}
+                        </div>
                 </div>
-                <div class="row">
-                     <label>
-                        Book Edition
-                        <input class="form-control" type="text" name="Book Edition i.e volume">
-                    </label>
                 </div>
-                {% endif %}
-                {% if error%}
-                    Sorry, we could not retrieve the isbn number that you entered from our friends at google books, however
-                    you can still list the book, and upload the picture by clicking on this link.
-                    <input type="submit" name="manually_list" value="List Your Textbook">
+            {% endif %}
+            {% if error%}
+                    <p>
+                        Sorry, we could not retrieve the isbn number that you entered from our online library friends, however
+                        you can still list the book, and upload the picture by clicking on this link.
+                        <input type="submit" class="btn-link" name="manually_list" value="Manually List Your Textbook">
+                    </p>
             {% endif %}
             </div>
     </form>

@@ -1,10 +1,70 @@
+{% extends 'search_results.html' %}
 <!DOCTYPE html>
 <html>
 <head lang="en">
     <meta charset="UTF-8">
-    <title></title>
+    <title>{% block title %}{{ user_name }} order history{% endblock %}</title>
 </head>
 <body>
-
+    {% block body%}
+        <div class="row">
+            <div class="col-lg-6">
+                {% if user_purchased_books %}
+                    <P><h2><b>List of Purchased Books</b></h2></P>
+                        {% for result, image in user_purchased_books %}
+                        <div class="row list-group">
+                            <div class="col-md-3">
+                                {% load staticfiles %}
+                                {% for pic in image %}
+                                <img src = '{% static 'media' %}/{{ pic.book_image }}' style="width:100%;height:100%;"/>
+                                {% endfor %}
+                            </div>
+                            <div class="col-md-6 roboto-font">
+                                <b><p>{{ result.book.title }}</p></b>
+                                <p><b>ISBN</b>: {{ result.book.isbn_number }}</p>
+                                <p><b>Listed By</b>: {{ result.book.book_owner.username }}</p>
+                                <b>${{ result.book.sales_price }}</b>
+                                {% if result.delivered_to_buyer %}
+                                    <p>Status: Delivered</p>
+                                {% else %}
+                                <p>Status: Not Delivered Yet</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <P><h4><b>You have not yet purchased a book on our platform</b></h4></P>
+                {% endif %}
+            </div>
+            <div class="col-lg-6">
+                {% if user_sold_books %}
+                    <P><h2><b>List of Sold Books</b></h2></P>
+                        {% for result, image in user_sold_books %}
+                        <div class="row list-group">
+                            <div class="col-md-3">
+                                {% load staticfiles %}
+                                {% for pic in image %}
+                                <img src = '{% static 'media' %}/{{ pic.book_image }}' style="width:100%;height:100%;"/>
+                                {% endfor %}
+                            </div>
+                            <div class="col-md-6 roboto-font">
+                                <b><p>{{ result.book.title }}</p></b>
+                                <p><b>ISBN</b>: {{ result.book.isbn_number }}</p>
+                                <p><b>Listed By</b>: {{ result.book.book_owner.username }}</p>
+                                <b>${{ result.book.sales_price }}</b>
+                                {% if result.delivered_to_buyer %}
+                                    <p>Status: Delivered</p>
+                                {% else %}
+                                <p>Status: Not Delivered Yet</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <P><h4><b>You have not yet sold a book on our platform</b></h4></P>
+                {% endif %}
+            </div>
+        </div>
+    {% endblock %}
 </body>
 </html>
