@@ -1004,7 +1004,7 @@ class SavedCreditCardPaymentView(LoginRequiredMixin, View):
 
     def post(self, request, user_name):
         if request.POST.get("payment"):
-            stripe.api_key = LIVE_SECRET_KEY
+            stripe.api_key = STRIPE_LIVE_SECRET_KEY
             elude_user = EludeUser.objects.get(username=self.request.user)
             checkout_cart = self.request.session.get('shopping_cart')
             payment_data = elude_user.payment_card_info.all().get(is_user_current_option=True)
@@ -1310,7 +1310,7 @@ class AboutUSView(View):
             user_name = request.user.username
         else:
             user_name = "guest"
-        return render(request, 'about_us.html', 'user_name':user_name)
+        return render(request, 'about_us.html', {'user_name':user_name})
 
 
 class ContactUSView(View):

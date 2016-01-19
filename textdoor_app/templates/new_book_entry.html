@@ -50,7 +50,7 @@
             </div>
             <hr>
             <div row>
-                <div class="col-md-2" id="make_selection_of_date_label">
+                <div class="col-md-3" id="make_selection_of_date_label">
                     <label>
                     Make Book Available For Purchase:
                      </label>
@@ -64,7 +64,7 @@
                     </label>
                 </div>
 
-                <div class="col-md-2" id="end_of_semester">
+                <div class="col-md-3" id="end_of_semester">
                     <label>
                     End Of The Semester
                     <input class="form-control" type="checkbox" onclick="openSpecifiedDateInput()"
@@ -72,7 +72,7 @@
                      </label>
                 </div>
 
-                <div class="col-md-2" id="specify_date">
+                <div class="col-md-3" id="specify_date">
                     <label>
                     Specify A Different Date:
                     <input class="form-control" type="checkbox" onclick="openSpecifiedDateInput()" id="date_specified_check"
@@ -89,7 +89,13 @@
                 </div>
             </div>
             <div class="row">
+            <div class="col-md-3">
+                {% if edit_book_form %}
+                    <input class="btn btn-lg btn-success" type="submit" value="Finish Book Edit">
+                {% else %}
                 <input class="btn btn-lg btn-success" type="submit" value="Register Book">
+                {% endif %}
+            </div>
             </div>
         <div hidden class="row" id="info">
             <div class="col-md-6">

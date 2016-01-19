@@ -65,11 +65,11 @@
                                     <div class="modal-body">
                                         <p><h4>Thanks for signing up {{ first_name }}, would you like to know more about:</h4>
                                             <hr>
-                                        <a href="{% url 'selling_a_textbook_info_page'%}">Buying a textbook?</a>
+                                        <h2><a href="{% url 'selling_a_textbook_info_page'%}">Buying a textbook?</a></h2>
                                             <hr>
-                                        <a href="{% url 'buying_a_textbook_info_page'%}">Selling a textbook?</a>
+                                        <h2><a href="{% url 'buying_a_textbook_info_page'%}">Selling a textbook?</a></h2>
                                             <hr>
-                                        <a href="{% url 'faq_page'%}">Everything In General</a>
+                                       <h2> <a href="{% url 'faq_page'%}">Everything In General</a></h2>
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-default" data-dismiss="modal">I'm Good</button>
@@ -126,13 +126,13 @@
             </script>
             <div class="row">
                 <div class="col-md-4 page-header">
-                <p class=""><a style="color:black" class="btn btn-link" href="{% url 'isbn_entry_page' user_name %}"><h3>List New Book</h3></a></p>
+                <h3><p class=""><a style="color:black" class="btn btn-link" href="{% url 'isbn_entry_page' user_name %}">List New Book</a></p></h3>
             </div>
             <div class="col-md-4 page-header">
-                <p class=""><a style="color:black" class="btn btn-link" href="{% url 'list_of_your_books' user_name %}"><h3>List Of Your Books</h3></a></p>
+                <h3><p class=""><a style="color:black" class="btn btn-link" href="{% url 'list_of_your_books' user_name %}">List Of Your Books</a></p></h3>
             </div>
             <div class="col-md-4 page-header">
-            <p class=""><a style="color:black" class="btn btn-link" href="{% url 'watch_list' user_name %}"><h3>Watch List Book</h3></a></p>
+            <h3><p class=""><a style="color:black" class="btn btn-link" href="{% url 'watch_list' user_name %}">Watch List Book</a></p></h3>
             </div>
             <br>
         </div>
