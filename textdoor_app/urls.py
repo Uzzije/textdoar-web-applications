@@ -4,6 +4,8 @@ from django.conf.urls import url
 
 import textdoor_app.views
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+from django.conf import settings
+from django.conf.urls.static import static
 
 
 urlpatterns = [
@@ -45,17 +47,17 @@ urlpatterns = [
         name='error_page_for_stripe'),
     url(r'^(?P<user_name>.*)/account-activation/$', textdoor_app.views.AccountActivationView.as_view(),
         name='user_activation_page'),
-    url(r'^/buying-information/$', textdoor_app.views.BuyingInformationView.as_view(),
+    url(r'^buying-information/$', textdoor_app.views.BuyingInformationView.as_view(),
         name='buying_a_textbook_info_page'),
-    url(r'^/selling-information/$', textdoor_app.views.SellingInformationView.as_view(),
+    url(r'^selling-information/$', textdoor_app.views.SellingInformationView.as_view(),
         name='selling_a_textbook_info_page'),
-    url(r'^/textdoar-FAQ/$', textdoor_app.views.FAQView.as_view(),
+    url(r'^textdoar-FAQ/$', textdoor_app.views.FAQView.as_view(),
         name='faq_page'),
-    url(r'^/contact-us/$', textdoor_app.views.ContactUSView.as_view(),
+    url(r'^contact-us/$', textdoor_app.views.ContactUSView.as_view(),
         name='contact_us_page'),
-    url(r'^/about-us/$', textdoor_app.views.AboutUSView.as_view(),
+    url(r'^about-us/$', textdoor_app.views.AboutUSView.as_view(),
         name='about_us_page'),
-    url(r'^/term-and-condition-page/$', textdoor_app.views.TermAndConditionView.as_view(),
+    url(r'^term-and-condition-page/$', textdoor_app.views.TermAndConditionView.as_view(),
         name='term_and_condition_page'),
-]
-urlpatterns += staticfiles_urlpatterns()
+
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

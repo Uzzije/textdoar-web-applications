@@ -16,11 +16,4 @@
             By signing up, you  are agreeing to our
             <a href='https://www.textdoar.com/term-and-condition-page'>Terms of Agreement.</a>
         </small></p></footer>
-        <div class="row">
-            <div class="text-center">
-                <div class="col-md-3">
-                    <small><a href='https://www.textdoar.com/unsubscribed'>un-subscribed</a></small>
-                </div>
-            </div>
-        </div>
 {% endblock %}

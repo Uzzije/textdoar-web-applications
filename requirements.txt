@@ -15,3 +15,4 @@ django-sslify>=0.2.0
 django-oauth-toolkit==0.10.0
 sanction==0.4.1
 rauth==0.7.2
+stripe==1.28.0
