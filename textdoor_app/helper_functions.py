@@ -1,5 +1,5 @@
 from elude_web_application.setting_secret import BUYERS_TAX_AND_PROCESSING_FEE, \
-    STRIPE_AND_TEXTDOAR_PAYMENT_PROCESSING_FEE, TRANSACTION_FEE, ACTIVATION_CODE_LIST, ACTIVATION_CODE_DIC
+    STRIPE_AND_TEXTDOAR_PAYMENT_PROCESSING_FEE, TRANSACTION_FEE, ACTIVATION_CODE_LIST, ACTIVATION_CODE_DIC, STRIPE_LIVE_SECRET_KEY, STRIPE_CLIENT_ID_LIVE
 from random import randint
 from rauth import OAuth2Service
 
@@ -8,8 +8,8 @@ def get_string_from_list(list):
     word = ','.join(list)
     return word
 
-stripe_token = OAuth2Service(client_secret='sk_test_0nUBiJyARoPOsmheLyUv4Glq',
-                             client_id='ca_7bk9PU3cXS93KOuRKMFSerKPMo4pBoMe',
+stripe_token = OAuth2Service(client_secret=STRIPE_LIVE_SECRET_KEY,
+                             client_id=STRIPE_CLIENT_ID_LIVE,
                              name='stripe',
                              authorize_url='https://connect.stripe.com/oauth/authorize',
                              access_token_url='https://connect.stripe.com/oauth/token',
