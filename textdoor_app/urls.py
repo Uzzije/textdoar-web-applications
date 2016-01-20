@@ -43,7 +43,7 @@ urlpatterns = [
         name='order_history'),
     url(r'^(?P<user_name>.*)/payment-card-details/$', textdoor_app.views.PaymentCardDetailView.as_view(),
         name='saved_card_page'),
-    url(r'^(?P<user_name>.*)/change-school-page/$', textdoor_app.views.ErrorPageViewForStripe.as_view(),
+    url(r'^(?P<user_name>.*)/error-page-view/$', textdoor_app.views.ErrorPageViewForStripe.as_view(),
         name='error_page_for_stripe'),
     url(r'^(?P<user_name>.*)/account-activation/$', textdoor_app.views.AccountActivationView.as_view(),
         name='user_activation_page'),

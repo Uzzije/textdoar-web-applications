@@ -24,7 +24,7 @@ from django.core.files.temp import NamedTemporaryFile
 import string
 import stripe
 from helper_functions import application_fee_amount
-from elude_web_application.setting_secret import TEST_STRIPE_API_KEY, STRIPE_LIVE_SECRET_KEY, STRIPE_LIVE_PUBLISHABLE_KEY
+from elude_web_application.setting_secret import TEST_STRIPE_API_KEY, STRIPE_LIVE_SECRET_KEY, STRIPE_LIVE_PUBLISHABLE_KEY, STRIPE_CLIENT_ID_LIVE
 from django.contrib import messages
 import os, stat
 from delete_isbn_pic_dir import DELETE_PIC_DIR
@@ -100,8 +100,11 @@ class UserHomeProfilePage(LoginRequiredMixin, View):
             del self.request.session['first_time_user']
         except(TypeError, KeyError, None):
             first_time_user = None
-
-        return render(request, 'user_profile_page.html', {'user_name': elude_user.username.username,
+        if not request.user.is_authenticated():
+            user_name = "guest"
+        else:
+            user_name = self.request.user.username
+        return render(request, 'user_profile_page.html', {'user_name': user_name,
                                                           'first_name': elude_user.username.first_name,
                                                           'first_time_user': first_time_user})
 
@@ -263,6 +266,10 @@ class ISBNView(View):
         return render(request, 'isbn_entry.html', {'user_name': user_name})
 
     def post(self, request, user_name):
+        if request.user.is_authenticated():
+            user_name = request.user.username
+        else:
+            user_name = "guest"
         error = False
         if request.POST.get("search_value"):
             value = request.POST.get("isbn_value")
@@ -313,32 +320,32 @@ class ISBNView(View):
 
                         self.request.session['dictionary'] = dictionary
 
-                        return render(request, 'isbn_entry.html', {'user_name': self.request.user.username,
+                        return render(request, 'isbn_entry.html', {'user_name': user_name,
                                                   'isbn_from_word' : isbn_from_word, 'isbn_author': isbn_author, 'isbn_title':
                                                            isbn_title, 'value':value, 'isbn_isbn':isbn_isbn,
                                                            'isbn_picture': isbn_picture, 'check_isbn_exist':
                                                                    check_isbn_exist,
                                                                    'isbn_to_book_info': isbn_to_book_info, 'error':error})
                     else:
-                        return render(request, 'isbn_entry.html', {'user_name': self.request.user.username,
-                                                               'value': value, 'error':error})
+                        return render(request, 'isbn_entry.html', {'user_name': user_name,
+                                                               'value': value, 'error':True})
                 else:
-                    return render(request, 'isbn_entry.html', {'user_name': self.request.user.username, 'value': value,
-                                                           'error':error})
+                    return render(request, 'isbn_entry.html', {'user_name': user_name, 'value': value,
+                                                           'error':True})
             else:
-                return render(request, 'isbn_entry.html', {'user_name': self.request.user.username, 'value': value,
-                                                           'error':error})
+                return render(request, 'isbn_entry.html', {'user_name': user_name, 'value': value,
+                                                           'error':False})
         if request.POST.get("finalizing_list"):
             try:
                 self.request.session.get('dictionary', False)
             except (KeyError, TypeError):
                 return HttpResponseRedirect(reverse('new_book_entry_page',
-                                                        kwargs={'user_name':self.request.user.username}))
+                                                        kwargs={'user_name':user_name}))
 
-            return HttpResponseRedirect(reverse('new_book_entry_page', kwargs={'user_name': self.request.user.username}))
+            return HttpResponseRedirect(reverse('new_book_entry_page', kwargs={'user_name': user_name}))
         if request.POST.get("manually_list"):
             return HttpResponseRedirect(reverse('new_book_entry_page',
-                                                    kwargs={'user_name': self.request.user.username}))
+                                                    kwargs={'user_name': user_name}))
 
 
 class NewBookListingView(LoginRequiredMixin, View):
@@ -359,7 +366,7 @@ class NewBookListingView(LoginRequiredMixin, View):
                                                             })
         except (KeyError, TypeError):
             form = form_templates.RegisterBookForm()
-        return render(request, 'new_book_entry.html', {'form': form, 'user_name': self.request.user.username})
+        return render(request, 'new_book_entry.html', {'form': form, 'user_name': user_name})
 
     def post(self, request, user_name):
         form = form_templates.RegisterBookForm(request.POST, request.FILES)
@@ -485,7 +492,11 @@ class SuccessPageView(View):
             message_success = self.request.session.get('new_message')
         except (KeyError, TypeError, None):
             message_success = False
-        return render(request, 'success_url.html', {'user_name':self.request.user.username, 'message': message_success})
+        if not request.user.is_authenticated():
+            user_name = "guest"
+        else:
+            user_name = self.request.user.username
+        return render(request, 'success_url.html', {'user_name':user_name, 'message': message_success})
 
 
 class CartView(LoginRequiredMixin, View):
@@ -513,8 +524,6 @@ class CartView(LoginRequiredMixin, View):
                         cart.append(book)
                         total_order += float(book.sales_price)
                         total_order_with_tax += float(get_total_price_of_purchase(book.sales_price))
-
-
             self.request.session['total_order_price'] = total_order
             if elude_user.payment_card_info.count() > 0:
                 try:
@@ -529,6 +538,10 @@ class CartView(LoginRequiredMixin, View):
                 payment_saved = False
             total_order = convert_str_to_money(str(total_order))
             total_order_with_tax = convert_str_to_money(str(total_order_with_tax))
+            if not request.user.is_authenticated():
+                user_name = "guest"
+            else:
+                user_name = self.request.user.username
             return render(request, 'cart.html', {'cart': cart,'user_name': user_name,
                                              'has_address': has_address, 'delivery_time':delivery_time, 'total_order':
                                              total_order, 'payment_saved':payment_saved, 'total_order_with_tax':
@@ -608,7 +621,11 @@ class ListOfYourBooksView(LoginRequiredMixin, View):
         for book in user_book:
                 book_image = BookImage.objects.filter(book=book).values()
                 user_books.append((book, book_image))
-        return render(request, 'all_user_books.html', {'user_book': user_books})
+        if not request.user.is_authenticated():
+            user_name = "guest"
+        else:
+            user_name = self.request.user.username
+        return render(request, 'all_user_books.html', {'user_book': user_books, 'user_name':user_name})
 
     def post(self, request, user_name):
         if 'edit-book-id' in request.POST:
@@ -665,7 +682,10 @@ class SingleBookDescriptionView(LoginRequiredMixin, View):
             return HttpResponseRedirect('')
 
         if 'add_to_cart' in request.POST:
-            shopping_cart_lists = self.request.session.get('shopping_cart')
+            try:
+                shopping_cart_lists = self.request.session.get('shopping_cart')
+            except (TypeError, None, KeyError):
+                shopping_cart_lists = None
             if shopping_cart_lists is None:
                 shopping_cart_lists = {book_id:book_id}
             elif book_id not in shopping_cart_lists:
@@ -713,7 +733,11 @@ class AddressView(LoginRequiredMixin, View):
             pop_up_address_form = "False"
             addresses = elude_user.address.all()
         form = form_templates.AddressBookForm()
-        return render(request, 'address_page.html', {'form': form, 'user_name': elude_user.username.username,
+        if not request.user.is_authenticated():
+            user_name = "guest"
+        else:
+            user_name = self.request.user.username
+        return render(request, 'address_page.html', {'form': form, 'user_name': user_name,
                                                      'pop_up_address_form': pop_up_address_form, 'addresses':addresses})
 
     def post(self, request, user_name):
@@ -834,8 +858,11 @@ class PaymentView(LoginRequiredMixin, View):
             token = request.POST.get("stripeToken")
         except KeyError:
             token = None
-        checkout_cart = self.request.session.get('shopping_cart')
-        if token:
+        try:
+            checkout_cart = self.request.session.get('shopping_cart')
+        except(None, TypeError, KeyError):
+            checkout_cart = None
+        if token and checkout_cart:
             user_name = self.request.user.username
             try:
                 customer = stripe.Customer.create(
@@ -843,7 +870,6 @@ class PaymentView(LoginRequiredMixin, View):
                     description=user_name
                 )
                 card_info = customer.sources['data'][0]
-                #card_info = json.loads(card_info)
                 try:
                     address = card_info['address_line1'] + "" + card_info['address_line2'] + ", " + card_info['address_city']
                     address_state = card_info['address_state']
@@ -880,8 +906,8 @@ class PaymentView(LoginRequiredMixin, View):
             try:
                 for book_id in checkout_cart:
                     book = get_object_or_404(Book, id=book_id)
-                    book_price = int(book.sales_price) * 100
-                    application_fee = application_fee_amount(book_price)
+                    book_price = float(get_total_price_of_purchase(book.sales_price)) * 100
+                    application_fee = application_fee_amount(book.sales_price)
                     self.request.session['application_fee'] = application_fee
                     book_owner = book.book_owner
                     stripe.Charge.create(
@@ -894,8 +920,8 @@ class PaymentView(LoginRequiredMixin, View):
                     )
                 start_range_of_pickup_time = datetime.now()
                 end_range_of_pick_up_time = datetime.now() + timedelta(hours=24)
-                start_range_of_pickup_time_str= start_range_of_pickup_time.strftime("%A %d. %B %Y")
-                end_range_of_pick_up_time_str = end_range_of_pick_up_time.strftime("%A %d. %B %Y")
+                start_range_of_pickup_time_str= start_range_of_pickup_time.strftime("%A %d, %B %Y")
+                end_range_of_pick_up_time_str = end_range_of_pick_up_time.strftime("%A %d, %B %Y")
                 address_full_query = elude_user.address.all().get(current_shipping_address=True)
                 full_address = address_full_query.address + " "+ address_full_query.city + \
                                " "+ address_full_query.state + " "+address_full_query.zip_code
@@ -973,34 +999,40 @@ class PaymentView(LoginRequiredMixin, View):
                 # Display a very generic error to the user, and maybe send
                 # yourself an email
                 pass
-                messages.error(request, 'Sorry, Display a very generic error to the user, and maybe send.')
+                messages.error(request, 'Sorry, an error occurred while processing your card.')
             except Exception, e:
                 # Something else happened, completely unrelated to Stripe
                 pass
-                try:
-                    len(checkout_cart)
-                except(None, TypeError, KeyError):
-                    pass
-                    return
                 messages.error(request, 'Sorry, Something else happened, completely unrelated to Stripe.')
-                return HttpResponseRedirect(reverse('cart_page', kwargs={'user_name': request.user.username}))
+                #return HttpResponseRedirect(reverse('cart_page', kwargs={'user_name': request.user.username}))
         return HttpResponseRedirect('')
 
 
 class SavedCreditCardPaymentView(LoginRequiredMixin, View):
 
     def get(self, request, user_name):
+        if not request.user.is_authenticated():
+            user_name = "guest"
+        else:
+            user_name = self.request.user.username
         try:
             application_fee = self.request.session.get('application_fee')
         except (None, KeyError, TypeError):
             application_fee = None
         elude_user = EludeUser.objects.get(username=self.request.user)
-        checkout_cart = self.request.session.get('shopping_cart')
-        payment_data = elude_user.payment_card_info.all().get(is_user_current_option=True)
-        last_four_digits = payment_data.last_4_of_card
-        card_type = payment_data.card_brand
+        try:
+            checkout_cart = self.request.session.get('shopping_cart')
+        except(None, TypeError, KeyError):
+            checkout_cart = None
+        try:
+            payment_data = elude_user.payment_card_info.all().get(is_user_current_option=True)
+            last_four_digits = payment_data.last_4_of_card
+            card_type = payment_data.card_brand
+        except (None, KeyError, TypeError, ObjectDoesNotExist):
+            return HttpResponseRedirect(reverse('payment_page', kwargs={'user_name':user_name}))
+
         return render(request, 'saved_payment_card_page.html', {'last_four_digits':last_four_digits,
-                                                                'card_type':card_type, 'application_fee': application_fee})
+                                                                'card_type':card_type, 'application_fee': application_fee, 'user_name':user_name})
 
     def post(self, request, user_name):
         if request.POST.get("payment"):
@@ -1109,12 +1141,6 @@ class SavedCreditCardPaymentView(LoginRequiredMixin, View):
                 messages.error(request, 'Sorry, we encountered while processing your card.')
             except Exception, e:
                 # Something else happened, completely unrelated to Stripe
-                pass
-                try:
-                    len(checkout_cart)
-                except(None, TypeError, KeyError):
-                    pass
-                    return
                 messages.error(request, 'Sorry, Something else happened, completely unrelated to Stripe.')
                 return HttpResponseRedirect(reverse('cart_page', kwargs={'user_name': request.user.username}))
             return HttpResponseRedirect('')
@@ -1134,16 +1160,20 @@ class StripeConnectionConfirmationView(LoginRequiredMixin, View):
         except:
             code = None
             scope = None
+        if not request.user.is_authenticated():
+            user_name = "guest"
+        else:
+            user_name = self.request.user.username
         return render(request, 'stripe_connection_confirmation_page.html', {'code': code,
-                                                                  'scope': scope, 'session':session
-                                                                  })
+                                                                  'scope': scope, 'session':session,
+                                                                  'user_name':user_name})
 
     def post(self, request):
         elude_user = EludeUser.objects.get(username=self.request.user)
         if request.POST.get("complete-connection") or request.POST.get("complete-connection-non-modal"):
             code = request.POST.get("code")
             if code:
-                response_dict = {'code': code, 'client_secret':"sk_test_0nUBiJyARoPOsmheLyUv4Glq",
+                response_dict = {'code': code, 'client_secret':STRIPE_LIVE_SECRET_KEY,
                             'grant_type': "authorization_code"}
                 session = stripe_token.get_raw_access_token(data=response_dict)
                 self.request.session['stripe_data'] = session.json()
@@ -1174,6 +1204,10 @@ class StripeConnectionConfirmationView(LoginRequiredMixin, View):
 class ListBookConfirmationView(LoginRequiredMixin, View):
 
     def get(self, request, user_name):
+        if not request.user.is_authenticated():
+            user_name = "guest"
+        else:
+            user_name = self.request.user.username
         elude_user = EludeUser.objects.get(username=self.request.user)
         try:
             address = elude_user.address.all().get(current_shipping_address=True)
@@ -1187,7 +1221,7 @@ class ListBookConfirmationView(LoginRequiredMixin, View):
         stripe_user_url = 'https://www.textdoar.com/'+elude_user.username.username+'/'
         stripe_user_country = 'US'
         stripe_user_phone_number = elude_user.phone_number
-        stripe_user_business_name = "textdoar"
+        stripe_user_business_name = "textdoar seller"
         stripe_user_first_name = elude_user.username.first_name
         stripe_user_last_name = elude_user.username.last_name
         stripe_user_street_address = address.address
@@ -1216,15 +1250,19 @@ class ListBookConfirmationView(LoginRequiredMixin, View):
                                                                   'stripe_user_average_payment':stripe_user_average_payment,
                                                                   'stripe_user_past_year_volume':stripe_user_past_year_volume,
                                                                   'stripe_user_currency':stripe_user_currency,
-                                                                'stripe_user_business_type':stripe_user_business_type})
+                                                                'stripe_user_business_type':stripe_user_business_type, 'username':user_name})
 
 
 class ChangePasswordView(LoginRequiredMixin, View):
 
     def get(self, request, user_name):
+        if not request.user.is_authenticated():
+            user_name = "guest"
+        else:
+            user_name = self.request.user.username
         user = User.objects.get(username=self.request.user.username)
         form = form_templates.PasswordChangeForm()
-        return render(request, 'password_change_page.html', {'user_name':user.username, 'form':form})
+        return render(request, 'password_change_page.html', {'user_name':user.username, 'form':form, 'user_name':user_name})
 
     def post(self, request, user_name):
         form = form_templates.PasswordChangeForm(request.POST)
@@ -1260,6 +1298,10 @@ class OrderHistoryView(LoginRequiredMixin, View):
             for book in users_sold_books:
                     book_image = BookImage.objects.filter(book=book.book).values()
                     users_sold_books_list.append((book, book_image))
+        if not request.user.is_authenticated():
+            user_name = "guest"
+        else:
+            user_name = self.request.user.username
         return render(request, 'order_history.html', {'user_name':user_name,
                                                       'user_purchased_books':users_purchased_books_list,
                                                       'user_sold_books': users_sold_books_list})
@@ -1268,6 +1310,10 @@ class OrderHistoryView(LoginRequiredMixin, View):
 class PaymentCardDetailView(LoginRequiredMixin, View):
 
     def get(self, request, user_name):
+        if not request.user.is_authenticated():
+            user_name = "guest"
+        else:
+            user_name = self.request.user.username
         elude_user = EludeUser.objects.get(username=self.request.user)
         saved_card_details = elude_user.payment_card_info.all()
         return render(request, 'payment_card_details_page.html', {'user_name':user_name,
@@ -1299,8 +1345,12 @@ class PaymentCardDetailView(LoginRequiredMixin, View):
 class ErrorPageViewForStripe(LoginRequiredMixin, View):
 
     def get(self, request, user_name):
+        if not request.user.is_authenticated():
+            user_name = "guest"
+        else:
+            user_name = self.request.user.username
         elude_user = EludeUser.objects.get(username=self.request.user)
-        return render(request, 'error_page_for_stripe.html', {'user_name':elude_user.username.username})
+        return render(request, 'error_page_for_stripe.html', {'user_name':user_name})
 
 
 class AboutUSView(View):
