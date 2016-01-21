@@ -8,7 +8,7 @@
     <p>
     <h3 style="font-family: 'Playfair Display', serif;">Congratulations on your purchase of {{ book }} {{ book_edition }}.
     Your order number is <b>{{ order_num }}</b>. Your textbook will be delivered to you within the next two days,
-    and could be as early as within the next few hours.</h3></p>
+    and could be delivered as early as the next few hours.</h3></p>
     <div class="col-md-6>
     <p><h3 style="font-family: 'Playfair Display', serif;">Latest arrival time: {{ arrival_time }}</h3></p>
     </div
@@ -38,13 +38,5 @@
             <a href='https://www.textdoar.com/term-and-condition-page'>Terms of Agreement.</a>
         </small></p></footer>
         <div class="row">
-            <div class="text-center">
-                <div class="col-md-3">
-                    <small><a href='https://www.textdoar.com/privacy'>Privacy</a></small>
-                </div>
-                <div class="col-md-3">
-                    <small><a href='https://www.textdoar.com/unsubscribed'>un-subscribed</a></small>
-                </div>
-            </div>
         </div>
    {% endblock %}

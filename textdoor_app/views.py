@@ -224,7 +224,7 @@ class AccountActivationView(View):
             send_templated_mail(
                 template_name='activation_email',
                 from_email='Textdoar Team',
-                recipient_list=['email@textdoar.com', user_email],
+                recipient_list=['email@textdoar.com','chris.burgweger@textdoar.com', user_email],
                 context={
                     'activation_code': activation_code,
                      'first_name': first_name,
@@ -243,7 +243,7 @@ class AccountActivationView(View):
                 send_templated_mail(
                 template_name = 'welcome_email',
                 from_email = 'Textdoar Team',
-                recipient_list = ['email@textdoar.com', user_email],
+                recipient_list = ['email@textdoar.com','chris.burgweger@textdoar.com', user_email],
                 context={
                     'user_name': user.username,
                      'first_name': first_name,
@@ -259,10 +259,15 @@ class AccountActivationView(View):
 class ISBNView(View):
 
     def get(self, request, user_name):
+
         if request.user.is_authenticated():
             user_name = request.user.username
         else:
             user_name = "guest"
+        try:
+            del self.request.session['edit_mode']
+        except(TypeError, KeyError, None):
+            pass
         return render(request, 'isbn_entry.html', {'user_name': user_name})
 
     def post(self, request, user_name):
@@ -415,6 +420,15 @@ class NewBookListingView(LoginRequiredMixin, View):
                 edit_book.sales_price = book_price
                 edit_book.isbn_number = isbn_num
                 edit_book.save()
+                if image_file:
+                    new_book = Book.objects.get(id=edit_mode)
+                    try:
+                        book_old_image = BookImage.objects.get(book=new_book)
+                        book_old_image.delete()
+                    except(KeyError, TypeError, None):
+                        pass
+                    book_image = BookImage(image_name=(name_of_book + " book image"), book_image=image_file, book=new_book)
+                    book_image.save()
             else:
                 new_book = Book(title=name_of_book, isbn_number=isbn_num, author=author,
                             book_condition=book_condition,
@@ -424,35 +438,40 @@ class NewBookListingView(LoginRequiredMixin, View):
                             publish_date=pub_date_clean,
                             publish_type=publish_type)
                 new_book.save()
-            if image_file:
-                if edit_mode:
-                    new_book = Book.objects.get(id=edit_mode)
-                    try:
-                        book_old_image = BookImage.objects.get(book=new_book)
-                        book_old_image.delete()
-                    except:
-                        pass
+                if image_file:
                     book_image = BookImage(image_name=(name_of_book + " book image"), book_image=image_file, book=new_book)
                     book_image.save()
                 else:
-                    book_image = BookImage(image_name=(name_of_book + " book image"), book_image=image_file, book=new_book)
-                    book_image.save()
-            else:
-                dictionary_new = self.request.session.get('dictionary', False)
-                try:
-                    image_url = dictionary_new['isbn_picture']
-                except (TypeError, KeyError, None):
-                    image_url = None
-                    image_file = None
-                if image_url: # new book listing entry
-                    r = requests.get(image_url)
-                    image = NamedTemporaryFile(delete=True)
-                    image.write(r.content)
-                    image.flush()
-                    image_file = File(image)
-                    image_file.name = dictionary_new['isbn_picture_name']
-                    book_image = BookImage(image_name=(name_of_book + " book image"), book_image=image_file, book=new_book)
-                    book_image.save()
+                    dictionary_new = self.request.session.get('dictionary', False)
+                    try:
+                        image_url = dictionary_new['isbn_picture']
+                    except (TypeError, KeyError, None):
+                        image_url = None
+                    if image_url: # new book listing entry
+                        r = requests.get(image_url)
+                        image = NamedTemporaryFile(delete=True)
+                        image.write(r.content)
+                        image.flush()
+                        image_file = File(image)
+                        image_file.name = dictionary_new['isbn_picture_name']
+                        book_image = BookImage(image_name=(name_of_book + " book image"), book_image=image_file, book=new_book)
+                        book_image.save()
+                    send_templated_mail(
+                        template_name='new_book_listed',
+                        from_email='no reply',
+                        recipient_list=['email@textdoar.com','chris.burgweger@textdoar.com', elude_user.username.email],
+                        context={
+                            'book': new_book.title,
+                            'isbn_number': new_book.isbn_number,
+                            'first_name': elude_user.username.first_name,
+                            'price': new_book.sales_price,
+                            'textdoar_commission': get_textdoar_commission(new_book.sales_price),
+                            'book_condition': new_book.book_condition,
+                            'book_edition': new_book.book_edition,
+                        },
+                        bcc=[variables.CUSTOMER_SERVICE_EMAIL],
+                    )
+            self.request.session['new_message'] = variables.REGISTERED_NEW_BOOK
             user = EludeUser.objects.get(username=self.request.user)
             if user.address.count() is 0:
                 if not user.stripe_account_activated:
@@ -463,26 +482,9 @@ class NewBookListingView(LoginRequiredMixin, View):
             if edit_mode:
                 del self.request.session['edit_mode']
                 return HttpResponseRedirect(reverse('list_of_your_books', kwargs={'user_name':user_name}))
-
-            send_templated_mail(
-                template_name='new_book_listed',
-                from_email='no reply',
-                recipient_list=['email@textdoar.com', elude_user.username.email],
-                context={
-                    'book': new_book.title,
-                     'isbn_number': new_book.isbn_number,
-                    'first_name': elude_user.username.first_name,
-                    'price': new_book.sales_price,
-                    'textdoar_commission': get_textdoar_commission(new_book.sales_price),
-                    'book_condition': new_book.book_condition,
-                    'book_edition': new_book.book_edition,
-                },
-                bcc=[variables.CUSTOMER_SERVICE_EMAIL],
-            )
-            self.request.session['new_message'] = variables.REGISTERED_NEW_BOOK
             return HttpResponseRedirect(reverse('success_url_page', kwargs={'user_name': user_name}))
         else:
-            return render(request, 'new_book_entry.html', {'form': form})
+            return render(request, 'new_book_entry.html', {'form': form, 'user_name':user_name})
 
 
 class SuccessPageView(View):
@@ -501,6 +503,10 @@ class SuccessPageView(View):
 
 class CartView(LoginRequiredMixin, View):
     def get(self, request, user_name):
+        if not request.user.is_authenticated():
+                user_name = "guest"
+        else:
+            user_name = self.request.user.username
         try:
             shopping_cart = self.request.session.get('shopping_cart')
         except (KeyError, TypeError, None):
@@ -538,16 +544,12 @@ class CartView(LoginRequiredMixin, View):
                 payment_saved = False
             total_order = convert_str_to_money(str(total_order))
             total_order_with_tax = convert_str_to_money(str(total_order_with_tax))
-            if not request.user.is_authenticated():
-                user_name = "guest"
-            else:
-                user_name = self.request.user.username
             return render(request, 'cart.html', {'cart': cart,'user_name': user_name,
                                              'has_address': has_address, 'delivery_time':delivery_time, 'total_order':
                                              total_order, 'payment_saved':payment_saved, 'total_order_with_tax':
                                                  total_order_with_tax,'shopping_cart':shopping_cart})
         else:
-            return render(request, 'cart.html', {'cart':None})
+            return render(request, 'cart.html', {'cart':None, 'user_name':user_name})
 
     def post(self, request, user_name):
         dynamic_cart = self.request.session.get('shopping_cart')
@@ -581,7 +583,7 @@ class SearchResultView(View):
             if found_entries:
                 for book in found_entries:
                     if book.book_owner.stripe_account_activated and book.book_owner.address.count() > 0:
-                        book_image = BookImage.objects.filter(book=book).values()
+                        book_image = BookImage.objects.filter(book=book)
                         book_image_list_for_search.append((book, book_image))
                 return render(request, 'search_results.html', {'query_string': query_string, 'found_entries': found_entries,
                                                        'user_name': user_name, 'form':form,
@@ -596,14 +598,18 @@ class SearchResultView(View):
     def post(self, request, user_name):
         form = form_templates.BooksStudentNeedForm(request.POST)
         if form.is_valid():
+            if not request.user.is_authenticated():
+                user_name = "guest"
+            else:
+                user_name = self.request.user.username
             isbn_number = form.cleaned_data.get("isbn_number")
             email = form.cleaned_data.get("email")
             name_of_book = form.cleaned_data.get("name_of_book")
             new_book_request = BooksStudentsRequested(isbn_number=isbn_number, email=email, name_of_book=name_of_book)
             new_book_request.save()
-            email = EmailMessage(variables.BOUGHT_BOOK_MESSAGE_EMAIL_SUBJECT,
-                                 "We Hope to let you when it comes in in the next week",
-                                 variables.TEXTDOAR_EMAIL, ['Uzzije2000@yahoo.co.uk'])
+            email = EmailMessage("Book Requested Order Recieved",
+                                 "We Hope to let you when know when it comes in ASAP",
+                                 variables.TEXTDOAR_EMAIL, [email, 'email@textdoar.com'])
             email.send()
             self.request.session['new_message'] = "You Just Successfully Notified Us"
             return HttpResponseRedirect(reverse('success_url_page', kwargs={'user_name':self.request.user.username}))
@@ -618,8 +624,13 @@ class ListOfYourBooksView(LoginRequiredMixin, View):
         user = User.objects.get(username=request.user)
         elude_user = EludeUser.objects.get(username=user)
         user_book = Book.objects.filter(book_owner=elude_user).filter(book_is_sold=False)
+        try:
+            edit_mode_check = self.request.session.get('edit_mode')
+            del self.request.session['edit_mode']
+        except(TypeError, KeyError, None):
+            pass
         for book in user_book:
-                book_image = BookImage.objects.filter(book=book).values()
+                book_image = BookImage.objects.filter(book=book)
                 user_books.append((book, book_image))
         if not request.user.is_authenticated():
             user_name = "guest"
@@ -659,7 +670,7 @@ class SingleBookDescriptionView(LoginRequiredMixin, View):
         else:
             user_name = self.request.user.username
         book = get_object_or_404(Book, id=book_id)
-        book_image = BookImage.objects.filter(book=book).values()
+        book_image = BookImage.objects.filter(book=book)
         return render(request, 'book_discription_view.html', {'book':book,'book_id':book_id,
                                                                 'book_image': book_image,
                                                               'user_name': user_name,
@@ -667,7 +678,6 @@ class SingleBookDescriptionView(LoginRequiredMixin, View):
 
     def post(self, request, book_id, slug):
         book = get_object_or_404(Book, id=book_id)
-        book_image = BookImage.objects.filter(book=book).values()
         if 'watch-list' in request.POST:
             book = get_object_or_404(Book, id=book_id)
             elude_user = EludeUser.objects.get(username=request.user)
@@ -711,7 +721,7 @@ class WatchListBooksView(LoginRequiredMixin, View):
             watch_list_books = None
         if watch_list_books:
             for book in watch_list_books:
-                    book_image = BookImage.objects.filter(book=book.book).values()
+                    book_image = BookImage.objects.filter(book=book.book)
                     watch_list_books_list.append((book, book_image))
         return render(request, 'watch_list_books.html', {'watch_list_books_list': watch_list_books_list, 'user_name': user_name})
 
@@ -911,11 +921,11 @@ class PaymentView(LoginRequiredMixin, View):
                     self.request.session['application_fee'] = application_fee
                     book_owner = book.book_owner
                     stripe.Charge.create(
-                        amount=book_price,
+                        amount=int(book_price),
                         currency='usd',
                         customer=payment_data.customer_id,
                         description="Sale of Book Charge",
-                        application_fee=application_fee,
+                        application_fee=int(application_fee),
                         destination=book_owner.stripe_data.stripe_user_id
                     )
                 start_range_of_pickup_time = datetime.now()
@@ -937,7 +947,7 @@ class PaymentView(LoginRequiredMixin, View):
                     send_templated_mail(
                         template_name = 'user_purchase_confirmation_email',
                         from_email = 'Textdoar Team',
-                        recipient_list = ['email@textdoar.com', elude_user.username.email],
+                        recipient_list = ['email@textdoar.com','chris.burgweger@textdoar.com', elude_user.username.email],
                         context={
                             'first_name': elude_user.username.first_name,
                             'address': full_address,
@@ -1043,16 +1053,16 @@ class SavedCreditCardPaymentView(LoginRequiredMixin, View):
             try:
                 for book_id in checkout_cart:
                     book = get_object_or_404(Book, id=book_id)
-                    book_price = int(book.sales_price) * 100
-                    application_fee = application_fee_amount(book_price/100)
+                    book_price = float(get_total_price_of_purchase(book.sales_price)) * 100
+                    application_fee = application_fee_amount(book.sales_price)
                     self.request.session['application_fee'] = application_fee
                     book_owner = book.book_owner
                     stripe.Charge.create(
-                        amount=book_price,
+                        amount=int(book_price),
                         currency='usd',
                         customer=payment_data.customer_id,
                         description="Sale of Book Charge",
-                        application_fee=application_fee,
+                        application_fee=int(application_fee),
                         destination=book_owner.stripe_data.stripe_user_id
                     )
                 start_range_of_pickup_time = datetime.now() + timedelta(hours=6)
@@ -1096,7 +1106,7 @@ class SavedCreditCardPaymentView(LoginRequiredMixin, View):
                     send_templated_mail(
                     template_name = 'user_sold_confirmation',
                     from_email = 'Textdoar Team',
-                    recipient_list = ['email@textdoar.com', sold_book.seller.username.email],
+                    recipient_list = ['email@textdoar.com','chris.burgweger@textdoar.com', sold_book.seller.username.email],
                     context={
                         'first_name': sold_book.seller.username.first_name,
                         'pickup_day_range': start_range_of_pickup_time_str,
@@ -1188,7 +1198,7 @@ class StripeConnectionConfirmationView(LoginRequiredMixin, View):
                     stripe_data.save()
                     elude_user.stripe_data = stripe_data
                     elude_user.save(force_update=True)
-                    self.request.session['message_for_success'] = variables.LIST_BOOK_MESSAGE
+                    self.request.session['message_for_success'] = variables.CONNECTED_TO_STRIPE
                     if elude_user.address.count() is 0:
                         self.request.session['redirect_to_success_page'] = True
                         return HttpResponseRedirect(reverse('address_entry_page',
@@ -1250,7 +1260,7 @@ class ListBookConfirmationView(LoginRequiredMixin, View):
                                                                   'stripe_user_average_payment':stripe_user_average_payment,
                                                                   'stripe_user_past_year_volume':stripe_user_past_year_volume,
                                                                   'stripe_user_currency':stripe_user_currency,
-                                                                'stripe_user_business_type':stripe_user_business_type, 'username':user_name})
+                                                                'stripe_user_business_type':stripe_user_business_type, 'user_name':user_name})
 
 
 class ChangePasswordView(LoginRequiredMixin, View):
@@ -1292,11 +1302,11 @@ class OrderHistoryView(LoginRequiredMixin, View):
             users_sold_books = None
         if users_purchased_books:
             for book in users_purchased_books:
-                    book_image = BookImage.objects.filter(book=book.book).values()
+                    book_image = BookImage.objects.filter(book=book.book)
                     users_purchased_books_list.append((book, book_image))
         if users_sold_books:
             for book in users_sold_books:
-                    book_image = BookImage.objects.filter(book=book.book).values()
+                    book_image = BookImage.objects.filter(book=book.book)
                     users_sold_books_list.append((book, book_image))
         if not request.user.is_authenticated():
             user_name = "guest"
@@ -1382,9 +1392,9 @@ class ContactUSView(View):
             student_feed_back = StudentFeedBacks(email=email, feed_back=feed_back, topic=topic)
             student_feed_back.save()
             if email:
-                sending_list = ['email@textdoar.com', email]
+                sending_list = ['email@textdoar.com','chris.burgweger@textdoar.com', email]
             else:
-                sending_list = ['emai@textdoar.com']
+                sending_list = ['emai@textdoar.com','chris.burgweger@textdoar.com',]
             send_templated_mail(
                 template_name = 'feed_back_receive_email',
                 from_email = 'Textdoar Team',

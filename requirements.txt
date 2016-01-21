@@ -1,4 +1,4 @@
-git://github.com/BradWhittington/django-templated-email.git@b993f2d3562fca490dc19a2607dc4e3ea6878917#egg=django-templated-email
+git+git://github.com/BradWhittington/django-templated-email.git@b993f2d3562fca490dc19a2607dc4e3ea6878917#egg=django-templated-email
 django>=1.8.0, <1.9.0
 django_static_jquery==2.1.1
 django-jquery-ui==1.11.4

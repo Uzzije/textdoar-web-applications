@@ -6,7 +6,7 @@
     <h3 style="font-family: 'Playfair Display', serif;">Good News {{ first_name }}!</h3>
     <hr>
     <p><h3 style="font-family: 'Playfair Display', serif;">Your textbook {{ book }} {{ book_edition }} has been purchased!
-    What Now? All you have to do is reply back with the most convenient time to pick up the book from you.</b></h3></p>
+    What Now? All you have to do is reply to back to this email with your phone number, and the most convenient time to pick up the book from you; i.e in the evening.</b></h3></p>
     <br>
     <p><h3 style="font-family: 'Playfair Display', serif;">Estimated Pick Up Time: Book will need to be picked up between
     <b>{{ pickup_day_range }} and {{ pickup_day_range_two }}</b> from this address: {{ address }}.</h3></p>
@@ -14,65 +14,9 @@
     <p><h3 style="font-family: 'Playfair Display', serif;">
     Payment from the sale of your textbook should reflect in your bank account within the next 3 business days
     (based on the notion that the purchased textbook will be delivered within the next two days).
-    A Payment transaction invoice will also be reflected in your stripe account shortly.</h3></p>
+    A Payment transaction invoice will also be reflected in your stripe account shortly as well.</h3></p>
     <br>
 
-    <p><h2 style="font-family: 'Playfair Display', serif;">
-    Where Should I Leave My Book?</h2></p>
-
-    <p><h3 style="font-family: 'Playfair Display', serif;">
-    Simply reply back to this email with what time and method works best for you. If you do not do
-    so within the next 6 hours from getting this message, we will go by the understanding that you want us to pick
-    the purchased book from your home anytime between <b>{{ pickup_day_range }} and {{ pickup_day_range_two }}</b>.
-
-    </h3></p>
-
-    <p><h3 style="font-family: 'Playfair Display', serif;">
-    Below are some suggestion of other ways that our delivery guys and gals can pick up
-    your textbook.</h3></p>
-    <br>
-
-    <p><h3 style="font-family: 'Playfair Display', serif;">
-    House:</h3></p>
-
-    <p><h3 style="font-family: 'Playfair Display', serif;">
-     Just wait for us to pick it up! Not home? Feel free to leave it in your mail box.</h3></p>
-
-    <br>
-    <p><h3 style="font-family: 'Playfair Display', serif;">
-    Apartments:</h3></p>
-
-    <p><h3 style="font-family: 'Playfair Display', serif;">
-    If there is a front office you may leave it there.</h3></p>
-    <br>
-
-    <p><h3 style="font-family: 'Playfair Display', serif;">
-     Dorms:</h3></p>
-
-    <p><h3 style="font-family: 'Playfair Display', serif;">
-    You can leave the book down at the front desk with a note.</h3></p>
-    <br>
-
-    <p><h3 style="font-family: 'Playfair Display', serif;">
-    Fraternity/Sorority:</h3></p>
-
-    <p><h3 style="font-family: 'Playfair Display', serif;">
-    Just leave it on the inside next to the door with a note so your fraternity brothers and
-    sorority sisters will get the message when we ring the doorbell.</h3></p>
-    <br>
-
-    <p><h3 style="font-family: 'Playfair Display', serif;">
-     Not in town?</h3></p>
-
-    <p><h3 style="font-family: 'Playfair Display', serif;">
-    Leave it with a friend.</h3></p>
-
-    <br>
-
-    <p><h3 style="font-family: 'Playfair Display', serif;">
-    Remember part of our uniqueness as a company is established from being able to work with our your time and schedule
-    to get you the most bang for the buck.</h3></p>
-    <br>
 
     <p><h3 style="font-family: 'Playfair Display', serif;">
      Thanks,</h3></p>
@@ -84,14 +28,4 @@
             By signing up, you  are agreeing to our
             <a href='https://www.textdoar.com/term-and-condition-page'>Terms of Agreement.</a>
         </small></p></footer>
-        <div class="row">
-            <div class="text-center">
-                <div class="col-md-3">
-                    <small><a href='https://www.textdoar.com/privacy'>Privacy</a></small>
-                </div>
-                <div class="col-md-3">
-                    <small><a href='https://www.textdoar.com/unsubscribed'>Un-subscribed</a></small>
-                </div>
-            </div>
-        </div>
 {% endblock %}

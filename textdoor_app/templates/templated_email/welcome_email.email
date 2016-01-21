@@ -13,7 +13,7 @@
         <br><b><b><b><b>
     <h3><b>P.S:</b></h3> <h4><b>If you list a textbook and it is purchased within 5 days of listing, we will tag along a free Chipotle Gift card when we pickup your textbook!</b></h4>
     <div class="col-md-6">
-        <span><a href="https://www.textdoar.com/{{user_name}}/new-book-listing/"></h4>List A New Textbook Here</h4></a></span>
+        <span><a href="https://www.textdoar.com/{{user_name}}/isbn-finder/"></h4>List A New Textbook Here</h4></a></span>
     </div>
     <div class="col-md-6">
         <img src="https://upload.wikimedia.org/wikipedia/en/thumb/3/3b/Chipotle_Mexican_Grill_logo.svg/1024px-Chipotle_Mexican_Grill_logo.svg.png"

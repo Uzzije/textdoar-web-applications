@@ -24,7 +24,7 @@ BOOK_CONDITION = \
                   ('Bad', 'Bad'),
                   ('Average', 'Average'),
                   ('Good', 'Good'),
-                  ('Like', 'Like New')
+                  ('Like New', 'Like New')
     ]
 TYPE_OF_RENT = [('Long Term', 'Long Term i.e half a semester or longer'), ('Medium Term', 'Medium Term, i.e a few weeks'),
                 ('Short Term', 'Short Term i.e a less than a couple of weeks')]
@@ -52,6 +52,8 @@ STRIPE_COUNTRY_LIST = [
 FEED_BACK_TOPICS = [
     ('Question', "Question"),
     ('Suggestion', "Suggestion"),
+    ('Report Technical Problem With Site', 'Report Technical Problem With Site'),
+    ('Payment Problem', 'Payment Problem'),
      ('Other', "Other"),
 ]
 

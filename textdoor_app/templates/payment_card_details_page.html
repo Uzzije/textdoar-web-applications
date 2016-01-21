@@ -10,6 +10,7 @@
         <form method="post" action="{% url 'saved_card_page' user_name %}">{% csrf_token %}
         <div class="container-fluid">
         <div class="row">
+            <div class="col-md-12">
             {% if saved_card_info %}
                 {% for card in saved_card_info %}
                      <div class="row">
@@ -39,8 +40,11 @@
                      </div>
                 {% endfor %}
             {% endif %}
+            </div>
             <div class="row">
-                <a href="{% url 'list_book_confirmation_page' user_name %}">Start Accepting Payment</a>
+                <div class="col-md-12">
+                    <a href="{% url 'list_book_confirmation_page' user_name %}">Start Accepting Payment</a>
+                </div>
             </div>
         </div>
         </div>
