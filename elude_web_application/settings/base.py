@@ -109,8 +109,7 @@ DATABASES = {
     }
 }
 
-MEDIA_ROOT = os.path.join(BASE_DIR, '../textdoor_app/static/media/')
-MEDIA_URL = '/static/media/'
+
 # Internationalization
 # https://docs.djangoproject.com/en/1.8/topics/i18n/
 
@@ -128,3 +127,6 @@ STATIC_ROOT = os.path.join(BASE_DIR, '../textdoor_app/static/')
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 STATIC_URL = '/static/'
+
+MEDIA_ROOT = os.path.join(BASE_DIR, '../textdoor_app/media/')
+MEDIA_URL = '/media/'

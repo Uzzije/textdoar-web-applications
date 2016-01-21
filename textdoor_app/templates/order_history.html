@@ -16,7 +16,7 @@
                             <div class="col-md-3">
                                 {% load staticfiles %}
                                 {% for pic in image %}
-                                <img src = '{% static 'media' %}/{{ pic.book_image }}' style="width:100%;height:100%;"/>
+                                <img src = '{{ pic.book_image.url }}' style="width:100%;height:100%;"/>
                                 {% endfor %}
                             </div>
                             <div class="col-md-6 roboto-font">
@@ -42,9 +42,8 @@
                         {% for result, image in user_sold_books %}
                         <div class="row list-group">
                             <div class="col-md-3">
-                                {% load staticfiles %}
                                 {% for pic in image %}
-                                <img src = '{% static 'media' %}/{{ pic.book_image }}' style="width:100%;height:100%;"/>
+                                <img src = '{{ pic.book_image.url }}' style="width:100%;height:100%;"/>
                                 {% endfor %}
                             </div>
                             <div class="col-md-6 roboto-font">

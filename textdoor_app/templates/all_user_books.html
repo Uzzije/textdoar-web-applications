@@ -27,15 +27,14 @@
                 </ul>
             {% endif %}
         </div>
-    {% if book %}
+    {% if user_book %}
         {% for book, book_image in user_book %}
             <p><h1>{{ book.title }},{{ book.book_edition }}</h1></p>
                 <div class="row">
                     <div class="col-md-3">
                         {% if book_image %}
-                           {% load staticfiles %}
-                            {% for pic in book_image %}
-                              <h2><img src = '{% static 'media' %}/{{ pic.book_image }}' style="width:100%;height:100%;"></h2>
+                            {% for pic in book_image.all %}
+                              <h2><img src ='{{ pic.book_image.url }}'></h2>
                             {% endfor %}
                             {% endif %}
                     </div>

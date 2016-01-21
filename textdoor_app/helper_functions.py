@@ -43,7 +43,7 @@ def validate_activation_code(user_code_input):
 
 def get_textdoar_commission(book_price):
     fee = float(application_fee_amount_not_for_stripe(book_price)) - float(get_buyers_fee())
-    return  fee
+    return '{0:.2f}'.format(fee)
 
 
 def generate_invoice_number(sold_book_id):
@@ -81,3 +81,4 @@ def card_type(number):
     if number[0] == "4":
         return "Visa"
     return "Unknown"
+

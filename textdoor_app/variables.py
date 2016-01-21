@@ -9,6 +9,7 @@ SOLD_BOOK_MESSAGE_EMAIL = "Textdoor, Sold Receipt"
 TEXTDOAR_EMAIL = 'email@textdoar.com'
 LIST_BOOK_MESSAGE = "Your, book has been listed, and will be live as soon as it is verified!"
 CUSTOMER_SERVICE_EMAIL = "customerservice@textdoar.com"
+CONNECTED_TO_STRIPE = "Good Deal! You are now connected to Stripe and can start receiving payments today!"
 
 #End dates of semesters
 KANSAS_STATE_UNIVERSITY_END_OF_SEMESTER_DATE = datetime.date(2016, 5, 31)
