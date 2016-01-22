@@ -37,19 +37,20 @@
 {% block body %}
     <div class="container overflow:scroll;">
         <form class="form-group vidaloka-font" method="post" action="{% url 'new_book_entry_page' user_name %}" enctype="multipart/form-data">{% csrf_token %}
-        <div class="col-md-6 input-group input-group-lg">
+        <div class="col-md-6 col-lg-offset-3 input-group input-group-lg">
             <div class="row">
                 {% if edit_book_form %}
                     <h1 class="bar-font jumbotron">Edit Book</h1>
                 {% else %}
-                <h1 class="bar-font jumbotron">Finalize Book Listing Process</h1>
+                <h1 class="bar-font jumbotron">Finalize Book Listing</h1>
                 {% endif %}
-            </div>
-            {% load bootstrap %}
-            {{ form|bootstrap}}
+                </div>
+                {% load bootstrap %}
+                {{ form|bootstrap}}
             </div>
             <hr>
-            <div row>
+            <!-- Write your comments here -->
+            <!--<div row>
                 <div class="col-md-3" id="make_selection_of_date_label">
                     <label>
                     Make Book Available For Purchase:
@@ -88,8 +89,9 @@
                         </div>
                 </div>
             </div>
+        <!-- Remember to add more information here -->
             <div class="row">
-            <div class="col-md-3">
+            <div class="col-md-3 col-lg-offset-8">
                 {% if edit_book_form %}
                     <input class="btn btn-lg btn-success" type="submit" value="Finish Book Edit">
                 {% else %}
@@ -97,13 +99,13 @@
                 {% endif %}
             </div>
             </div>
-        <div hidden class="row" id="info">
-            <div class="col-md-6">
-                <hr>
-                <p><h4>Right now only the right now option is available regardless of what option you check;
-                being able pre-post your textbook is coming in the near future.</h4></p>
-            </div>
-        </div>
+         <div hidden class="row" id="info">
+                <div class="col-md-6">
+                    <hr>
+                    <p><h4>Right now only the right now option is available regardless of what option you check;
+                    being able pre-post your textbook is coming in the near future.</h4></p>
+                </div>
+         </div>
         </form>
     </div>
 {% endblock %}
