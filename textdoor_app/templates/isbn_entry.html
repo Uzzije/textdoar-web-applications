@@ -15,7 +15,7 @@
     <div class="container" id="isbn_value_number">
         <form method="post">{% csrf_token %}
             <div class="row">
-                <div class="panel panel-body col-md-10 col-lg-offset-1 box-shadow--16dp">
+                <div class="col-md-10 col-lg-offset-1">
                     <div class="col-md-6 col-lg-offset-3">
                         <h3>What Book Do You Want to Sell?</h3>
                     </div>
@@ -43,14 +43,6 @@
                                     Our Library Connection, Feel Free to Upload Your Own Picture On the Next Page</b></p>
                                 {% endif %}
                             </div>
-                            <div class="col-md-4">
-                                <input type="submit" class="btn btn-primary btn-lg" value="Continue" name="finalizing_list">
-                                <hr>
-                                <p><h2 class="voltaire-font text-center"><b>Feel free to edit what does not quite look right in the product
-                                    description on the next page; <p>this includes uploading your own picture, if you do not like the
-                                    one returned to you.</p></b>
-                                </h2></p>
-                            </div>
                         </div>
                         <hr>
                         <div class="row">
@@ -73,6 +65,14 @@
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                        <div class="col-md-4">
+                                <input type="submit" class="btn btn-primary btn-lg" value="Continue" name="finalizing_list">
+                                <hr>
+                                <p><h2 class="voltaire-font text-center"><b>Feel free to edit what does not quite look right in the product
+                                    description on the next page; <p>this includes uploading your own picture, if you do not like the
+                                    one returned to you.</p></b>
+                                </h2></p>
                         </div>
                     </div>
                 {% elif error %}
