@@ -456,21 +456,21 @@ class NewBookListingView(LoginRequiredMixin, View):
                         image_file.name = dictionary_new['isbn_picture_name']
                         book_image = BookImage(image_name=(name_of_book + " book image"), book_image=image_file, book=new_book)
                         book_image.save()
-                    send_templated_mail(
-                        template_name='new_book_listed',
-                        from_email='no reply',
-                        recipient_list=['email@textdoar.com','chris.burgweger@textdoar.com', elude_user.username.email],
-                        context={
-                            'book': new_book.title,
-                            'isbn_number': new_book.isbn_number,
-                            'first_name': elude_user.username.first_name,
-                            'price': new_book.sales_price,
-                            'textdoar_commission': get_textdoar_commission(new_book.sales_price),
-                            'book_condition': new_book.book_condition,
-                            'book_edition': new_book.book_edition,
-                        },
-                        bcc=[variables.CUSTOMER_SERVICE_EMAIL],
-                    )
+                send_templated_mail(
+                    template_name='new_book_listed',
+                    from_email='no reply',
+                    recipient_list=['email@textdoar.com','chris.burgweger@textdoar.com', elude_user.username.email],
+                    context={
+                        'book': new_book.title,
+                        'isbn_number': new_book.isbn_number,
+                        'first_name': elude_user.username.first_name,
+                        'price': new_book.sales_price,
+                        'textdoar_commission': get_textdoar_commission(new_book.sales_price),
+                        'book_condition': new_book.book_condition,
+                        'book_edition': new_book.book_edition,
+                    },
+                    bcc=[variables.CUSTOMER_SERVICE_EMAIL],
+                )
             self.request.session['new_message'] = variables.REGISTERED_NEW_BOOK
             user = EludeUser.objects.get(username=self.request.user)
             if user.address.count() is 0:

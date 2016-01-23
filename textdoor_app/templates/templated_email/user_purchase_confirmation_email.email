@@ -22,7 +22,7 @@
     <p><h3 style="font-family: 'Playfair Display', serif;">Order Number: {{ order_num }}</h3></p>
     <p><h3 style="font-family: 'Playfair Display', serif;">Sub total: {{ sub_total }}</h3></p>
     <p><h3 style="font-family: 'Playfair Display', serif;">Tax & Fees: {{ sales_tax }}</h3></p>
-    <p><h3 style="font-family: 'Playfair Display', serif;">Tax & Fees: <b>Order Total: {{ order_total }}</b></h3></p>
+    <p><h3 style="font-family: 'Playfair Display', serif;"><b>Order Total: {{ order_total }}</b></h3></p>
     <br>
     <p><h3 style="font-family: 'Playfair Display', serif;">Have a question? email us at customerservice@textdoar.com or call us at 770-905-3795</h3></p>
     <p><h3 style="font-family: 'Playfair Display', serif;">Thank you for shopping with us.</h3></p>
