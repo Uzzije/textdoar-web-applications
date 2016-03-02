@@ -29,7 +29,7 @@ setting_secret.py
 
 # Directories #
 ################
-**/ENV
+ENV/**
 
 # Logs and databases #
 ######################
