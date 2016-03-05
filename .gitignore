@@ -30,6 +30,7 @@ setting_secret.py
 # Directories #
 ################
 ENV
+media
 
 # Logs and databases #
 ######################
