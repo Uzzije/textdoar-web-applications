@@ -59,6 +59,10 @@ urlpatterns = [
         name='about_us_page'),
     url(r'^term-and-condition-page/$', textdoor_app.views.TermAndConditionView.as_view(),
         name='term_and_condition_page'),
+    url(r'^launch-page-sign-up/$', textdoor_app.views.LaunchPageView.as_view(),
+        name='launch_page'),
+    url(r'^un-subscribe-page/$', textdoor_app.views.UnsubscribePageView.as_view(),
+        name='unsubscribe_page'),
 
 ]
 urlpatterns += staticfiles_urlpatterns()

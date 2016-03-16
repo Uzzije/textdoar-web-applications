@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from django.views.generic import View, FormView
 from form_views import form_templates
 from models import EludeUser, BookImage, Book, Watchlist,\
-    EludeUserAddress, StripeData, PaymentCardData, SoldBooks, BooksStudentsRequested, StudentFeedBacks
+    EludeUserAddress, StripeData, PaymentCardData, SoldBooks, BooksStudentsRequested, StudentFeedBacks, LaunchPageEmail
 from django.db.models import Q
 from django.http import HttpResponseRedirect
 from django.utils.http import is_safe_url
@@ -44,6 +44,7 @@ class TextDoorHomePageView(View):
             user_name = request.user.username
         else:
             user_name = "guest"
+            return HttpResponseRedirect(reverse('launch_page'))
         return render(request, 'home_page.html', {'user_name': user_name})
 
 
@@ -51,7 +52,8 @@ class SignUpPageView(View):
 
     def get(self, request):
         form = form_templates.UserSignUpForm()
-        return render(request, 'sign_up_page.html', {'form': form, 'user_name': "guest"})
+        return HttpResponseRedirect(reverse('launch_page'))
+        # return render(request, 'sign_up_page.html', {'form': form, 'user_name': "guest"})
 
     def post(self, request):
         form = form_templates.UserSignUpForm(request.POST)
@@ -104,6 +106,7 @@ class UserHomeProfilePage(LoginRequiredMixin, View):
             user_name = "guest"
         else:
             user_name = self.request.user.username
+            return HttpResponseRedirect(reverse('launch_page'))
         return render(request, 'user_profile_page.html', {'user_name': user_name,
                                                           'first_name': elude_user.username.first_name,
                                                           'first_time_user': first_time_user})
@@ -144,7 +147,8 @@ class LogoutView(View):
 
     def get(self, request):
         logout(request)
-        return render(request, 'home_page.html', {'user_name': "guest"})
+        return HttpResponseRedirect(reverse('launch_page'))
+        # return render(request, 'home_page.html', {'user_name': "guest"})
 
 
 class LoginViews(FormView):
@@ -212,7 +216,8 @@ class AccountActivationView(View):
             user_email = self.request.session['email_name']
         except(KeyError, TypeError, None):
             return HttpResponseRedirect(reverse('user_registration_page'))
-        return render(request, 'activate_account_form.html', {'user_name': user_name, 'form':form, 'user_email':user_email})
+        return HttpResponseRedirect(reverse('launch_page'))
+        # return render(request, 'activate_account_form.html', {'user_name': user_name, 'form':form, 'user_email':user_email})
 
     def post(self, request, user_name):
         form = form_templates.ActivateAccountForm(request.POST)
@@ -268,7 +273,8 @@ class ISBNView(View):
             del self.request.session['edit_mode']
         except(TypeError, KeyError, None):
             pass
-        return render(request, 'isbn_entry.html', {'user_name': user_name})
+        return HttpResponseRedirect(reverse('launch_page'))
+        # return render(request, 'isbn_entry.html', {'user_name': user_name})
 
     def post(self, request, user_name):
         if request.user.is_authenticated():
@@ -360,6 +366,7 @@ class NewBookListingView(LoginRequiredMixin, View):
             user_name = self.request.user.username
         else:
             user_name = "guest"
+            return HttpResponseRedirect(reverse('launch_page'))
         try:
             dictionary_new = self.request.session.get('dictionary', False)
         except (KeyError, TypeError):
@@ -504,7 +511,8 @@ class SuccessPageView(View):
 class CartView(LoginRequiredMixin, View):
     def get(self, request, user_name):
         if not request.user.is_authenticated():
-                user_name = "guest"
+            user_name = "guest"
+            return HttpResponseRedirect(reverse('launch_page'))
         else:
             user_name = self.request.user.username
         try:
@@ -568,6 +576,7 @@ class SearchResultView(View):
         form = form_templates.BooksStudentNeedForm()
         if not request.user.is_authenticated():
             user_name = "guest"
+            return HttpResponseRedirect(reverse('launch_page'))
         else:
             user_name = self.request.user.username
         delivery_time = datetime.now() + timedelta(hours=36)
@@ -634,6 +643,7 @@ class ListOfYourBooksView(LoginRequiredMixin, View):
                 user_books.append((book, book_image))
         if not request.user.is_authenticated():
             user_name = "guest"
+            return HttpResponseRedirect(reverse('launch_page'))
         else:
             user_name = self.request.user.username
         return render(request, 'all_user_books.html', {'user_book': user_books, 'user_name':user_name})
@@ -667,6 +677,7 @@ class SingleBookDescriptionView(LoginRequiredMixin, View):
     def get(self, request, book_id, slug):
         if not request.user.is_authenticated():
             user_name = "guest"
+            return HttpResponseRedirect(reverse('launch_page'))
         else:
             user_name = self.request.user.username
         book = get_object_or_404(Book, id=book_id)
@@ -711,6 +722,7 @@ class WatchListBooksView(LoginRequiredMixin, View):
         watch_list_books_list = []
         if not request.user.is_authenticated():
             user_name = "guest"
+            return HttpResponseRedirect(reverse('launch_page'))
         else:
             user_name = self.request.user.username
         user = User.objects.get(username=request.user.username)
@@ -745,6 +757,7 @@ class AddressView(LoginRequiredMixin, View):
         form = form_templates.AddressBookForm()
         if not request.user.is_authenticated():
             user_name = "guest"
+            return HttpResponseRedirect(reverse('launch_page'))
         else:
             user_name = self.request.user.username
         return render(request, 'address_page.html', {'form': form, 'user_name': user_name,
@@ -840,6 +853,7 @@ class AccountView(LoginRequiredMixin, View):
     def get(self, request, user_name):
         if not request.user.is_authenticated():
             user_name = "guest"
+            return HttpResponseRedirect(reverse('launch_page'))
         else:
             user_name = self.request.user.username
         return render(request, 'account_page.html', {'user_name': user_name})
@@ -853,6 +867,7 @@ class PaymentView(LoginRequiredMixin, View):
             application_fee = None
         if not request.user.is_authenticated():
             user_name = "guest"
+            return HttpResponseRedirect(reverse('launch_page'))
         else:
             user_name = self.request.user.username
 
@@ -1010,10 +1025,10 @@ class PaymentView(LoginRequiredMixin, View):
                 # yourself an email
                 pass
                 messages.error(request, 'Sorry, an error occurred while processing your card.')
-            except Exception, e:
+            #except Exception, e:
                 # Something else happened, completely unrelated to Stripe
-                pass
-                messages.error(request, 'Sorry, Something else happened, completely unrelated to Stripe.')
+                #pass
+                #messages.error(request, 'Sorry, Something else happened, completely unrelated to Stripe.')
                 #return HttpResponseRedirect(reverse('cart_page', kwargs={'user_name': request.user.username}))
         return HttpResponseRedirect('')
 
@@ -1023,6 +1038,7 @@ class SavedCreditCardPaymentView(LoginRequiredMixin, View):
     def get(self, request, user_name):
         if not request.user.is_authenticated():
             user_name = "guest"
+            return HttpResponseRedirect(reverse('launch_page'))
         else:
             user_name = self.request.user.username
         try:
@@ -1149,10 +1165,10 @@ class SavedCreditCardPaymentView(LoginRequiredMixin, View):
                 # yourself an email
                 pass
                 messages.error(request, 'Sorry, we encountered while processing your card.')
-            except Exception, e:
+            #except Exception, e:
                 # Something else happened, completely unrelated to Stripe
-                messages.error(request, 'Sorry, Something else happened, completely unrelated to Stripe.')
-                return HttpResponseRedirect(reverse('cart_page', kwargs={'user_name': request.user.username}))
+                #messages.error(request, 'Sorry, Something else happened, completely unrelated to Stripe.')
+                #return HttpResponseRedirect(reverse('cart_page', kwargs={'user_name': request.user.username}))
             return HttpResponseRedirect('')
 
 
@@ -1172,6 +1188,7 @@ class StripeConnectionConfirmationView(LoginRequiredMixin, View):
             scope = None
         if not request.user.is_authenticated():
             user_name = "guest"
+            return HttpResponseRedirect(reverse('launch_page'))
         else:
             user_name = self.request.user.username
         return render(request, 'stripe_connection_confirmation_page.html', {'code': code,
@@ -1216,6 +1233,7 @@ class ListBookConfirmationView(LoginRequiredMixin, View):
     def get(self, request, user_name):
         if not request.user.is_authenticated():
             user_name = "guest"
+            return HttpResponseRedirect(reverse('launch_page'))
         else:
             user_name = self.request.user.username
         elude_user = EludeUser.objects.get(username=self.request.user)
@@ -1268,6 +1286,7 @@ class ChangePasswordView(LoginRequiredMixin, View):
     def get(self, request, user_name):
         if not request.user.is_authenticated():
             user_name = "guest"
+            return HttpResponseRedirect(reverse('launch_page'))
         else:
             user_name = self.request.user.username
         user = User.objects.get(username=self.request.user.username)
@@ -1310,6 +1329,7 @@ class OrderHistoryView(LoginRequiredMixin, View):
                     users_sold_books_list.append((book, book_image))
         if not request.user.is_authenticated():
             user_name = "guest"
+            return HttpResponseRedirect(reverse('launch_page'))
         else:
             user_name = self.request.user.username
         return render(request, 'order_history.html', {'user_name':user_name,
@@ -1322,6 +1342,7 @@ class PaymentCardDetailView(LoginRequiredMixin, View):
     def get(self, request, user_name):
         if not request.user.is_authenticated():
             user_name = "guest"
+            return HttpResponseRedirect(reverse('launch_page'))
         else:
             user_name = self.request.user.username
         elude_user = EludeUser.objects.get(username=self.request.user)
@@ -1357,6 +1378,7 @@ class ErrorPageViewForStripe(LoginRequiredMixin, View):
     def get(self, request, user_name):
         if not request.user.is_authenticated():
             user_name = "guest"
+            return HttpResponseRedirect(reverse('launch_page'))
         else:
             user_name = self.request.user.username
         elude_user = EludeUser.objects.get(username=self.request.user)
@@ -1422,6 +1444,72 @@ class TermAndConditionView(View):
         return render(request, 'term_and_condition_page.html', {'user_name':user_name})
 
 
+class LaunchPageView(View):
+    def get(self, request):
+        form = form_templates.LaunchPageForm()
+        return render(request, 'new_user_sign_up_page.html', {'form':form})
+
+    def post(self, request):
+
+        form = form_templates.LaunchPageForm(request.POST)
+        if form.is_valid():
+            auto_pop = "False"
+            user_email = form.cleaned_data.get('user_email')
+            launch_page = LaunchPageEmail(user_email=user_email)
+            launch_page.save()
+            request.session['new_message'] = "Thanks For Signing Up!"
+            if user_email:
+                sending_list = ['email@textdoar.com','chris.burgweger@textdoar.com', user_email]
+            else:
+                sending_list = ['emai@textdoar.com','chris.burgweger@textdoar.com',]
+            send_templated_mail(
+                template_name = 'sign_up_for_launch_receive_email',
+                from_email = 'Textdoar Team',
+                recipient_list = sending_list, #testing purposes
+                context={
+                    'email': user_email,
+                    'topic': "Thanks For Signing Up",
+                        },
+                        bcc=[variables.CUSTOMER_SERVICE_EMAIL],
+                )
+            messages.success(request, 'Sweet! Thanks For Signing Up!')
+            return HttpResponseRedirect('')
+        else:
+            auto_pop = "True"
+            return render(request, 'new_user_sign_up_page.html', {'form':form, 'pop_up_address_form':auto_pop})
+
+class UnsubscribePageView(View):
+    def get(self, request):
+        form = form_templates.UnsubcribeForm()
+        return render(request, 'unsubscribe_page.html', {'form':form})
+
+    def post(self, request):
+
+        form = form_templates.LaunchPageForm(request.POST)
+        if form.is_valid():
+            user_email = form.cleaned_data.get('user_email')
+            try:
+                LaunchPageEmail.objects.filter(user_email=user_email).delete()
+            except:
+                pass
+            messages.success(request, "You have been successfully un-subscribed!")
+            if user_email:
+                sending_list = ['email@textdoar.com','chris.burgweger@textdoar.com', user_email]
+            else:
+                sending_list = ['emai@textdoar.com','chris.burgweger@textdoar.com',]
+            send_templated_mail(
+                template_name = 'un-subscribed_email_verification',
+                from_email = 'Textdoar Team',
+                recipient_list = sending_list, #testing purposes
+                context={
+                    'email': user_email,
+                    'topic': "Successfully Un-subscribed",
+                        },
+                        bcc=[variables.CUSTOMER_SERVICE_EMAIL],
+                )
+            return HttpResponseRedirect('')
+        else:
+            return render(request, 'new_user_sign_up_page.html', {'form':form})
 
 
 

@@ -1,6 +1,6 @@
 __author__ = 'Administrator'
 from django import forms
-from textdoor_app.models import User
+from textdoor_app.models import User, LaunchPageEmail
 from ..choices import SCHOOL_LIST, BOOK_CONDITION, FEED_BACK_TOPICS, EXPIRATION_YEAR_CHOICES, EXPIRATION_MONTH_CHOICES
 from localflavor.us.forms import USStateSelect, USZipCodeField, USStateField
 from datetime import date
@@ -283,5 +283,23 @@ class StudentFeedBacksForm(forms.Form):
 class BooksStudentNeedForm(forms.Form):
     isbn_number = forms.CharField(max_length=5000, label="Enter ISBN Number",
                                        widget=forms.TextInput(attrs={'placeholder': 'Enter ISBN number here'}),required=True)
-    email = forms.CharField(max_length=5000, label="Your Email To Notify You", required=False)
+    email = forms.EmailField(max_length=5000, label="Your Email To Notify You", required=False)
     name_of_book = forms.CharField(max_length=5000, label="Name of Book (optional)", required=False)
+
+
+class LaunchPageForm(forms.Form):
+    user_email = forms.EmailField(max_length=50, label="Enter Your Email Here", required=True)
+
+class UnsubcribeForm(forms.Form):
+    user_email = forms.EmailField(max_length=50, label="Verify Your Email Here", required=True)
+
+    def clean(self):
+        cleaned_data = super(UnsubcribeForm, self).clean()
+        email = self.cleaned_data['user_email']
+        try:
+            User.objects.get(email=email)
+            return email
+        except User.DoesNotExist:
+                msg = "sorry, email deosn't exist in our database"
+                self.add_error('user_email', msg)
+

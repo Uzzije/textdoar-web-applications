@@ -158,3 +158,9 @@ class BooksStudentsRequested(models.Model):
     name_of_book = models.CharField(max_length=100, blank=True)
     isbn_number = models.CharField(max_length=100, blank=True)
     email = models.CharField(max_length=100, blank=True)
+
+
+class LaunchPageEmail(models.Model):
+    user_email = models.CharField(max_length=100, blank=True, null=True)
+
+
