@@ -1,0 +1,15 @@
+{% extends 'search_results.html' %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Error Page</title>
+</head>
+<body>
+{% block body %}
+    <p><h3>Sorry, something went wrong and we got an error, to try again, click</h3></p><a href="{% url 'list_book_confirmation_page' user_name %}">Here</a>
+    <hr>
+    <p><h3>Contact Us, If You Need Help</h3></p><a href="{% url 'contact_us_page' %}">Contact US</a>
+{% endblock %}
+</body>
+</html>

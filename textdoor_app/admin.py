@@ -1,5 +1,5 @@
 from django.contrib import admin
-from textdoor_app.models import Book, Watchlist, EludeUserAddress, EludeUser, BookImage
+from textdoor_app.models import Book, Watchlist, EludeUserAddress, EludeUser, BookImage, PaymentCardData, StripeData, SoldBooks, LaunchPageEmail
 from image_cropping import ImageCroppingMixin
 # Register your models here.
 
@@ -11,3 +11,8 @@ admin.site.register(Watchlist)
 admin.site.register(EludeUserAddress)
 admin.site.register(EludeUser)
 admin.site.register(BookImage)
+admin.site.register(PaymentCardData)
+admin.site.register(StripeData)
+admin.site.register(SoldBooks)
+admin.site.register(LaunchPageEmail)
+

@@ -1,0 +1,50 @@
+{% block staticfiles %}{% load staticfiles %}{% load static %}{% endblock %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Un-subscribe</title>
+    <script type="text/javascript" src="{% static 'static_jquery/js/jquery.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/jquery-ui.js' %}"></script>
+        <link rel="stylesheet" type="text/css" href="{% static 'css/jquery-ui/smoothness/jquery-ui.css' %}"/>
+        <link rel="stylesheet" type="text/css" href="{% static 'bootstrap-3.3.5-dist/css/bootstrap.min.css'%}">
+        <script type="text/javascript" src="{% static 'bootstrap-3.3.5-dist/js/bootstrap.min.js' %}"></script>
+        <link rel="stylesheet" type="text/css" href="{% static 'general_design.css' %}"/>
+        <link rel="icon" type="image/png" href='{% static 'media/image/logo/book_only_textdoar_logo.png' %}' sizes="16x16">
+        <link rel="icon" type="image/png" href='{% static 'media/image/logo/book_only_textdoar_logo.png' %}' sizes="32x32">
+</head>
+<body>
+<div class="container-fluid">
+<div  class="row">
+    <div class="col-md-4">
+    {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                <li id="confirmation-message" {% if message.tags == "success" %} class="alert alert-success"{% endif %}><div>{{ message }}</div></li>
+            {% endfor %}
+        </ul>
+            {% endif %}
+        </div>
+    </div>
+    <form method="post">{% csrf_token %}
+    <div class="col-md-6">
+        <div class="row">
+            {% load bootstrap %}
+            {{ form|bootstrap }}
+        </div>
+        <div class="row">
+            <input type="submit" name="activate-account" value="Un-subcribed From Our Mailing List" class="btn btn-success">
+        </div>
+    </div>
+    {% if form.errors %}
+                {% for field in form %}
+            {% for error in field.errors %}
+            <p> {{ errors }} </p>
+            {% endfor %}
+            {% endfor %}
+            {% endif %}
+    </form>
+</div>
+</div>
+</body>
+</html>

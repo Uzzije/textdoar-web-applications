@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 
 from django.db import models, migrations
 import datetime
+import image_cropping.fields
 from django.conf import settings
 
 
@@ -19,30 +20,14 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('title', models.CharField(max_length=500, db_index=True)),
                 ('isbn_number', models.CharField(max_length=500, db_index=True)),
-                ('long_term_rent', models.BooleanField(default=False)),
-                ('short_term_rent', models.BooleanField(default=False)),
-                ('for_buy', models.BooleanField(default=False)),
                 ('book_condition', models.CharField(max_length=25)),
-                ('need_investment', models.BooleanField(default=False)),
                 ('author', models.CharField(max_length=500)),
-                ('sales_price', models.FloatField(default=0.0)),
-                ('rent_price', models.FloatField(default=0.0)),
-                ('short_term_rent_price', models.FloatField(default=0.0)),
-                ('eight_weeks_rent_price', models.FloatField(default=0.0)),
+                ('sales_price', models.CharField(default=b'0.00', max_length=500)),
                 ('publish_date', models.DateTimeField(default=datetime.datetime.now, db_index=True, blank=True)),
-                ('slug', models.SlugField()),
-            ],
-        ),
-        migrations.CreateModel(
-            name='BookAcquiredByRent',
-            fields=[
-                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('rented_date', models.DateTimeField(verbose_name=b'Time book was received')),
-                ('additional_information', models.TextField(verbose_name=b'Additional Information about book rental i.e length of rent')),
-                ('return_date', models.DateTimeField(verbose_name=b'Time book was rented out')),
-                ('has_book_been_returned', models.BooleanField(default=False, verbose_name=b'Has book been Returned')),
-                ('type_of_rent', models.CharField(default=None, max_length=250, verbose_name=b"Length of Book's Rent")),
-                ('book', models.ForeignKey(to='textdoor_app.Book')),
+                ('publish_type', models.CharField(default=b'Now', max_length=15)),
+                ('slug', models.SlugField(max_length=100)),
+                ('book_edition', models.CharField(max_length=100, blank=True)),
+                ('book_description', models.CharField(default=b'', max_length=6000, blank=True)),
             ],
         ),
         migrations.CreateModel(
@@ -51,26 +36,8 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('image_name', models.CharField(max_length=100)),
                 ('book_image', models.ImageField(upload_to=b'image/%Y/%m/%d', verbose_name=b'book image')),
+                (b'cropping', image_cropping.fields.ImageRatioField(b'book_image', '60x60', hide_image_field=False, size_warning=False, allow_fullsize=False, free_crop=False, adapt_rotation=False, help_text=None, verbose_name='cropping')),
                 ('book', models.ForeignKey(default=b'', to='textdoor_app.Book')),
-            ],
-        ),
-        migrations.CreateModel(
-            name='BookListedAsRent',
-            fields=[
-                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('time_received', models.DateTimeField(auto_now_add=True, verbose_name=b'Time renting began')),
-                ('additional_information', models.TextField(verbose_name=b'Additional Information about book rental i.e length of rent')),
-                ('return_date', models.DateTimeField(verbose_name=b'Time renting ended or should end')),
-                ('type_of_rent', models.CharField(default=b'None', max_length=250, verbose_name=b"Length of Book's Rent(short, long)")),
-                ('book', models.ForeignKey(to='textdoor_app.Book')),
-            ],
-        ),
-        migrations.CreateModel(
-            name='BooksYourAreRenting',
-            fields=[
-                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('has_book_been_returned', models.BooleanField(default=False, verbose_name=b'Has book been Returned to owner?')),
-                ('book', models.ForeignKey(related_name='your_book', to='textdoor_app.BookListedAsRent')),
             ],
         ),
         migrations.CreateModel(
@@ -79,6 +46,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('college_attending', models.CharField(max_length=254)),
                 ('new_user', models.BooleanField(default=True)),
+                ('stripe_account_activated', models.BooleanField(default=False)),
             ],
         ),
         migrations.CreateModel(
@@ -89,15 +57,6 @@ class Migration(migrations.Migration):
                 ('city', models.CharField(default=None, max_length=600)),
                 ('state', models.CharField(default=None, max_length=600)),
                 ('zip_code', models.CharField(default=None, max_length=600)),
-            ],
-        ),
-        migrations.CreateModel(
-            name='ListedBookForSale',
-            fields=[
-                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('additional_information', models.TextField(default=b'No additional information', verbose_name=b'Additional Information about book sold')),
-                ('book', models.ForeignKey(to='textdoor_app.Book')),
-                ('user', models.ForeignKey(to='textdoor_app.EludeUser')),
             ],
         ),
         migrations.CreateModel(
@@ -133,11 +92,29 @@ class Migration(migrations.Migration):
             ],
         ),
         migrations.CreateModel(
+            name='PaymentCardData',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('customer_id', models.CharField(default=b'No customer ID', max_length=1000)),
+                ('is_user_current_option', models.BooleanField(default=False)),
+                ('address', models.CharField(default=b'No Address', max_length=1000)),
+                ('address_state', models.CharField(default=b'No State', max_length=100)),
+                ('address_country', models.CharField(default=b'No Country', max_length=100)),
+                ('address_zip_code', models.CharField(default=b'No Zip Code', max_length=100)),
+                ('exp_month', models.CharField(default=b'No exp month', max_length=10)),
+                ('exp_year', models.CharField(default=b'No exp year', max_length=10)),
+                ('last_4_of_card', models.CharField(default=b'No last Four', max_length=10)),
+                ('card_brand', models.CharField(default=b'No card brand', max_length=100)),
+                ('funding_type', models.CharField(default=b'No funding type', max_length=100)),
+                ('created_date', models.DateTimeField(default=datetime.datetime.now)),
+            ],
+        ),
+        migrations.CreateModel(
             name='PurchasedBooks',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('additional_information', models.TextField(verbose_name=b'Additional Information about book rental i.e length of rent')),
-                ('time_book_was_bought', models.DateTimeField(verbose_name=b'Time book was bought')),
+                ('additional_information', models.TextField()),
+                ('time_book_was_bought', models.DateTimeField()),
                 ('book', models.ForeignKey(to='textdoor_app.Book')),
                 ('user', models.ForeignKey(to='textdoor_app.EludeUser')),
             ],
@@ -146,6 +123,7 @@ class Migration(migrations.Migration):
             name='RepGroup',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('status', models.CharField(default=b'Applied', max_length=100)),
                 ('user', models.ForeignKey(to='textdoor_app.EludeUser')),
             ],
         ),
@@ -153,9 +131,21 @@ class Migration(migrations.Migration):
             name='SoldBooks',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('time_book_was_sold', models.DateTimeField(verbose_name=b'Time book was sold')),
-                ('book', models.ForeignKey(to='textdoor_app.ListedBookForSale')),
+                ('time_book_was_sold', models.DateTimeField()),
+                ('book', models.ForeignKey(to='textdoor_app.Book')),
                 ('user', models.ForeignKey(to='textdoor_app.EludeUser')),
+            ],
+        ),
+        migrations.CreateModel(
+            name='StripeData',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('token_type', models.CharField(default=None, max_length=1000)),
+                ('stripe_publishable_key', models.CharField(default=None, max_length=1000)),
+                ('scope', models.CharField(default=None, max_length=1000)),
+                ('stripe_user_id', models.CharField(default=None, max_length=1000)),
+                ('refresh_token', models.CharField(default=None, max_length=1000)),
+                ('access_token', models.CharField(default=None, max_length=1000)),
             ],
         ),
         migrations.CreateModel(
@@ -180,23 +170,18 @@ class Migration(migrations.Migration):
         ),
         migrations.AddField(
             model_name='eludeuser',
+            name='payment_card_info',
+            field=models.ManyToManyField(to='textdoor_app.PaymentCardData'),
+        ),
+        migrations.AddField(
+            model_name='eludeuser',
+            name='stripe_data',
+            field=models.ForeignKey(blank=True, to='textdoor_app.StripeData', null=True),
+        ),
+        migrations.AddField(
+            model_name='eludeuser',
             name='username',
-            field=models.OneToOneField(default=b'', to=settings.AUTH_USER_MODEL),
-        ),
-        migrations.AddField(
-            model_name='booksyourarerenting',
-            name='user',
-            field=models.ForeignKey(to='textdoor_app.EludeUser'),
-        ),
-        migrations.AddField(
-            model_name='booklistedasrent',
-            name='user',
-            field=models.ForeignKey(to='textdoor_app.EludeUser'),
-        ),
-        migrations.AddField(
-            model_name='bookacquiredbyrent',
-            name='user',
-            field=models.ForeignKey(to='textdoor_app.EludeUser'),
+            field=models.OneToOneField(to=settings.AUTH_USER_MODEL),
         ),
         migrations.AddField(
             model_name='book',

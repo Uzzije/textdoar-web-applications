@@ -28,6 +28,11 @@ setting_secret.py
 *.zip
 ENV/**
 
+# Directories #
+################
+ENV
+media
+
 # Logs and databases #
 ######################
 *.log
@@ -43,4 +48,7 @@ ENV/**
 .Trashes
 ehthumbs.db
 Thumbs.db
+# Virtual Enviroment
+######################
+ENV
 

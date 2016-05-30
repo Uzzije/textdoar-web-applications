@@ -1,0 +1,54 @@
+{% extends 'search_results.html' %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}{{ user_name }}'s Payment Details{% endblock %}</title>
+</head>
+<body>
+    {% block body %}
+        <form method="post" action="{% url 'saved_card_page' user_name %}">{% csrf_token %}
+        <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+            {% if saved_card_info %}
+                {% for card in saved_card_info %}
+                     <div class="row">
+                        <div class="col-md-2">
+                            <div class="row">
+                                <p>Last Four on Card: {{ card.last_4_of_card }}</p>
+                            </div>
+                            <div class="row">
+                                <p>Expiration Date: {{ card.exp_month }}/{{ card.exp_year }}</p>
+                            </div>
+                             {% if card.is_user_current_option %}
+                                <div class="row">
+                                    <p><b>Default Card For Payment</b></p>
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-2">
+                            <div class="row">
+                                <button class="btn-default" type="submit" name="delete-card-id" value="{{ card.id }}">Remove Card</button>
+                             </div>
+                            {% if not card.is_user_current_option %}
+                             <div class="row">
+                                <button class="btn-default" type="submit" name="make-default-card-id" value="{{ card.id }}">Make Default Card</button>
+                             </div>
+                            {% endif %}
+                        </div>
+                     </div>
+                {% endfor %}
+            {% endif %}
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <a href="{% url 'list_book_confirmation_page' user_name %}">Start Accepting Payment</a>
+                </div>
+            </div>
+        </div>
+        </div>
+        </form>
+    {% endblock %}
+</body>
+</html>

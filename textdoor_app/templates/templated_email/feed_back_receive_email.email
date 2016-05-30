@@ -1,0 +1,19 @@
+{% block subject %}Feed Back Recieved{% endblock %}
+{% block html %}
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
+    integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <link href='https://fonts.googleapis.com/css?family=Playfair+Display:700' rel='stylesheet' type='text/css'>
+    <h2 style="font-family: 'Playfair Display', serif;">Just letting you know that we have received your feedback.</h2>
+    <hr>
+    <p><h4 style="font-family: 'Playfair Display', serif;">{{ topic }}.</h4></p>
+        <br><b><b><b><b>
+    <h3><b></b></h3> <h4>{{ feed_back }}</h4>
+    <br><hr><br>
+        <p><a href='http://postimage.org/' target='_blank'><img src='http://s19.postimg.org/aefdqq7mn/imageedit_3_5809846069.png' border='0' alt="textdoar image"/></a></p>
+    <p><h3 style="font-family: 'Playfair Display', serif;">Textdoar Team</h3></p>
+        <p><small>Textdoar is a US-based company. For any questions please
+            contact information@textdoar.com or feel free to visit http://www.textdoar.com/textdoar-FAQ/.
+            By signing up, you  are agreeing to our
+            <a href='https://www.textdoar.com/term-and-condition-page'>Terms of Agreement.</a>
+        </small></p></footer>
+{% endblock %}

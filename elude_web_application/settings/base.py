@@ -12,25 +12,29 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
-from django.conf.global_settings import ALLOWED_INCLUDE_ROOTS
 from elude_web_application.setting_secret import *
 from easy_thumbnails.conf import Settings as thumbnail_settings
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 LOGIN_URL = '/login'
 SITE_ID = 3
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = SECRET_KEY
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
+DEBUG = False
+USE_TZ = True
 ALLOWED_HOSTS = []
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'email@textdoar.com'
+EMAIL_HOST_PASSWORD = EMAIL_PASSWORD
+EMAIL_PORT = 587
+MY_TEMPLATE_DIRECTORY = os.path.join(BASE_DIR, '../textdoor_app/templates/')
+TEMPLATED_EMAIL_BACKEND = 'templated_email.backends.vanilla_django.TemplateBackend'
 
-
+# Security
+SECURE_SSL_REDIRECT = True
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
 # Application definition
 
 INSTALLED_APPS = (
@@ -48,7 +52,10 @@ INSTALLED_APPS = (
     'easy_thumbnails',
     'image_cropping',
     'bootstrapform',
+    'rest_framework',
+    'oauth2_provider',
 )
+
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -59,6 +66,9 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
+
+    # custome middleware for redirecting non super users away from admin
+    'textdoor_app.middleware.custome_middleware.RestrictStaffToAdminMiddleware'
 )
 
 THUMBNAIL_PROCESSORS = (
@@ -70,14 +80,17 @@ ROOT_URLCONF = 'elude_web_application.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
-        'APP_DIRS': True,
+        'DIRS': [
+            MY_TEMPLATE_DIRECTORY
+        ],
+        'APP_DIRS':True,
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.static',
             ],
         },
     },
@@ -95,8 +108,8 @@ DATABASES = {
         'PASSWORD': DATABASE_PASSWORD,
     }
 }
-MEDIA_ROOT = os.path.join(BASE_DIR, 'textdoor_app/static/../../textdoor_app/static/media')
-MEDIA_URL = 'static/media/'
+
+
 # Internationalization
 # https://docs.djangoproject.com/en/1.8/topics/i18n/
 
@@ -110,11 +123,10 @@ USE_L10N = True
 
 USE_TZ = True
 
-
+STATIC_ROOT = os.path.join(BASE_DIR, '../textdoor_app/static/')
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
-
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [
-    "/Users/Administrator/ELUDE APPLICATION PROJECTS/elude_web_application/textdoor_app/static"
-    ]
+
+MEDIA_ROOT = os.path.join(BASE_DIR, '../textdoor_app/media/')
+MEDIA_URL = '/media/'

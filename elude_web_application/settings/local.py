@@ -3,7 +3,7 @@ from elude_web_application.settings.base import *
 
 DEBUG = True
 INSTALLED_APPS += (
-
+ "sslserver",
 )
 
 DATABASES = {

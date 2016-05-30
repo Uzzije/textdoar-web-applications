@@ -1,0 +1,33 @@
+{% block subject %} Textbook List Confirmation {% endblock %}
+{% block plain %}
+
+    DO NOT REPLY
+    Note: this e-mail was sent from a notification-only address that cannot accept incoming e-mail.
+
+    Dear {{ first_name }},
+
+    Thank you for listing your book at https://www.textdoar.com.
+
+    Your textbook will be available for purchase in just a short moment. Please do not re-list your item if you do not
+    see it in your listing inventory right away.
+
+    Listing details:
+
+            Title: {{ book }} {{ book_edition }}
+            ISBN: {{ isbn_number }}
+            Quantity: 1
+            Listing Price: $ {{ price }}
+            Textdoar Commission (if Sold): ${{ textdoar_commission }}
+            Shipping: Free
+            Condition: {{ book_condition }}
+
+
+    For more questions please refer to https://www.textdoar.com/textdoar-FAQ/
+
+
+
+
+    Thanks,
+
+    Textdoar Team
+{% endblock %}

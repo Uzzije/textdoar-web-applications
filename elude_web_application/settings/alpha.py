@@ -4,7 +4,10 @@ DEBUG = True
 INSTALLED_APPS += (
 
 )
-
+ALLOWED_HOSTS = [
+    'https://www.textdoar.com',
+    '.textdoar.com'
+    ]
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',

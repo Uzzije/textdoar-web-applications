@@ -4,17 +4,101 @@
 <head>
     <meta charset="UTF-8">
     <title>{% block title %}Add Shipping Address{% endblock %}</title>
+    {% block javascript %}
+        <script>
+            $(document).ready(function(){
+                    // Show the Modal on load
+                var pop_up_address_form = document.getElementById("empty_address_box").value;
+                console.log(pop_up_address_form)
+                if(pop_up_address_form == "True"){
+                    $("#address").modal("show");
+                    }
+                });
+        </script>
+    {% endblock %}
 </head>
 <body>
 {% block body %}
+    <input type=hidden id="empty_address_box" value="{{ pop_up_address_form }}">
+    <p><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#address">Add New Address</button></p>
     <div class="container">
          <form method="post">{% csrf_token %}
         {% load bootstrap %}
-        {{ form|bootstrap }}
-    <input type="submit" name="add-address" value="Add Address" class="btn btn-success">
+                     <div id="address" class="modal fade" role="dialog">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <div class="modal-body">
+                                        <div class="text-center">
+                                            <h1>Address</h1>
+                                        </div>
+
+                                            <br>
+                                            <br>
+                                            {{ form|bootstrap }}
+                                            <input type="submit" name="add-address" value="Add Address" class="btn btn-success">
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                    </div>
+                                </div>
+                            </div>
+                         </div>
+                    </div>
+         <h2 class="panel-primary">List of Entered Address</h2>
+         <div class="row ">
+         <div class="col-md-10 panel panel-header">
+            {% if addresses %}
+                 {% for address in addresses %}
+                 <div class="row">
+                 <div class="panel-body">
+                     <div class="col-sm-6">
+                         <div class="row">
+                             <div class="col-md-6">
+                                Address: {{ address.address }}
+                             </div>
+                         </div>
+                         <div class="row">
+                             <div class="col-md-6">
+                                City: {{ address.city }}
+                             </div>
+                         </div>
+                         <div class="row">
+                             <div class="col-md-6">
+                                State: {{ address.state }}
+                             </div>
+                         </div>
+                         <div class="row">
+                             <div class="col-md-6">
+                                 Zip Code: {{ address.zip_code }}
+                             </div>
+                         </div>
+                         {% if address.current_shipping_address %}
+                            <div class="row">
+                             <div class="col-md-6">
+                                 <b>Current Shipping Address</b>
+                             </div>
+                         </div>
+                        {% endif %}
+                     </div>
+                    <div class="col-md-2">
+                        <button class="btn btn-link" type="submit" name="edit-address" value="{{ address.id }}">Edit</button>
+                    </div>
+                    <div class="col-md-2">
+                        <button class="btn btn-link btn-danger" type="submit" name="delete-address" value="{{ address.id }}">Delete</button>
+                    </div>
+                    <div class="col-md-2">
+                        <button class="btn btn-link btn-sm" type="submit" name="make-current-address" value="{{ address.id }}">Make Current Address</button>
+                    </div>
+                     </div>
+                     </div>
+                     <hr>
+                 {% endfor %}
+         {% endif %}
+             </div>
+         </div>
     </form>
     </div>
-
 {% endblock %}
 </body>
 </html>

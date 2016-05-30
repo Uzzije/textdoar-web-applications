@@ -3,17 +3,39 @@
 <html>
 <head lang="en">
     <meta charset="UTF-8">
-    <title></title>
+    <title>{% block title %}{{ user_name }}, watchlist{% endblock %}</title>
 </head>
 <body>
-{% block body %}
-    {% if books %}
-    {% for book in books %}
-        <p><a href="{% url 'single_book_description' book.id book %}">{{ book }}</a></p>
-    {% endfor %}
-    {% else %}
-         No book has been added to your watch list
-    {% endif %}
+{% block body%}
+    <form method="post" action=".">{% csrf_token %}
+        <div class="row">
+            <div class="col-lg-6">
+                {% if watch_list_books_list %}
+                    <P><h2><b>Book On Watch List</b></h2></P>
+                        {% for result, image in watch_list_books_list %}
+                        <div class="row list-group">
+                            <div class="col-md-3">
+                                {% for pic in image %}
+                                <img src ='{{ pic.book_image.url }}' style="width:100%;height:100%;"/>
+                                {% endfor %}
+                            </div>
+                            <div class="col-md-6 roboto-font">
+                                <b><p><a href="{% url 'single_book_description' result.book.id result.book.slug %}">{{ result.book.title }}</a></p></b>
+                                <p><b>ISBN</b>: {{ result.book.isbn_number }}</p>
+                                <p><b>Listed By</b>: {{ result.book.book_owner.username }}</p>
+                                <b>${{ result.book.sales_price }}</b>
+                                    <hr>
+                                    <p><button class="btn btn-lg btn-primary" id="delete-book" name="delete-book-id"
+                                               type="submit" value="{{ result.book.pk }}">Remove Book From Watchlist</button></p>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <P><h4><b>No book in your watchlist.</b></h4></P>
+                {% endif %}
+            </div>
+    </div>
+    </form>
 {% endblock %}
 </body>
 </html>

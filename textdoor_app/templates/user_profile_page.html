@@ -4,121 +4,136 @@
 <html>
 <head lang="en">
     <meta charset="UTF-8">
-    <title>{% block title %}{{ first_name }}, Home Page{% endblock %}</title>
-    {% block jquery-head %}
-    <script type="text/javascript" src="{% static 'static_jquery/js/jquery.js' %}"></script>
-        <script type="text/javascript" src="{% static 'js/jquery-ui.js' %}"></script>
-        <link rel="stylesheet" type="text/css" href="{% static 'css/jquery-ui/smoothness/jquery-ui.css' %}"/>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-        <link rel="stylesheet" type="text/css" href="{% static 'home_page_design.css' %}"/>
-        {% if gue %}
-            <script>
-         $(function() {
-            $( "#help-box" ).dialog({
-               autoOpen: true
-            });
-         });
-      </script>
-        {% else %}
-            <script>
-         $(function() {
-            $( "#help-box" ).dialog({
-               autoOpen: false
-            });
-         });
-      </script>
-        {% endif %}
-        {% endblock %}
+    <title>{% block title %}{{ first_name }}'s Home Page{% endblock %}</title>
+    {% block javascript %}
+        <script>
+            $(document).ready(function(){
+                    // Show the Modal on load
+                var pop_up_help_menu_form = document.getElementById("first_time_box").value;
+                console.log(pop_up_help_menu_form);
+                if(pop_up_help_menu_form == "True"){
+                    $("#help-menu").modal("show");
+                    }
+                });
+        </script>
+    {% endblock %}
 </head>
 <body>
     {% block body %}
-    <div class="container-fluid">
-        <div id="help-box" style="display:none">
-            Would you like to buy
-            <br>
-            Buy a book?
-            <br>
-            Sell a book?
-            <br>
-            Rent a book? {{ first_time_user }}
-            <br>
-            List a book to rent?
-            <br>
-            Still need help?
-        </div>
-        <div class="vidaloka-font col-md-6">
-                <p><h4><b>Welcome {{ first_name }}!</b></h4></p>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-6">
+                  <img src="{% static 'media/logo_for_search_page.png' %}" style="width:50%;height:50%;"/>
+                </div>
+                <div class="col-sm-3"></div>
+                <div class="col-sm-3 offset-col-sm-3">
+                    <p><h2><b>Hey {{ first_name }}!</b></h2></p>
+                </div>
             </div>
-        <div class="col-md-6 vidaloka-font">
-            <p><h4>Seller Rating: No Books Sold Yet</h4></p>
-        </div>
-        <div id="carousel-example-generic" class="carousel slide row" data-interval="7000" data-ride="carousel">
-         <!-- Indicators -->
+            <hr>
+            <div class="row">
+          <div class="col-md-5 panel panel-body box-shadow--16dp">
+                <div class="row text-center">
+                <h2>Your Account</h2>
+            </div>
+            <hr>
+            <div class="row">
+            <div class="col-md-12">
+                <a href="{% url 'address_entry_page' user_name %}"><h4>Shipping Address (add new/edit current address)</h4></a>
+            </div>
+            </div>
+            <hr>
+            <div class="row">
+            <div class="col-md-12">
+                <a href="{% url 'change_password_page' user_name %}"><h4>Change Password</h4></a>
+            </div>
+            </div>
+            <hr>
+            <div class="row">
+            <div class="col-md-12">
+                <a href="{% url 'order_history' user_name %}"><h4>Order History (purchased and sold books)</h4></a>
+            </div>
+            </div>
+            <hr>
+            <div class="row">
+            <div class="col-md-12">
+                 <a href="{% url 'saved_card_page' user_name %}"><h4>Payment Information</h4></a>
+            </div>
+            </div>
+          </div>
+            <div class="col-md-1"></div>
+            <div class="col-md-6">
+            <input type=hidden id="first_time_box" value="{{ first_time_user }}">
+            <div id="help-menu" class="modal fade" role="dialog">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <div class="modal-body">
+                                        <p><h4>Thanks for signing up {{ first_name }}, would you like to know more about:</h4>
+                                            <hr>
+                                        <h2><a href="{% url 'selling_a_textbook_info_page'%}">Buying a textbook?</a></h2>
+                                            <hr>
+                                        <h2><a href="{% url 'buying_a_textbook_info_page'%}">Selling a textbook?</a></h2>
+                                            <hr>
+                                       <h2> <a href="{% url 'faq_page'%}">Everything In General</a></h2>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">I'm Good</button>
+                                    </div>
+                                </div>
+                            </div>
+                         </div>
+                    </div>
+            <div class="row panel panel-body box-shadow--16dp">
+                <div id="carousel-example-generic" class="carousel slide row" data-interval="7000" data-ride="carousel">
+                    <div class="text-center">
+                        <h2><b>Quotes Of The Week</b></h2>
+                    </div>
+            <!-- Indicators -->
             <ol class="carousel-indicators">
                 <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
                 <li data-target="#carousel-example-generic" data-slide-to="1"></li>
                 <li data-target="#carousel-example-generic" data-slide-to="2"></li>
             </ol>
 
-        <!-- Wrapper for slides -->
+            <!-- Wrapper for slides -->
             <div class="carousel-inner">
-             <div class="item active">
-             <img src="{% static 'media/image/female_talks.jpeg' %}" style="width: 100%; height: 315px;">
-                <div class="carousel-caption">
-          <header><b>Elen Of K-State Talks About The Friend Zone</b></header>
-         </div>
-            </div>
-            <div class="item">
-            <img src="{% static 'media/image/aggivielle_ad.jpg' %}" style="width: 100%; height: 315px;">
-            <div class="carousel-caption">
-          <header><b>20% off!</b></header>
-            </div>
-            </div>
-            <div class="item">
-            <img src="{% static 'media/image/educational_demo_ad.jpg' %}" style="width: 100%; height: 315px">
-            <div class="carousel-caption">
-          <header><b>A Million Dollars Donated to Educational Fund!</b></header>
-            </div>
-            </div>
+                <div class="item active">
+                    <img src="{% static 'media/image/motivational_picture_for_profileone.jpg' %}" style="width: 100%; height: 300px;">
+                        <div class="carousel-caption">
+                        </div>
+                </div>
+                <div class="item">
+                    <img src="{% static 'media/image/motivational_profile_pic_2.jpg' %}" style="width: 100%; height: 300px;">
+                        <div class="carousel-caption">
+                        </div>
+                </div>
+                <div class="item">
+                    <img src="{% static 'media/image/dream-believe-do-repeat.jpg' %}" style="width: 100%; height: 300px">
+                        <div class="carousel-caption">
+                        </div>
+                </div>
             </div>
 
   <!-- Controls -->
                 <a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">
-            <span class="glyphicon glyphicon-chevron-left"></span>
-            </a>
-            <a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">
-             <span class="glyphicon glyphicon-chevron-right"></span>
-            </a>
-        </div> <!-- Carousel -->
+                 <span class="glyphicon glyphicon-chevron-left"></span>
+                    </a>
+                <a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">
+                <span class="glyphicon glyphicon-chevron-right"></span>
+                </a>
+            </div> <!-- Carousel -->
             <script>
                 $('.carousel').carousel({
                 interval: 7000
                 })
             </script>
-            <div class="row">
-                <div class="col-md-4 page-header">
-                <p class="vidaloka-font"><a class="btn btn-primary btn-lg" href="{% url 'new_book_entry_page' user_name %}">List New Book</a> </p>
-            </div>
-            <div class="col-md-4 page-header">
-                <p class="vidaloka-font"><a class="btn btn-primary btn-lg" href="{% url 'list_of_your_books' user_name %}">List Of Your Books</a> </p>
-            </div>
-            <div class="col-md-4 page-header">
-            <p class="vidaloka-font"><a class="btn btn-primary btn-lg" href="{% url 'watch_list' user_name %}">Watch List Book</a></p>
-            </div>
             <br>
-            <form method="post" action=".">{% csrf_token %}
-
-            </form>
         </div>
-
+      </div>
     </div>
-        {% block footer %}
-            <div class="navbar navbar-default navbar-fixed-bottom">
-            <div class="container">
-             <p class="navbar-text pull-left">© Elude Group LLC 2015</p>
-            </div>
-            </div>
-            {% endblock %}
+        </div>
+        </div>
     {% endblock %}
 </body>
 </html>

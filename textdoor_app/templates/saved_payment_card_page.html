@@ -1,0 +1,46 @@
+{% extends 'search_bar.html' %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+{% block body %}
+       <div  class="text-center row">
+        <div class="col-md-6">
+            {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                <li id="confirmation-message" {% if message.tags == "error" %} class="alert alert-danger"{% endif %}><div>{{ message }}</div></li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+        </div>
+        </div>
+    <div class="text-center page-header">
+            <h2>Make Payment</h2>
+    </div>
+    <div class=" text-center row">
+        <div class="row">
+            <div class="col-md-12">
+                <h4><p>Pay with {{ card_type }} card ending in <b>{{ last_four_digits }}</b></p></h4>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <form method="post">{% csrf_token %}
+                <input class="btn btn-primary btn-lg" type="submit" name="payment" value="Make Payment"/>
+                </form>
+            </div>
+        </div>
+        <hr>
+        <div class="row">
+            <div class="row">
+                <h2><a href="{% url 'payment_page' %}">Pay With a Different Card</a></h2>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+</body>
+</html>

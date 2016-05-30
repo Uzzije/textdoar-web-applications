@@ -1,0 +1,19 @@
+{% block subject %}Un-subscription Successful{% endblock %}
+{% block html %}
+{% block staticfiles %}{% load staticfiles %}{% load static %}{% endblock %}
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
+    integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <link href='https://fonts.googleapis.com/css?family=Playfair+Display:700' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Josefin+Sans&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="{% static 'general_design.css' %}"/>
+    <p>
+    <h3 class="font-family">You have been successfully un-subscribed from our mailing list. If
+    this was done by accident, or if you decide to sign back up in the near future, simply <a href='https://www.textdoar.com'>click here</a> and re-insert your email address.</h3>
+    </p>
+    <hr>
+    <br><hr>
+    <p><h3 style="font-family: 'Playfair Display', serif;">Textdoar Team</h3></p>
+        <p><small>Textdoar is a US-based company. For any questions please
+            contact information@textdoar.com
+        </small></p></footer>
+{% endblock %}
