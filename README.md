@@ -1,4 +1,4 @@
-# textdoar-web-applications(beta)
+# textdoar-web-applications (alpha)
 ### Local
 ###### Before you set out to buy your next textbook, we invite you to use our website to check if someone from your local campus has listed that particular textbook for sale. Simply search for the textbook by name, author or isbn number; if you find it, great! You can go ahead and purchase it online and have it delivered to you within the next two days.
 
