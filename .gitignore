@@ -27,6 +27,11 @@ setting_secret.py
 *.tar
 *.zip
 
+# Directories #
+################
+ENV
+media
+
 # Logs and databases #
 ######################
 *.log
