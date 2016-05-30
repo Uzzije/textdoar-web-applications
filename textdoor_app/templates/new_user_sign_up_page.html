@@ -1,0 +1,190 @@
+{% block statifiles %}{% load static from staticfiles %}{% endblock %}
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Textdoar</title>
+        <link rel="stylesheet" type="text/css" href="{% static 'general_design.css' %}"/>
+        <link rel="stylesheet" type="text/css" href="{% static 'startbootstrap-agency-1.0 2.5/css/bootstrap.min.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'startbootstrap-agency-1.0 2.5/css/agency.css' %}">
+        <link rel="icon" type="image/png" href='{% static 'media/image/logo/book_only_textdoar_logo.png' %}' sizes="16x16">
+        <link rel="icon" type="image/png" href='{% static 'media/image/logo/book_only_textdoar_logo.png' %}' sizes="32x32">
+    <!-- Custom Fonts -->
+        <link rel="stylesheet" type=text/css href="{% static "startbootstrap-agency-1.0 2.5/font-awesome/css/font-awesome.min.css" %}"/>
+        <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
+        <link href='https://fonts.googleapis.com/css?family=Kaushan+Script' rel='stylesheet' type='text/css'>
+        <link href='https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+        <link href='https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700' rel='stylesheet' type='text/css'>
+        <script type="text/javascript" src="{% static 'static_jquery/js/jquery.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/jquery-ui.js' %}"></script>
+        <script type="text/javascript" src="{% static 'toastr.js' %}"></script>
+        <script type="text/javascript" src="{% static 'bootstrap-3.3.5-dist/js/bootstrap.min.js' %}"></script>
+
+        <script>
+            $(document).ready(function(){
+                setTimeout(function(){
+                $("#confirmation-message").fadeIn('slow').delay(2000).fadeOut('slow');
+                     }, 3000);
+                    // Show the Modal on load
+                var pop_up_address_form = document.getElementById("empty_address_box").value;
+                console.log(pop_up_address_form)
+                if(pop_up_address_form == "True"){
+                    $("#address").modal("show");
+                    }
+                });
+        </script>
+</head>
+<body id="page-top" class="index">
+<form method="post">{% csrf_token %}
+     <nav class="navbar navbar-default navbar-fixed-top">
+        <div class="container">
+            <div class="col-md-12 text-center">
+                {% if messages %}
+                    <ul class="messages">
+                {% for message in messages %}
+                <li id="confirmation-message" {% if message.tags == "success" %} class="alert alert-success"{% endif %}><div>{{ message }}</div></li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+        </div>
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand page-scroll" href="{% url 'home_page'%}">
+                    textdoar
+                    </a>
+            </div>
+                  <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                         <a class="page-scroll" href="https://twitter.com/textdoar">
+                              Follow Us on Twitter
+                               <span class="fa-stack fa-1x">
+                                <i class="fa fa-twitter fa-stack-1x fa-2x fa-inverse"></i></span> </a>
+                    </li>
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container-fluid -->
+    </nav>
+         <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="intro-text">
+                <div class="-align-center"><h4>Find Your Next Textbook Within Your Campus</h4></div>
+                <div class="intro-lead-in">Coming Soon</div>
+                     <br>
+                <div class="row">
+                    <input type=hidden id="empty_address_box" value="{{ pop_up_address_form }}">
+                <p><button type="button" class="btn btn-lg btn-info" data-toggle="modal" data-target="#address">Notify Me</button></p>
+                <div class="container">
+                    {% load bootstrap %}
+                        <div id="address" class="modal fade" role="dialog">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <div class="modal-body">
+                                            <div class="">
+                                                <img src="{% static 'media/logo_for_search_page.png' %}" style="width:100%;height:100%;"/>
+                                            </div>
+                                                <br>
+                                                <div class="row -align-center"><h4 style="color: black">Insert Your Email Here</h4></div>
+                                                {{ form|bootstrap }}
+                                            <input type="submit" name="add-address" value="Enter" class="btn btn-success">
+                                        </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                    </div>
+                                </div>
+                            </div>
+                         </div>
+                     </div>
+                </div>
+                </div>
+            </div>
+            </div>
+    </header>
+                <section id="services">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 text-center">
+                    <h2 class="section-heading">This is Textdoar</h2>
+                </div>
+            </div>
+            <div class="row text-center">
+                <div class="col-md-4">
+                    <span class="fa-stack fa-4x">
+                        <i class="fa  fa-stack-2x text-primary"></i>
+                        <i class="fa fa-bicycle fa-stack-1x fa-inverse"></i>
+                    </span>
+                    <h4 class="service-heading">Local</h4>
+                    <p class="text-muted">Before you set out to buy your next textbook, we invite you to use our website
+                        to check if someone from your local campus has listed that particular textbook for sale.
+                        Simply search for the textbook by name, author or isbn number;
+                        if you find it, great! You can go ahead and purchase it online and have it delivered to you
+                        within the next two days.</p>
+                </div>
+                <div class="col-md-4">
+                     <span class="fa-stack fa-4x">
+                        <i class="fa fa-stack-2x text-primary"></i>
+                        <i class="fa fa-barcode fa-stack-1x fa-inverse"></i>
+                    </span>
+                    <h4 class="service-heading">Simple</h4>
+                    <p class="text-muted">If you are looking to sell your textbook locally, our platform provides a simple
+                    three step procedure: search for the textbook's isbn number,
+                        insert your price, connect to a stripe account (if it
+                    is your first listing), done. Once your textbook is sold, your textbook's
+                        shipping and handling via usps is on us</p>
+                </div>
+                <div class="col-md-4">
+                    <span class="fa-stack fa-4x">
+                        <i class="fa fa-stack-2x text-primary"></i>
+                        <i class="fa fa-lock fa-stack-1x fa-inverse"></i>
+                    </span>
+                    <h4 class="service-heading">Secure</h4>
+                    <p class="text-muted">All sellers on our platform are required to have a stripe account. This process
+                        takes about a minute; we pre-filled the sign up form for your convenience.
+                        By using stripe's payment system we are able to provide a secure means of buying a textbook and
+                        a simple and quick means of receiving payment for a textbook.
+                    </p>
+                </div>
+            </div>
+        </div>
+        </section>
+     <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <span class="copyright">Copyright &copy; Textdoar 2016</span>
+                </div>
+                <div class="col-md-4">
+                    <ul class="list-inline quicklinks">
+                        <li><a class="page-scroll" href="{% url 'term_and_condition_page' %}">Terms and Conditions</a></p>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </footer>
+     <script type="text/javascript" src="{% static 'startbootstrap-agency-1.0 2.5/js/jquery.js' %}"></script>
+    <script type="text/javascript" src="{% static 'startbootstrap-agency-1.0 2.5/js/bootstrap.min.js' %}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js" type="text/javascript"></script>
+    <script type="text/javascript" src="{% static 'startbootstrap-agency-1.0 2.5/js/classie.js' %}"></script>
+    <script type="text/javascript" src="{% static 'startbootstrap-agency-1.0 2.5/js/cbpAnimatedHeader.js' %}"></script>
+    <script type="text/javascript" src="{% static 'startbootstrap-agency-1.0 2.5/js/jqBootstrapValidation.js' %}"></script>
+    <script type="text/javascript" src="{% static 'startbootstrap-agency-1.0 2.5/js/contact_me.js' %}"></script>
+    <script type="text/javascript" src="{% static 'startbootstrap-agency-1.0 2.5/js/agency.js' %}"></script>
+</form>
+</body>
+</html>

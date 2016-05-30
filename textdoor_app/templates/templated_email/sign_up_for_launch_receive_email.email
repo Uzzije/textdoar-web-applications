@@ -1,0 +1,19 @@
+% block subject %}Thanks for Signing Up{% endblock %}
+{% block html %}
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
+    integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <link href='https://fonts.googleapis.com/css?family=Playfair+Display:700' rel='stylesheet' type='text/css'>
+    <h2 style="font-family: 'Playfair Display', serif;">Hey,</h2>
+    <h3 style="font-family: 'Playfair Display', serif;">Thanks for signing up to get notified when we officially launch.We
+     hope to make it an entertaining journey for you through our various promotional give away. More importantly, we are
+     grateful that you chose to take interest in our mission of making the sale and purchase of textbooks local, simple and
+     cheap.</h3>
+    <hr>
+    <br><hr><br>
+    <p><h3 style="font-family: 'Playfair Display', serif;">Textdoar Team</h3></p>
+        <p><small>Textdoar is a US-based company. For any questions please
+            contact information@textdoar.com or feel free to visit our <a href='https://www.textdoar.com/textdoar-FAQ/'>Frequently Asked Questions Page</a>.
+            By signing up, you  are agreeing to our
+            <a href='https://www.textdoar.com/term-and-condition-page'>Terms of Agreement.</a>
+        </small></p></footer>
+{% endblock %}

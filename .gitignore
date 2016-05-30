@@ -42,4 +42,7 @@ setting_secret.py
 .Trashes
 ehthumbs.db
 Thumbs.db
+# Virtual Enviroment
+######################
+ENV
 
