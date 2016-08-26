@@ -21,7 +21,7 @@
             Shipping: Free
             Condition: {{ book_condition }}
 
-
+    Make sure you unlist the book before finalizing a purchase if payment method is via cash.
     For more questions please refer to https://www.textdoar.com/textdoar-FAQ/
 
 

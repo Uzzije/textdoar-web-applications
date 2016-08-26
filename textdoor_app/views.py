@@ -44,7 +44,7 @@ class TextDoorHomePageView(View):
             user_name = request.user.username
         else:
             user_name = "guest"
-            return HttpResponseRedirect(reverse('launch_page'))
+            # return HttpResponseRedirect(reverse('launch_page'))
         return render(request, 'home_page.html', {'user_name': user_name})
 
 
@@ -52,8 +52,8 @@ class SignUpPageView(View):
 
     def get(self, request):
         form = form_templates.UserSignUpForm()
-        return HttpResponseRedirect(reverse('launch_page'))
-        # return render(request, 'sign_up_page.html', {'form': form, 'user_name': "guest"})
+        # return HttpResponseRedirect(reverse('launch_page'))
+        return render(request, 'sign_up_page.html', {'form': form, 'user_name': "guest"})
 
     def post(self, request):
         form = form_templates.UserSignUpForm(request.POST)
@@ -106,7 +106,7 @@ class UserHomeProfilePage(LoginRequiredMixin, View):
             user_name = "guest"
         else:
             user_name = self.request.user.username
-            return HttpResponseRedirect(reverse('launch_page'))
+            # return HttpResponseRedirect(reverse('launch_page'))
         return render(request, 'user_profile_page.html', {'user_name': user_name,
                                                           'first_name': elude_user.username.first_name,
                                                           'first_time_user': first_time_user})
@@ -147,8 +147,8 @@ class LogoutView(View):
 
     def get(self, request):
         logout(request)
-        return HttpResponseRedirect(reverse('launch_page'))
-        # return render(request, 'home_page.html', {'user_name': "guest"})
+        # return HttpResponseRedirect(reverse('launch_page'))
+        return render(request, 'home_page.html', {'user_name': "guest"})
 
 
 class LoginViews(FormView):
@@ -216,8 +216,8 @@ class AccountActivationView(View):
             user_email = self.request.session['email_name']
         except(KeyError, TypeError, None):
             return HttpResponseRedirect(reverse('user_registration_page'))
-        return HttpResponseRedirect(reverse('launch_page'))
-        # return render(request, 'activate_account_form.html', {'user_name': user_name, 'form':form, 'user_email':user_email})
+        # return HttpResponseRedirect(reverse('launch_page'))
+        return render(request, 'activate_account_form.html', {'user_name': user_name, 'form':form, 'user_email':user_email})
 
     def post(self, request, user_name):
         form = form_templates.ActivateAccountForm(request.POST)
@@ -273,8 +273,8 @@ class ISBNView(View):
             del self.request.session['edit_mode']
         except(TypeError, KeyError, None):
             pass
-        return HttpResponseRedirect(reverse('launch_page'))
-        # return render(request, 'isbn_entry.html', {'user_name': user_name})
+        # return HttpResponseRedirect(reverse('launch_page'))
+        return render(request, 'isbn_entry.html', {'user_name': user_name})
 
     def post(self, request, user_name):
         if request.user.is_authenticated():
@@ -366,7 +366,7 @@ class NewBookListingView(LoginRequiredMixin, View):
             user_name = self.request.user.username
         else:
             user_name = "guest"
-            return HttpResponseRedirect(reverse('launch_page'))
+            # return HttpResponseRedirect(reverse('launch_page'))
         try:
             dictionary_new = self.request.session.get('dictionary', False)
         except (KeyError, TypeError):
@@ -512,7 +512,7 @@ class CartView(LoginRequiredMixin, View):
     def get(self, request, user_name):
         if not request.user.is_authenticated():
             user_name = "guest"
-            return HttpResponseRedirect(reverse('launch_page'))
+            # return HttpResponseRedirect(reverse('launch_page'))
         else:
             user_name = self.request.user.username
         try:
@@ -576,7 +576,7 @@ class SearchResultView(View):
         form = form_templates.BooksStudentNeedForm()
         if not request.user.is_authenticated():
             user_name = "guest"
-            return HttpResponseRedirect(reverse('launch_page'))
+            # return HttpResponseRedirect(reverse('launch_page'))
         else:
             user_name = self.request.user.username
         delivery_time = datetime.now() + timedelta(hours=36)
@@ -643,7 +643,7 @@ class ListOfYourBooksView(LoginRequiredMixin, View):
                 user_books.append((book, book_image))
         if not request.user.is_authenticated():
             user_name = "guest"
-            return HttpResponseRedirect(reverse('launch_page'))
+            # return HttpResponseRedirect(reverse('launch_page'))
         else:
             user_name = self.request.user.username
         return render(request, 'all_user_books.html', {'user_book': user_books, 'user_name':user_name})
@@ -677,7 +677,7 @@ class SingleBookDescriptionView(LoginRequiredMixin, View):
     def get(self, request, book_id, slug):
         if not request.user.is_authenticated():
             user_name = "guest"
-            return HttpResponseRedirect(reverse('launch_page'))
+            # return HttpResponseRedirect(reverse('launch_page'))
         else:
             user_name = self.request.user.username
         book = get_object_or_404(Book, id=book_id)
@@ -722,7 +722,7 @@ class WatchListBooksView(LoginRequiredMixin, View):
         watch_list_books_list = []
         if not request.user.is_authenticated():
             user_name = "guest"
-            return HttpResponseRedirect(reverse('launch_page'))
+           # return HttpResponseRedirect(reverse('launch_page'))
         else:
             user_name = self.request.user.username
         user = User.objects.get(username=request.user.username)
@@ -757,7 +757,7 @@ class AddressView(LoginRequiredMixin, View):
         form = form_templates.AddressBookForm()
         if not request.user.is_authenticated():
             user_name = "guest"
-            return HttpResponseRedirect(reverse('launch_page'))
+            # return HttpResponseRedirect(reverse('launch_page'))
         else:
             user_name = self.request.user.username
         return render(request, 'address_page.html', {'form': form, 'user_name': user_name,
@@ -853,7 +853,7 @@ class AccountView(LoginRequiredMixin, View):
     def get(self, request, user_name):
         if not request.user.is_authenticated():
             user_name = "guest"
-            return HttpResponseRedirect(reverse('launch_page'))
+            # return HttpResponseRedirect(reverse('launch_page'))
         else:
             user_name = self.request.user.username
         return render(request, 'account_page.html', {'user_name': user_name})
@@ -867,7 +867,7 @@ class PaymentView(LoginRequiredMixin, View):
             application_fee = None
         if not request.user.is_authenticated():
             user_name = "guest"
-            return HttpResponseRedirect(reverse('launch_page'))
+           # return HttpResponseRedirect(reverse('launch_page'))
         else:
             user_name = self.request.user.username
 
@@ -959,6 +959,10 @@ class PaymentView(LoginRequiredMixin, View):
                     book.book_is_sold = True
                     book.save()
                     del self.request.session['shopping_cart']
+                    if elude_user.phone_number == '000-000-0000':
+                        phone_number = 'Seller prefers to be contacted by their email ', sold_book.book_owner.username.email
+                    else:
+                        phone_number = sold_book.book_owner.phone_number
                     send_templated_mail(
                         template_name = 'user_purchase_confirmation_email',
                         from_email = 'Textdoar Team',
@@ -973,6 +977,7 @@ class PaymentView(LoginRequiredMixin, View):
                             'book': sold_book.book.title,
                             'arrival_time': end_range_of_pick_up_time_str,
                             'book_condition': sold_book.book.book_edition,
+                            'phone_number': phone_number,
                             },
                             bcc=[variables.CUSTOMER_SERVICE_EMAIL],
                         )
@@ -1038,7 +1043,7 @@ class SavedCreditCardPaymentView(LoginRequiredMixin, View):
     def get(self, request, user_name):
         if not request.user.is_authenticated():
             user_name = "guest"
-            return HttpResponseRedirect(reverse('launch_page'))
+            # return HttpResponseRedirect(reverse('launch_page'))
         else:
             user_name = self.request.user.username
         try:
@@ -1188,7 +1193,7 @@ class StripeConnectionConfirmationView(LoginRequiredMixin, View):
             scope = None
         if not request.user.is_authenticated():
             user_name = "guest"
-            return HttpResponseRedirect(reverse('launch_page'))
+            # return HttpResponseRedirect(reverse('launch_page'))
         else:
             user_name = self.request.user.username
         return render(request, 'stripe_connection_confirmation_page.html', {'code': code,
@@ -1233,7 +1238,7 @@ class ListBookConfirmationView(LoginRequiredMixin, View):
     def get(self, request, user_name):
         if not request.user.is_authenticated():
             user_name = "guest"
-            return HttpResponseRedirect(reverse('launch_page'))
+            # return HttpResponseRedirect(reverse('launch_page'))
         else:
             user_name = self.request.user.username
         elude_user = EludeUser.objects.get(username=self.request.user)
@@ -1286,7 +1291,7 @@ class ChangePasswordView(LoginRequiredMixin, View):
     def get(self, request, user_name):
         if not request.user.is_authenticated():
             user_name = "guest"
-            return HttpResponseRedirect(reverse('launch_page'))
+            # return HttpResponseRedirect(reverse('launch_page'))
         else:
             user_name = self.request.user.username
         user = User.objects.get(username=self.request.user.username)
@@ -1329,7 +1334,7 @@ class OrderHistoryView(LoginRequiredMixin, View):
                     users_sold_books_list.append((book, book_image))
         if not request.user.is_authenticated():
             user_name = "guest"
-            return HttpResponseRedirect(reverse('launch_page'))
+            # return HttpResponseRedirect(reverse('launch_page'))
         else:
             user_name = self.request.user.username
         return render(request, 'order_history.html', {'user_name':user_name,
@@ -1342,7 +1347,7 @@ class PaymentCardDetailView(LoginRequiredMixin, View):
     def get(self, request, user_name):
         if not request.user.is_authenticated():
             user_name = "guest"
-            return HttpResponseRedirect(reverse('launch_page'))
+            # return HttpResponseRedirect(reverse('launch_page'))
         else:
             user_name = self.request.user.username
         elude_user = EludeUser.objects.get(username=self.request.user)
@@ -1378,7 +1383,7 @@ class ErrorPageViewForStripe(LoginRequiredMixin, View):
     def get(self, request, user_name):
         if not request.user.is_authenticated():
             user_name = "guest"
-            return HttpResponseRedirect(reverse('launch_page'))
+            # return HttpResponseRedirect(reverse('launch_page'))
         else:
             user_name = self.request.user.username
         elude_user = EludeUser.objects.get(username=self.request.user)

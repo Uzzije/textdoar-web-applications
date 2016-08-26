@@ -7,13 +7,12 @@
     <hr>
     <p>
     <h3 style="font-family: 'Playfair Display', serif;">Congratulations on your purchase of {{ book }} {{ book_edition }}.
-    Your order number is <b>{{ order_num }}</b>. Your textbook will be delivered to you within the next two days,
-    and could be delivered as early as the next few hours.</h3></p>
+    Your order number is <b>{{ order_num }}</b>. The seller has already been notified and is expecting your response from this contact: {{ phone_number }}.</h3></p>
     <div class="col-md-6>
-    <p><h3 style="font-family: 'Playfair Display', serif;">Latest arrival time: {{ arrival_time }}</h3></p>
+    <p><h3 style="font-family: 'Playfair Display', serif;">Latest arrival time (if purchase was local): {{ arrival_time }}</h3></p>
     </div
     <div class="col-md-6>
-    <p><h3 style="font-family: 'Playfair Display', serif;">Delivered To: {{ address }}</h3></p>
+    <p><h3 style="font-family: 'Playfair Display', serif;">Delivered To (if shipping): {{ address }}</h3></p>
     </div
     <hr>
     <div>

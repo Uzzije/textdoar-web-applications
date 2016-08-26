@@ -50,4 +50,5 @@ Thumbs.db
 # Virtual Enviroment
 ######################
 ENV
-
+mysitename.crt
+mysitename.key

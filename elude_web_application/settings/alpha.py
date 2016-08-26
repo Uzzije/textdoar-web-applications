@@ -1,6 +1,6 @@
 from elude_web_application.settings.base import *
 
-DEBUG = True
+DEBUG = False
 INSTALLED_APPS += (
 
 )

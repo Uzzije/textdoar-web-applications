@@ -6,10 +6,7 @@
     <h3 style="font-family: 'Playfair Display', serif;">Good News {{ first_name }}!</h3>
     <hr>
     <p><h3 style="font-family: 'Playfair Display', serif;">Your textbook {{ book }} {{ book_edition }} has been purchased!
-    What Now? All you have to do is reply to back to this email with your phone number, and the most convenient time to pick up the book from you; i.e in the evening.</b></h3></p>
-    <br>
-    <p><h3 style="font-family: 'Playfair Display', serif;">Estimated Pick Up Time: Book will need to be picked up between
-    <b>{{ pickup_day_range }} and {{ pickup_day_range_two }}</b> from this address: {{ address }}.</h3></p>
+    What Now? The buyer would get in touch with you shortly, to set up a meetup time (note this email means your book has already been purchase via an online payment) </b></h3></p>
     <br>
     <p><h3 style="font-family: 'Playfair Display', serif;">
     Payment from the sale of your textbook should reflect in your bank account within the next 3 business days

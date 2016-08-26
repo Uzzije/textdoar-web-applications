@@ -8,7 +8,7 @@ BOUGHT_BOOK_MESSAGE_EMAIL_SUBJECT = "Textdoor, Purchase Receipt"
 SOLD_BOOK_MESSAGE_EMAIL = "Textdoor, Sold Receipt"
 TEXTDOAR_EMAIL = 'email@textdoar.com'
 LIST_BOOK_MESSAGE = "Your, book has been listed, and will be live as soon as it is verified!"
-CUSTOMER_SERVICE_EMAIL = "customerservice@textdoar.com"
+CUSTOMER_SERVICE_EMAIL = "Uzzije2000@yahoo.co.uk"
 CONNECTED_TO_STRIPE = "Good Deal! You are now connected to Stripe and can start receiving payments today!"
 
 #End dates of semesters
